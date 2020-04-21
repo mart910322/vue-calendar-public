@@ -1,7 +1,7 @@
 <template>
-    <div v-hovering-color="[color,hoveringColor]" @click="emitClickEvent">
-        <svg height='100px' width='100px'  fill="#000000" viewBox="0 0 28.00024 47.99976" x="0px" y="0px"  v-color="color" >
-            <path d="M4.00012,47.99976a4,4,0,0,1-2.82861-6.82862L18.34338,23.99976,1.17151,6.82837A4.00027,4.00027,0,0,1,6.82874,1.17114l20,20a4.00061,4.00061,0,0,1,0,5.65723l-20,20A3.98887,3.98887,0,0,1,4.00012,47.99976Z"></path>
+    <div v-hovering-color="[color,hoveringColor]" @click="emitClickEvent" class="wrapper">
+        <svg viewBox="0 0 50 50" v-color="color" class="icon">
+            <path class="cls-1" d="M21.2,20.59h6.39V35.24H28.8v3.44H21.2V35.24h1.2V24H21.2ZM28,14.35a3,3,0,1,1-3-3A3,3,0,0,1,28,14.35ZM25,50A25,25,0,1,0,0,25,25,25,0,0,0,25,50Z"/>
         </svg>
     </div>
 </template>
@@ -17,6 +17,7 @@ export default {
     },
     methods:{
        emitClickEvent(){
+           console.log(this.$parent)
            this.$emit('iconClicked');
         }
     }
@@ -24,5 +25,9 @@ export default {
 </script>
 
 <style scoped>
+.cls-1{
+    fill-rule:evenodd;
+ 
+}
 
 </style>

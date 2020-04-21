@@ -1,6 +1,6 @@
 <template>
-    <div class="wrapper">
-        <svg viewBox="0 0 60 60">
+    <div class="wrapper" @click="emitClickEvent">
+        <svg viewBox="0 0 60 60" >
             <g>
                 <rect y="25" width="60" height="10"/>
             </g>
@@ -12,8 +12,14 @@
 </template>
 
 <script>
-export default {
 
+export default {
+ 
+    methods:{
+       emitClickEvent(){
+           this.$emit('iconClicked');
+        }
+    }
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <svg viewBox="0 0 320 345.75">
+    <div v-hovering-color="[color,hoveringColor]" @click="emitClickEvent">
+        <svg viewBox="0 0 320 345.75"  v-color="color" >
             <path class="cls-1" d="M11,39H73V13c0-17,27-17,27,0V39H220V13c0-17,27-17,27,0V39h63c5,0,10,5,10,11V335c0,6-5,11-10,11H11A11.1,11.1,0,0,1,0,335V50A11.1,11.1,0,0,1,11,39Zm6,77H303V329H17Z" transform="translate(0 -0.25)"/>
             <path d="M117,228c-8-8,4-21,12-13l20,21,46-46c8-8,20,5,12,13l-51,51a10.51,10.51,0,0,1-13,0Z" transform="translate(0 -0.25)"/>
         </svg>
@@ -8,8 +8,19 @@
 </template>
 
 <script>
+import colorChanger from './color_changer_directive.js'
+import hoveringColor from './hovering_color_change_directive.js'
 export default {
-
+    props:['color','hoveringColor'],
+    directives:{
+        color:colorChanger,
+        'hovering-color':hoveringColor
+    },
+    methods:{
+       emitClickEvent(){
+           this.$emit('iconClicked');
+        }
+    }
 }
 </script>
 

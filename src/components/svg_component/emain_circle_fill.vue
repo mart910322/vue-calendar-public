@@ -1,20 +1,33 @@
 <template>
-    <div>
-        <svg viewBox="0 0 78 78">
+    <div v-hovering-color="[color,hoveringColor]" @click="emitClickEvent">
+        <svg viewBox="0 0 78 78" v-color="color" >
             <path class="cls-1" d="M0,39A39,39,0,1,1,39,78,39,39,0,0,1,0,39ZM20.15,23.55a4,4,0,0,0-4,4V51.07a4,4,0,0,0,4,4h38.4a4,4,0,0,0,4-4V27.54a4,4,0,0,0-4-4Z"/>
-            <path class="cls-2" d="M61.5,28.5,39.39,43.17"/>
-            <path class="cls-2" d="M16.5,28.5l22,14.68"/>
+            <rect x="34.68" y="33.34" width="31.54" height="5" transform="translate(-11.4 33.87) rotate(-33.57)"/>
+            <rect x="25.01" y="20.11" width="5" height="31.46" transform="translate(-17.57 38.84) rotate(-56.31)"/>
         </svg>
     </div>
 </template>
 
 <script>
+import colorChanger from './color_changer_directive.js'
+import hoveringColor from './hovering_color_change_directive.js'
 export default {
-
+    props:['color','hoveringColor'],
+    directives:{
+        color:colorChanger,
+        'hovering-color':hoveringColor
+    },
+    methods:{
+       emitClickEvent(){
+           this.$emit('iconClicked');
+        }
+    }
 }
+
 </script>
 
 <style scoped>
-.cls-1{fill-rule:evenodd;}
-.cls-2{fill:none;stroke:#000;stroke-linecap:square;stroke-width:5px;}
+.cls-1{
+    fill-rule:evenodd;
+}
 </style>

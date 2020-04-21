@@ -1,8 +1,6 @@
 <template>
     <div id="app">
         <router-view/>  
-    
-
     </div>
 </template>
 <script>
@@ -10,8 +8,7 @@
 export default {
     data(){
         return{
-            show:true,
-            content:[],
+   
         }
     },
     methods:{
@@ -24,7 +21,7 @@ export default {
     
     },
     mounted(){
-        this.content = new Array(20);
+   
     
     }
 }
@@ -33,7 +30,7 @@ export default {
 
 
 :root{
-    --dark-bule:#002130;
+    --dark-blue:#002130;
     --light-blue:#D2E0E9;
     --normal-blue:#4579A0;
     --brown:#A35D22;
