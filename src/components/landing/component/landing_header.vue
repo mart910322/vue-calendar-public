@@ -4,8 +4,8 @@
             <h1 class="logo-text">logo</h1>
         </section>
         <aside class="buttons-area">
-            <email-icon class="icon" color="var(--light-blue)" hoveringColor="var(--normal-blue)" @iconClicked="test"></email-icon>
-            <info-icon class="icon" color="var(--light-blue)" hoveringColor="var(--normal-blue)" @iconClicked="test"></info-icon>
+            <email-icon class="icon" @iconClicked="test"></email-icon>
+            <info-icon class="icon" @iconClicked="test"></info-icon>
             
         </aside>
     </header>
@@ -89,18 +89,16 @@ export default {
     padding:0.65rem;
 
     cursor: pointer;
-
-   
+  
+    --icon-background-color:transparent;
+    --icon-color:var(--light-blue);
     
 }
 .icon:hover{
     
-    background: var(--light-blue);
+    --icon-background-color:var(--light-blue);
+    --icon-color:var(--normal-blue);
 
 }
-.icon{
-    /*
-    fill: var(--light-blue);
-    */
-}
+
 </style>

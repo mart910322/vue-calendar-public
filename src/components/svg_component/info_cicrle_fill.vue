@@ -29,5 +29,11 @@ export default {
     fill-rule:evenodd;
  
 }
-
+.wrapper{
+    background: var(--icon-background-color)
+}
+.icon{
+    
+    fill: var(--icon-color);
+}
 </style>

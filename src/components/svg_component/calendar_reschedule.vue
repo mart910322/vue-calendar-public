@@ -1,6 +1,6 @@
 <template>
-    <div v-hovering-color="[color,hoveringColor]" @click="emitClickEvent">
-        <svg viewBox="0 0 48 48.01" v-color="color" >
+    <div  @click="emitClickEvent" class="wrapper">
+        <svg viewBox="0 0 48 48.01"  class="icon">
             <path d="M14,47a9,9,0,1,1,6.28-15.43L17,34.37l8.23.61.61-8.22-3.31,2.85a12,12,0,1,0,2.21,13.75,10.21,10.21,0,0,0,.54-1.28A11.85,11.85,0,0,0,26,38H23A9,9,0,0,1,14,47Z" transform="translate(-2 -2)"/>
             <path d="M17.57,12h.86A2.82,2.82,0,0,0,21,9V5a2.82,2.82,0,0,0-2.57-3h-.86A2.82,2.82,0,0,0,15,5V9A2.82,2.82,0,0,0,17.57,12Z" transform="translate(-2 -2)"/>
             <path d="M37.57,12h.86A2.82,2.82,0,0,0,41,9V5a2.82,2.82,0,0,0-2.57-3h-.86A2.82,2.82,0,0,0,35,5V9A2.82,2.82,0,0,0,37.57,12Z" transform="translate(-2 -2)"/>
@@ -27,5 +27,11 @@ export default {
 </script>
 
 <style scoped>
-
+.wrapper{
+    background: var(--icon-background-color)
+}
+.icon{
+    
+    fill: var(--icon-color);
+}
 </style>
