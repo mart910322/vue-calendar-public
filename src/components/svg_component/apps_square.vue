@@ -25,7 +25,8 @@ export default {
 
 <style scoped>
 .wrapper{
-    background: var(--icon-background-color)
+    background: var(--icon-background-color);
+ 
 }
 .icon{
     

@@ -62,7 +62,8 @@ export default {
 
 .container{
     width: 100%;
-    padding: 0 0.5rem;
+    height: 3.5rem;
+    padding: 0 0 0 0.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -71,11 +72,13 @@ export default {
 
 .logo-text{
     margin: 0;
-    padding: 0;
+    padding: 0 0 0.25rem 0;
+
 
     color: var(--brown);
     font-weight: 500;
     font-size: 1.75rem;
+    
 }
 .buttons-area{
     display: flex;
@@ -84,15 +87,17 @@ export default {
 
 .icon{
     
-    width: 3rem;
-    height: 3rem;
-    padding:0.65rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    padding:0.9rem ;
 
     cursor: pointer;
   
     --icon-background-color:transparent;
     --icon-color:var(--light-blue);
     
+
+   
 }
 .icon:hover{
     
