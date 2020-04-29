@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="landing-page">
         <landing-header></landing-header>
 
         <main class="function-box">
@@ -9,33 +9,33 @@
         </main>
 
         <nav class="nav-icons-container">
-            <div v-for="(navIconName,index) in navIconsName" :key="index" class="nav-icon-wrapper">
+            <div v-for="(navIconName,index) in navIconsName" :key="index" class="nav-icon-wrapper" @click="scrollToArticle(index)">
                 <component :is="navIcons(index)" class="nav-icon"></component>
                 <span class="nav-icon-name">{{ navIconName }}</span>
             </div>
         </nav>
-        <article>
-            <landing-article :isContentFirst="false">
+        <article class="swim-lane">
+            <landing-article :isContentFirst="false" class="swim-lane-el">
                 <img src="../../assets/background_image/hourGlass.jpg" slot="picture">
                 <span slot="title">Save your time</span>
                 <span slot="content">
                     Manage and track your time effectively. Let you know where has the time gone. Then reduce unnecessary time spending. And get efficient lifestyle. Even do more work in a day                 
                 </span>
             </landing-article>
-            <landing-article :isContentFirst="true">
+            <landing-article :isContentFirst="true" class="swim-lane-el">
                 <img src="../../assets/landing_content_image/wotk_to_do_list.jpg" slot="picture">
                 <span slot="title">Task notes and to do list</span>
                 <span slot="content">
                     Manage and track your time effectively. Let you know where has the time gone. Then reduce unnecessary time spending. And get efficient lifestyle. Even do more work in a day                 
                 </span>
             </landing-article>
-            <landing-article :isContentFirst="false">
+            <landing-article :isContentFirst="false" class="swim-lane-el">
                 <img src="../../assets/landing_content_image/work_schedule.jpg" slot="picture">
                 <span slot="title">Easy to use</span>
                 <span slot="content">
                     You don't need any tutorials and instructions. It will come naturally to you and pick it up. It will not spend your time a lot as well. But it keeps its powerful function as the same                </span>
             </landing-article>
-            <landing-article :isContentFirst="true"> 
+            <landing-article :isContentFirst="true" class="swim-lane-el"> 
                 <img src="../../assets/landing_content_image/work_calendar.jpg" slot="picture">
                 <span slot="title">Calendar and schedule</span>
                 <span slot="content">
@@ -45,8 +45,9 @@
 
 
         </article>
-        <footer>
-
+        <footer class="landing-footer">
+            <span class="prompt-text">What are you waiting for?</span>
+            <custom-btn class="getStartedBtn" @onClick="redirect"><span slot="btn-name">Let's get started</span></custom-btn>
         </footer>
     </div>
 </template>
@@ -63,6 +64,7 @@ import appsIcon from '../svg_component/apps_square.vue';
 import calendarIcon from '../svg_component/calendar_clock.vue';
 //icons
 
+import btnTemplate from '../template/vue-btton-template.vue'
 export default {
     data(){
         return{
@@ -72,6 +74,7 @@ export default {
     components:{
         'landing-header':landingHeader,
         'landing-article':landingArticle,
+        'custom-btn':btnTemplate,
 
         'clock-icon':clockIcon,
         'task-border-icon':taskBorderIcon,
@@ -96,8 +99,23 @@ export default {
             return calendarIcon;
         },//variable for dynamic component
 
+        scrollToArticle(index){
+            var articles =  document.getElementsByClassName('swim-lane-el');
+            window.scrollTo({
+                top: articles[index].offsetTop,
+                behavior: 'smooth'
+            });
+        },//scoll to article of swim lane
+        redirect(){
+            this.$router.push('/register');
+            window.scrollTo({
+                top:0,
+                behavior: 'smooth'
+            })
+        }//Navigating to register when let's get started button was clicked
 
-    }
+    },
+
 }
 </script>
 
@@ -111,8 +129,12 @@ main.function-box{
     background-image:linear-gradient(rgba(0,33,48,0.5) 0%, rgba(0,33,48,0.5) 100%) ,url('../../assets/background_image/landing_page_background.jpg');
     background-size: cover ;
     background-position: center ;
-}
-.nav-icons-container{
+
+    display: flex;
+    align-items: center;
+    
+}/*.landing-page is in order to limit coverage and prevent the class registered in another page*/
+.landing-page .nav-icons-container{
     display: grid;
     grid-template-columns: repeat(4,1fr);
     grid-auto-rows: minmax(8rem,auto);
@@ -120,7 +142,7 @@ main.function-box{
 
     
 }
-.nav-icon-wrapper{
+.landing-page .nav-icon-wrapper{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -132,33 +154,97 @@ main.function-box{
     cursor: pointer;
     
 }
-.nav-icon-wrapper:hover{
+.landing-page .nav-icon-wrapper:hover{
     background: rgba(255,255,255,0.1);
 }
-.nav-icon-wrapper:hover .nav-icon{
+.landing-page .nav-icon-wrapper:hover .nav-icon{
     --icon-color:var(--white);
 }
-.nav-icon-wrapper:hover .nav-icon-name{
+.landing-page .nav-icon-wrapper:hover .nav-icon-name{
     color: var(--white);
 }
-.nav-icon{
+.landing-page .nav-icon{
 
     width: 2.85rem;
     margin-bottom: 0.25rem;
     --icon-color:var(--light-blue);
 }
-.nav-icon-name{
+.landing-page .nav-icon-name{
     color: var(--light-blue);
     font-weight: 400;
     font-size: 1.25rem;
 }
+
+
+article.swim-lane{
+    overflow-x: hidden;
+}
+.landing-footer{
+    height: 15rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+}
+.landing-footer .prompt-text{
+    color: black;
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 1.25rem;
+}
+.getStartedBtn{
+    border: 1px solid var(--normal-blue);
+    color: var(--normal-blue);
+    font-size: 1.5rem;
+    padding: 0.2rem 5rem;
+    transition: 0.25s linear;
+
+}
+.getStartedBtn:hover{
+    background: var(--normal-blue);
+    color: white;
+}
+
+.fade-left-enter-active,.fade-left-leave-active{
+    transition: 1s ease-out;
+    
+}
+.fade-left-enter,.fade-left-leave-to{
+    opacity: 0;
+    transform: translateX(0%)
+}
+.fade-left-leave,.fade-left-enter-to{
+    opacity: 1;
+    transform: translateX(-100%)
+}
 @media screen and (max-width: 700px){
-.nav-icons-container{
+.landing-page .nav-icons-container{
    
     grid-template-columns: repeat(2,1fr);
     grid-auto-rows: minmax(8rem,auto);
 
 }
 
+}
+@media screen and (max-width: 550px){
+main.function-box{
+ 
+ 
+    max-height: 40rem;
+}
+.landing-footer .prompt-text{
+
+    font-size: 2.35rem;
+
+
+}
+.getStartedBtn{
+
+    font-size: 1.35rem;
+
+
+}
 }
 </style>

@@ -1,15 +1,25 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import firebase from 'firebase'
+
 import landingPage from '../components/landing/landing_page.vue'
-import containerPage from '../components/main/container.vue'
 import slogan from '../components/landing/branch/slogan.vue'
 import login from '../components/landing/branch/login.vue'
 import register from '../components/landing/branch/register.vue'
+import resetPassword from '../components/landing/branch/auth/reset_password.vue'
+import verifyEamil from '../components/landing/branch/auth/verify_email.vue'
+
+import containerPage from '../components/main/container.vue'
 import schedule from '../components/main/branch/schedule/schedule.vue'
 import calendar from '../components/main/branch/calendar/calendar.vue'
-import taskManagement from '../components/main/branch/task_management/task_management.vue'
+import taskBoard from '../components/main/branch/task_management/task_management.vue'
 import setting from '../components/main/branch/setting/setting.vue'
 import timetable from '../components/main/branch/calendar/branch/timetable.vue'
+
+import notFound from '../components/template/404error.vue'
+
+
+
 
 Vue.use(VueRouter)
 
@@ -37,7 +47,19 @@ Vue.use(VueRouter)
         name:'register',
         component:register,
         meta: { requiresAuth : false },
-      }
+      },
+      {
+        path:'resetPassword',
+        name:'resetPassword',
+        component:resetPassword ,
+        meta: { requiresAuth : false },
+      },      
+      {
+        path:'verifyEamil',
+        name:'verifyEamil',
+        component:verifyEamil ,
+        meta: { requiresAuth : false },
+      },         
     ]
   },
   {
@@ -66,9 +88,9 @@ Vue.use(VueRouter)
 
       },
       {
-        path:'taskManagement',
-        name:'taskManagement',
-        component:taskManagement,
+        path:'taskBoard',
+        name:'taskBoard',
+        component:taskBoard,
         meta: { requiresAuth : true },
       },
       {
@@ -78,17 +100,35 @@ Vue.use(VueRouter)
         meta: { requiresAuth : true },
       }
     ]
+  },
+  {
+    path:'*',
+    name:'notFound',
+    component:notFound,
+    meta: { requiresAuth : false },    
   }
+
+
 ]
 
 const router = new VueRouter({
   routes,
   mode:'history'
 })
-/*
-router.beforeEach((to, from, next) => {
 
-  
-})
-*/
+router.beforeEach((to,from,next) => {
+
+  if(to.meta.requiresAuth){
+
+    if(!firebase.auth().currentUser){
+      next({path:'/'});
+    }
+    else{
+      next();
+    }
+  }
+  else{
+    next();
+  }
+});
 export default router

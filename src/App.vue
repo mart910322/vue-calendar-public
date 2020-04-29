@@ -1,10 +1,15 @@
 <template>
     <div id="app">
         <router-view/>  
+
+        <custom-alert></custom-alert>
+        <loading></loading>
+
     </div>
 </template>
 <script>
-
+import customAlert from './components/template/alert_custom.vue'
+import loading from './components/template/loading_animated_component.vue'
 export default {
     data(){
         return{
@@ -15,7 +20,8 @@ export default {
   
     },
     components:{
-
+      'custom-alert':customAlert,
+      loading
     },
     computed:{
     
@@ -77,6 +83,11 @@ html{
 @media screen and (max-width: 1024px){
 html{
   font-size: 13.75px;
+}
+}
+@media screen and (max-width: 550px){
+html{
+  font-size: 12.5px;
 }
 }
 </style>

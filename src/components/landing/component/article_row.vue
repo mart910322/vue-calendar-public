@@ -1,8 +1,8 @@
 <template>
     <div class="article-area" :class="layout"> 
         <div class="article-container" :class="layout">    
-            <div class="article-picture" :class="layout"><slot name="picture"></slot></div>
-            <div class="content-wrapper" :class="layout">
+            <div class="article-picture" :class="layout" :data-aos="[isContentFirst? 'fade-left' : 'fade-right']" data-aos-once="ture"><slot name="picture"></slot></div>
+            <div class="content-wrapper" :class="layout" :data-aos="[isContentFirst? 'fade-right' : 'fade-left']" data-aos-once="ture">
                 <h1 class="title"><slot name="title"></slot></h1>
                 <p class="content"><slot name="content"></slot></p>
             </div>

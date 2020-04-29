@@ -4,8 +4,8 @@
             <h1 class="logo-text">logo</h1>
         </section>
         <aside class="buttons-area">
-            <email-icon class="icon" @iconClicked="test"></email-icon>
-            <info-icon class="icon" @iconClicked="test"></info-icon>
+            <email-icon class="icon" @iconClicked="redirect"></email-icon>
+            <info-icon class="icon" @iconClicked="redirect"></info-icon>
             
         </aside>
     </header>
@@ -28,7 +28,7 @@ export default {
         
     },
     methods:{
-        test(){
+        redirect(){
             console.log('asdasd')
         }
     }
@@ -52,7 +52,7 @@ export default {
 
 
     color: var(--brown);
-    font-weight: 500;
+    font-weight: 600;
     font-size: 1.9rem;
 
     cursor: pointer;

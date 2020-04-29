@@ -17,9 +17,9 @@ export default {
 <style scoped>
 .btn-wrapper{
     
-    padding: 0.2rem 0rem;
+
     cursor: pointer;
-    border-radius: 4px;
+
 
     display: flex;
     align-items: center;
