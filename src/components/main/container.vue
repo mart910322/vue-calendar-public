@@ -1,7 +1,9 @@
 <template>
      <div class="main_container">
         <slide-nav></slide-nav>
-        <router-view></router-view>
+        <keep-alive>
+            <router-view></router-view>
+        </keep-alive>
  
     </div>
 </template>
@@ -23,6 +25,8 @@ export default {
 <style>
 .main_container{
     display: flex;
+    min-width: calc(100vw + 20rem);
+
     
 }
 

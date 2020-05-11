@@ -64,13 +64,13 @@ Vue.use(VueRouter)
   },
   {
     path:'/home',
-    name:'home',
+    name:'container',
     component:containerPage,
     meta: { requiresAuth : true },
     children:[
       {
         path:'/',
-        name:'schedule',
+        name:'home',
         component:schedule,
         meta: { requiresAuth : true },
       },

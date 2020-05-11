@@ -1,5 +1,5 @@
 <template>
-    <div class="mon">
+    <div class="container">
         <div class="wrapper">
             <span class="title"><slot name="title"></slot></span>
             <span class="button"><slot name="button"></slot></span>
@@ -14,8 +14,11 @@ export default {
 </script>
 
 <style scoped>
-.mon{
-    width: 100%;
+.container{
+    width: calc(100vw - 5.75rem);
+    padding: 0.85rem 0.25rem;
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.16);
+    background: var(--white);
 }
 .wrapper{
     width: 100%;
@@ -30,7 +33,7 @@ export default {
 .title{
     color:var(--normal-blue);
     font-weight: 400;
-    font-size: 2rem;
+    font-size: 2.5rem;
 }
 .button{
     cursor: pointer;

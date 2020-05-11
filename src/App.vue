@@ -4,12 +4,14 @@
 
         <custom-alert></custom-alert>
         <loading></loading>
+        <booking-board></booking-board>
 
     </div>
 </template>
 <script>
 import customAlert from './components/template/alert_custom.vue'
 import loading from './components/template/loading_animated_component.vue'
+import bookingBoard from './components/global_component/new_booking_board.vue'
 export default {
     data(){
         return{
@@ -21,7 +23,8 @@ export default {
     },
     components:{
       'custom-alert':customAlert,
-      loading
+      'loading':loading,
+      'booking-board':bookingBoard,
     },
     computed:{
     
@@ -35,13 +38,17 @@ export default {
 <style>
 
 
+
 :root{
     --dark-blue:#002130;
     --light-blue:#D2E0E9;
 
     --normal-blue:#4579A0;
     --brown:#A35D22;
-    --gray:#F9F9F9;
+    --gray-background:#F9F9F9;
+    --gray-border:#C7C7C7;
+    --light-gray:#EBEBEB;
+    --dark-gray:#707070;
 
 
 
@@ -57,6 +64,8 @@ body,html{
     
     padding: 0;
     margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
 
 
 }
@@ -73,6 +82,11 @@ html{
 @media screen and (min-width: 1850px) and (max-width: 2250px)  {
 html{
   font-size: 17.5px;
+}
+}
+@media screen and (max-width: 1680px){
+html{
+  font-size: 16px;
 }
 }
 @media screen and (max-width: 1370px){

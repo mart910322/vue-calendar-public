@@ -26,7 +26,7 @@
                 <img src="../../assets/landing_content_image/wotk_to_do_list.jpg" slot="picture">
                 <span slot="title">Task notes and to do list</span>
                 <span slot="content">
-                    Manage and track your time effectively. Let you know where has the time gone. Then reduce unnecessary time spending. And get efficient lifestyle. Even do more work in a day                 
+                    It's a reminder in order to check the task you want to do. And it assist you to remember something you don't want forgot. Also you will not be confused with the clearly UI. 
                 </span>
             </landing-article>
             <landing-article :isContentFirst="false" class="swim-lane-el">
@@ -208,16 +208,20 @@ article.swim-lane{
 }
 
 .fade-left-enter-active,.fade-left-leave-active{
-    transition: 1s ease-out;
+    transition: 0.75s ease-out;
     
+}
+.fade-left-leave-active{
+    position: absolute;
 }
 .fade-left-enter,.fade-left-leave-to{
     opacity: 0;
-    transform: translateX(0%)
+
+    transform: translateX(0%);
 }
 .fade-left-leave,.fade-left-enter-to{
     opacity: 1;
-    transform: translateX(-100%)
+    transform: translateX(-10%)
 }
 @media screen and (max-width: 700px){
 .landing-page .nav-icons-container{

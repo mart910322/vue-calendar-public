@@ -1,7 +1,9 @@
 <template>
-    <div class="container" v-if="loading">
-        <svg class="loading-element"><circle cx="50" cy="50" r="50"></circle></svg>
-    </div>
+    <transition name="fade">
+        <div class="container" v-if="loading">
+            <svg class="loading-element"><circle cx="50" cy="50" r="50"></circle></svg>
+        </div>
+    </transition>
 </template>
 
 <script>
@@ -16,6 +18,7 @@ export default {
 </script>
 
 <style scoped>
+
 .container{
     position: fixed;
     z-index: 10000;

@@ -1,14 +1,14 @@
 <template>
-    <div class="container" v-if="isCalledAlert">
+    <div class="container" v-if="doesAlertShow">
         <div class="wrapper">
             <div class="msg-area">
                 <div class="icon" ><svg viewBox="0 0 100 100" fill="currentColor"><path d="M50,7A43,43,0,1,1,7,50,43.06,43.06,0,0,1,50,7m0-7a50,50,0,1,0,50,50A50,50,0,0,0,50,0Z"/><path d="M75.3,35.8,42.1,69a3.54,3.54,0,0,1-2.6,1,3.7,3.7,0,0,1-2.6-1L24.7,56.8a3.44,3.44,0,0,1,0-4.8,3.25,3.25,0,0,1,2.4-1,3.1,3.1,0,0,1,2.4,1l10,10,31-31a3.25,3.25,0,0,1,2.4-1,3.1,3.1,0,0,1,2.4,1A3.44,3.44,0,0,1,75.3,35.8Z"/></svg></div>
 
-                <span class="msg">{{ msg }}</span>
+                <span class="msg">{{ alertMsg }}</span>
             </div>
             <div class="btn-area">
            
-                <div class="ok btn" @click="isCalledAlert = false">ok</div>
+                <div class="ok btn" @click="unshowAlert">ok</div>
             </div>
         </div>
 
@@ -16,29 +16,30 @@
 </template>
 
 <script>
-import {bus} from '../../main.js'
+import {mapState,mapMutations} from 'vuex'
+
 export default {
     data(){
         return{
-
-            msg:'Create account successful. please verify your email before the first time login',
-            isCalledAlert:false,//handle the page show or not
 
             showTickOrOther:false,//true = show tick,false = else
             showCancel:false,
 
         }
     },
+    computed:{
+        ...mapState([
+            'doesAlertShow',
+            'alertMsg'
+        ])
+    },
     methods:{
-
+        ...mapMutations([
+            'unshowAlert'
+        ])
     },
     created(){
-        bus.$on('customAlert',({msg}) => {
 
-            this.isCalledAlert = true;
-            this.msg = msg;
-   
-        });
     }
 }
 </script>

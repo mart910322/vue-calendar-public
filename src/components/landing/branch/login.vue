@@ -82,7 +82,8 @@ export default {
     color: white;
     margin-left: 5vw;
     width: 20rem;
-    margin-bottom: 5%;
+    margin-bottom: 4.25%;
+   
 }
 .title{
     font-weight: 400;

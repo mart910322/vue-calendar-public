@@ -2,16 +2,16 @@
     <div class="container" >
         <header class="nav-header" @click="$router.push('/home')"><h1 class="logo-text">logo</h1></header>
         <section class="nav-body">
-            <div v-for="(cell,index) in navNames" :key="index" class="nav-element-wrapper" @click="linkTo(index)">
+            <div v-for="(cell,index) in navNames" :key="index" class="nav-element-wrapper" @click="linkTo(index)" :class="{'current-path': matchCurrentPath(index)}">
                 <component :is="navIcons(index)" class="nav-icon"></component>
                 <span class="nav-name">{{cell}}</span>
             </div>
       
         </section>
         <footer class="nav-footer">
-            <div class="nav-element-wrapper">
-                <support-icon  class="nav-icon"></support-icon>
-                <span class="nav-name">support</span>
+            <div class="nav-element-wrapper"  @click="linkTo(5)">
+                <logout-icon  class="nav-icon"></logout-icon>
+                <span class="nav-name">log out</span>
             </div>
         </footer>
     </div>
@@ -29,7 +29,7 @@ import supportIcon from '../../svg_component/support_question.vue'
 
 export default {
     components: {
-        'home-icom':homeIcom,
+        'home-icom':homeIcom,    
         'calendar-icon':calendarIcon,
         'taskboard-icon':taskboardIcon,
         'setting-icon':settingIcon,
@@ -41,20 +41,24 @@ export default {
     },
     data(){
         return{
-            navNames:["home","calendar","task board","setting","log out"],
+            navNames:["home","calendar","task board","setting","support"],
         }
     },
     computed:{
 
     },
     methods:{
+        matchCurrentPath(index){
+        
+            return this.$route.name.toLowerCase() == this.navNames[index].trim();
+        },//matching which current path and icon name for distinguish where is the user  
         navIcons(index){
             switch(index){
                 case 0 : return homeIcom;
                 case 1 : return calendarIcon;
                 case 2 : return taskboardIcon;
                 case 3 : return settingIcon;
-                case 4 : return logoutIcon;
+                case 4 : return supportIcon;
             }
         },//variable for dynamic component,it used for nav-icon
         linkTo(index){
@@ -66,7 +70,8 @@ export default {
                 case 1 : router.push('/home/calendar');break;
                 case 2 : router.push('/home/taskBoard');break;
                 case 3 : router.push('/home/setting');break;
-                case 4 : firebase.auth().signOut();router.push('/');break;
+                case 4 : router.push('/');break;
+                case 5 : firebase.auth().signOut();router.push('/');break;
             }  
 
         }//when the nav element was clicked, this event redirect to next destination
@@ -77,17 +82,20 @@ export default {
 <style scoped>
 .container{
     width: 5.75rem;
+    min-width: 5.75rem;
     height: 100vh;
+    min-height: 550px;
     background: var(--dark-blue);
     display: grid;
     grid-template-rows: 1fr 10fr 1fr;
 
     overflow: hidden;
     transition: 0.5s;
-   
+    
 }
 .container:hover{
     width: 20rem;
+    min-width: 20rem;
 }
 
 .nav-header{
@@ -107,14 +115,14 @@ export default {
     
 }
 .nav-body{
-  
+    margin-top: 0.25rem;
     display: grid;
-    grid-auto-rows: 6.5rem;
+    grid-auto-rows: 6.25rem;
 
 }
 .nav-element-wrapper{
     width:20rem;
-    height: 6.5rem;
+    height: 6.25rem;
     padding: 0 1.5rem;
     
     
@@ -124,12 +132,15 @@ export default {
     cursor: pointer;
 
 }
+.current-path{
+    background: rgba(255,255,255,0.3);
+}
 .nav-element-wrapper:hover{
     background: rgba(255,255,255,0.3);
 }
 
 .nav-icon{
-    width: 2.35rem;
+    width: 2.25rem;
     margin-right: 3rem;
     --icon-color:var(--light-blue);
 }
@@ -153,5 +164,54 @@ export default {
  
     width: 100%;
 
+}
+@media screen and (max-height: 650px){
+.nav-body{
+  
+
+    grid-auto-rows: 5rem;
+
+}
+.nav-element-wrapper{
+
+    height: 5rem;
+
+
+}
+.nav-icon{
+    width: 2rem;
+
+}
+.nav-name{
+
+    font-size: 1.5rem;
+    padding-bottom: 0.125rem
+
+
+}
+}
+@media screen and (max-height:1370px){
+.nav-body{
+  
+
+
+
+}
+.nav-element-wrapper{
+
+
+
+
+}
+.nav-icon{
+   
+
+}
+.nav-name{
+
+
+
+
+}
 }
 </style>

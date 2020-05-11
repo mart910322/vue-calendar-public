@@ -85,6 +85,7 @@ export default {
     font-size: 2rem;
 }
 .content{
+    display: block;
     
     line-height: 2rem;
     font-weight: 300;
