@@ -359,7 +359,7 @@ export default {
                     this.endingAction(true);
         
                     this.errorText = err;
-                    console.log(err);
+                    console.log(err );
                 })
    
             }
