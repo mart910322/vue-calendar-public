@@ -1,12 +1,13 @@
 <template>
-    <div class="container" >
+
+    <div class="container" :class="{ 'show':mobileMenuShow }">
         <header class="nav-header" @click="$router.push('/home')"><h1 class="logo-text">logo</h1></header>
         <section class="nav-body">
             <div v-for="(cell,index) in navNames" :key="index" class="nav-element-wrapper" @click="linkTo(index)" :class="{'current-path': matchCurrentPath(index)}">
                 <component :is="navIcons(index)" class="nav-icon"></component>
                 <span class="nav-name">{{cell}}</span>
             </div>
-      
+    
         </section>
         <footer class="nav-footer">
             <div class="nav-element-wrapper"  @click="linkTo(5)">
@@ -15,6 +16,7 @@
             </div>
         </footer>
     </div>
+
 </template>
 
 <script>
@@ -27,6 +29,7 @@ import settingIcon from '../../svg_component/setting_slim_line.vue'
 import logoutIcon from '../../svg_component/logout_door.vue'
 import supportIcon from '../../svg_component/support_question.vue'
 
+import {mapState} from 'vuex'
 export default {
     components: {
         'home-icom':homeIcom,    
@@ -45,7 +48,9 @@ export default {
         }
     },
     computed:{
-
+        ...mapState([
+            'mobileMenuShow'
+        ])
     },
     methods:{
         matchCurrentPath(index){
@@ -90,7 +95,7 @@ export default {
     grid-template-rows: 1fr 10fr 1fr;
 
     overflow: hidden;
-    transition: 0.5s;
+    transition: 0.5s ;
     
 }
 .container:hover{
@@ -190,28 +195,25 @@ export default {
 
 }
 }
-@media screen and (max-height:1370px){
-.nav-body{
-  
+@media screen and (max-width:768px){
+.container{
 
+    width: 20rem;
+    min-width: 20rem;
 
-
-}
-.nav-element-wrapper{
-
-
-
+    overflow: hidden;
+    min-height: 300px;
 
 }
-.nav-icon{
-   
+
+.container.show{
+
+
+    /* this effect better than display transition, but it will trigger a bug on ios*/
 
 }
-.nav-name{
-
-
-
-
+.container.show .nav-name{
+    opacity: 1; 
 }
 }
 </style>

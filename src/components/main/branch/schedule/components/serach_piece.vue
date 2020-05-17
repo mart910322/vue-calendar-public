@@ -47,6 +47,7 @@ export default {
 
     display: grid;
     grid-template-columns: 1fr 2.5rem;
+
 }
 .search-typing-area{
     width: 100%;
@@ -71,5 +72,10 @@ export default {
 
     
 
+}
+@media screen and (max-width: 500px){
+.container{
+    grid-auto-rows: 2.5rem;
+}   
 }
 </style>

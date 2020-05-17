@@ -1,15 +1,15 @@
 <template>
     <div class="container">
         <header class="title">
-            <div class="title-text">{{ titleDate }}'s schedule</div>
+            <div class="title-text">{{ titleDateLocal  }}'s schedule</div>
             <div class="booking-btn" @click="toggleBookingState">+ book appointment </div>
         </header>
         <section class="schedule-events-container">
-            <div class="event-wrapper" v-for="({title,content,startTime,endTime,duringTime},index) in handledTimeTableData" :key="index">
+            <div class="event-wrapper" v-for="({title,content,startTime,endTime,duringTime,ref,isItRegular},index) in handledTimeTableData" :key="index">
      
                 <div class="event-date">
                     <div class="month-and-day">
-                        <span class="month">{{ monthsName[startTime.getMonth()] }}</span>
+                        <span class="month">{{ monthsName[startTime.getMonth()]  }}</span>
                         <span class="day">{{ startTime.getDate() }}</span>
                     </div>
                     <div class="during-time">
@@ -23,23 +23,25 @@
                     </div>
                 </div>
                 <div class="event-content-wrapper">
-                    <div class="event-title">{{ title }}</div>
+                    <div class="event-title">{{ title }}<span v-if="duringTime.hour > 24" class="cross-day-end-time">{{" " + monthsName[endTime.getMonth()] + " " + endTime.getDate() + " end"}}</span></div>
                     <div class="event-datail">{{ content }}</div>
                 </div>
                 <div class="event-menu-btn-wrapper" :class="{'show':currentShowingMenu == index}">
                     <three-dots-icon class="event-menu-btn" @iconClicked="showMenu(index)" :class="{'show':currentShowingMenu == index}"></three-dots-icon>
              
-                    <div class="menu-wrapper"  v-click-outside="showMenu" >
-                        <div class="menu-option" v-for="(cell,index) in menuicons" :key="index" >
-
-                            <span class="menu-option-name">{{ menuNames[index] }}</span>
+                    <div class="menu-wrapper"  v-click-outside="showMenu" @click.self="showMenu(index)">
+                        <div class="menu-option" v-for="(cell,optionIndex) in menuicons" :key="optionIndex" @click="menuEventsHandle(optionIndex,ref,isItRegular)">
                             <component :is="cell" class="menu-icon"></component>
+                            <span class="menu-option-name">{{ menuNames[optionIndex] }}</span>
+                            
                             
                         </div>
                     </div>
                 </div>
             </div>
             <div v-if="handledTimeTableData.length == 0" class="no-event-propmt">no result...</div>
+            <note-and-to-do class="note-mobile"></note-and-to-do>
+            
 
         </section>
     </div>
@@ -53,19 +55,41 @@ import cancelIcon from '../../../../svg_component/calendar_cancel.vue'
 import rescheduleIcon from '../../../../svg_component/calendar_reschedule.vue'
 import editScheduleIcon from '../../../../svg_component/edit_pan.vue'
 
+import noteAndToDoPiece from './notes_to_do_piece.vue'
 export default {
     components:{
         'three-dots-icon':threeDotsIcon,
+        'note-and-to-do':noteAndToDoPiece,
         cancelIcon,
         rescheduleIcon,
-        editScheduleIcon
+        editScheduleIcon,
+
+
+    },
+    mounted(){
+        
+        let self = this;
+        function myFunction(x) {
+            if (x.matches) { // If media query matches
+            
+                self.titleDateLocal ='day';
+            } else {
+            
+                self.titleDateLocal = self.titleDate;
+            }
+        }
+
+        var x = window.matchMedia("(max-width: 550px)")
+        x.addListener(myFunction);
+
 
     },
     data(){
         return{
             monthsName:["JAN","FEB","MAR","APR","MAY","JUN","JULY","AUG","SEP","OCT","NOV","DEC"],
             menuicons:[cancelIcon,rescheduleIcon,editScheduleIcon],
-            menuNames:['Cancel','Reschedule','Edit schedule'],
+            menuNames:['Cancel & Delete','Reschedule','Edit schedule'],
+            titleDateLocal:'day', 
 
  
             currentShowingMenu:null,
@@ -122,7 +146,12 @@ export default {
     },
     methods:{
         ...mapMutations([
-            'toggleBookingState'
+            'toggleBookingState',
+            'showAlert'
+
+        ]),
+        ...mapActions([
+            'cancelSchedule'
         ]),
         formatDate(date){
          
@@ -139,12 +168,35 @@ export default {
 
         },
         showMenu(index){
+
             if(this.currentShowingMenu == index){
                 this.currentShowingMenu = null;
                 return;
             }
             this.currentShowingMenu = index;
-        }//the number of currentShowingMenu equal the number of a menu will show
+        },//the number of currentShowingMenu equal the number of a menu will show
+
+        menuEventsHandle(index,ref,isItRegular){
+            //this.showMenu(index); //clickout directive handle this
+            
+
+            if(index == 0){
+                this.showAlert({msg:'Are you sure you are going to delete this?',needCancel:true,func:this.cancelSchedule,funcChild:{ref,isItRegular}});
+                //                showing up the alert ,then execute the function which wrote in func ^ if user clicked  yes
+            }
+            if(index == 1){
+                console.log(index,ref,isItRegular);
+             
+            }
+            if(index == 2){
+                console.log(index,ref,isItRegular);
+            }
+
+
+        },
+        testingConsole(){
+            console.log('asdasdasd');
+        }
 
 
     }
@@ -159,6 +211,8 @@ export default {
     background: var(--white);
     width: 100%;
     height: 100%;
+    min-height: 50rem;
+    padding-bottom: 6rem;
 }
 header.title{
     display: flex;
@@ -264,6 +318,11 @@ header.title{
     font-weight: 400;
     font-size: 1.25rem;
     margin-bottom: 0.25rem;
+
+}
+.cross-day-end-time{
+    margin-left: 0.5rem;
+    color: var(--normal-blue)
 }
 .event-datail{
     font-weight: 300;
@@ -290,7 +349,7 @@ header.title{
 }
 .menu-wrapper{
     position: absolute;
-    z-index: 1000000;
+    z-index: 10;
     right: 0;
     transform: translateX(100%);
     width: 15rem;
@@ -303,29 +362,44 @@ header.title{
 
 .menu-option{
     cursor: pointer;
+    /*
     display: flex;
     justify-content: space-between;
     align-items:center;
+    */
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    align-items: center;
     height: 2.5rem;
     padding: 0 0.25rem;
 
    
 }
-.menu-option:hover{
-    opacity: 0.7;
-    background: var(--normal-blue);
-    color: var(--white);
-    --icon-color:var(--white);
-}
+
 .menu-option:not(:last-of-type){
     border-bottom: 1px solid var(--light-gray);
 }
 .menu-option-name{
-    font-size: 1.4rem;
+    font-size: 1.3rem;
+    opacity: 0.8;
+    
 }
 .menu-icon{
-    width: 1.475rem;
+    --icon-color:var(--gray-border);
+    width: 1.4rem;
 }
+.menu-option:hover .menu-icon{
+
+
+    --icon-color:var(--normal-blue);
+}
+.menu-option:hover .menu-option-name{
+    font-size: 1.4rem;
+    opacity: 1;
+}
+
+
+
 .event-menu-btn.show{
     opacity: 1;
 }
@@ -333,9 +407,163 @@ header.title{
     opacity: 1;
 }
 .no-event-propmt{
+    height: 2.5rem;
     font-weight: 400;
     font-size: 1.5rem;
     margin: 0 0.5rem;
     color: var(--normal-blue);
+}
+.note-mobile{
+    display: none;
+}
+@media screen and (max-width: 1065px){
+.container{
+    box-shadow:none;
+
+}    
+.event-menu-btn-wrapper.show .menu-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+.menu-wrapper{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(0);
+
+    box-shadow: none;
+
+    background: rgba(0,0,0,0.5);
+ 
+
+}   
+.menu-option{
+    padding: 0 0.75rem;
+    background: var(--white);
+    height: 4.5rem;
+    grid-template-columns: 3rem 1fr;
+} 
+.menu-option:not(:last-of-type){
+    border-bottom: 1px solid var(--gray-border);
+}
+.menu-option-name{
+    font-size: 1.5rem;
+
+    
+}
+.menu-icon{
+    --icon-color:var(--gray-border);
+    width: 1.75rem;
+}
+
+.menu-option:hover .menu-option-name{
+    font-size: 1.65rem;
+
+}
+
+
+.note-mobile{
+    display: grid;
+}
+
+.menu-wrapper .menu-option{
+ 
+}
+.event-menu-btn-wrapper.show .menu-option{
+    animation:  0.5s menuSliderTop ;
+
+
+}
+@keyframes menuSliderTop {
+    0%{
+        transform: translateY(300%);
+    }
+    100%{
+        transform: translateY(0%);
+    }
+}
+
+}
+@media screen and (max-width: 768px){
+header.title{
+
+    padding: 0 0.25rem 0 0.25rem;
+
+
+
+}
+
+}
+@media screen and (max-width: 550px){
+.event-wrapper{
+
+    grid-template-columns:  1fr 3rem;
+    grid-auto-rows: 2.5rem minmax(7.25rem,7.25rem);
+
+    border-bottom: 1px solid var(--light-gray);
+   
+}
+.event-date{
+    grid-column: 1 / 4;
+
+
+    display: grid;
+    grid-template-columns:5.25rem 1fr 7.5rem; 
+    align-items: center;
+    grid-column-gap: 0.5rem;
+
+    border: none;
+
+
+    padding: 0 1% 0 2%;    
+    background: var(--light-blue);
+
+}
+.month-and-day{
+
+
+    font-size: 1.5rem;
+
+
+}
+
+.during-time{
+
+
+    justify-content:flex-start;   
+    font-size: 1.325rem;
+
+  
+}
+.day{
+    margin-bottom: 0.15rem
+}
+.during-time-total{
+   
+
+    font-size:1.3rem;
+
+    margin-top: 0rem;
+
+}
+.event-title{
+
+    font-size: 1.425rem;
+    margin-bottom: 0rem;
+}
+.event-datail{
+
+    font-size: 1.2rem;
+   
+}
+.event-menu-btn-wrapper{
+
+    justify-content: center;
+
+
+}
 }
 </style>

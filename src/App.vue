@@ -5,6 +5,7 @@
         <custom-alert></custom-alert>
         <loading></loading>
         <booking-board></booking-board>
+        <adding-task-note-borad></adding-task-note-borad>
 
     </div>
 </template>
@@ -12,6 +13,7 @@
 import customAlert from './components/template/alert_custom.vue'
 import loading from './components/template/loading_animated_component.vue'
 import bookingBoard from './components/global_component/new_booking_board.vue'
+import addingTaskNoteBorad from './components/global_component/new_task_note_board.vue'
 export default {
     data(){
         return{
@@ -25,6 +27,7 @@ export default {
       'custom-alert':customAlert,
       'loading':loading,
       'booking-board':bookingBoard,
+      'adding-task-note-borad':addingTaskNoteBorad
     },
     computed:{
     

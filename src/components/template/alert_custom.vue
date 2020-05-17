@@ -2,13 +2,13 @@
     <div class="container" v-if="doesAlertShow">
         <div class="wrapper">
             <div class="msg-area">
-                <div class="icon" ><svg viewBox="0 0 100 100" fill="currentColor"><path d="M50,7A43,43,0,1,1,7,50,43.06,43.06,0,0,1,50,7m0-7a50,50,0,1,0,50,50A50,50,0,0,0,50,0Z"/><path d="M75.3,35.8,42.1,69a3.54,3.54,0,0,1-2.6,1,3.7,3.7,0,0,1-2.6-1L24.7,56.8a3.44,3.44,0,0,1,0-4.8,3.25,3.25,0,0,1,2.4-1,3.1,3.1,0,0,1,2.4,1l10,10,31-31a3.25,3.25,0,0,1,2.4-1,3.1,3.1,0,0,1,2.4,1A3.44,3.44,0,0,1,75.3,35.8Z"/></svg></div>
-
+                <tick-circle class="icon" v-if="!needCancel"></tick-circle>
+                <question-circle class="icon" v-if="needCancel"></question-circle>
                 <span class="msg">{{ alertMsg }}</span>
             </div>
             <div class="btn-area">
-           
-                <div class="ok btn" @click="unshowAlert">ok</div>
+                <div class="cancel btn" v-show="needCancel" @click="alertEventHandle">cancel</div>
+                <div class="ok btn" @click="alertEventHandle({func:funcContain,funcChild:funcChild})">{{needCancel ? 'yes' : 'ok' }}</div>
             </div>
         </div>
 
@@ -17,6 +17,8 @@
 
 <script>
 import {mapState,mapMutations} from 'vuex'
+import tickCircle from '../svg_component/tick_circle.vue'
+import questionCircle from '../svg_component/question_circle.vue'
 
 export default {
     data(){
@@ -27,16 +29,25 @@ export default {
 
         }
     },
+    components:{
+        'tick-circle':tickCircle,
+        'question-circle':questionCircle
+    },
     computed:{
         ...mapState([
             'doesAlertShow',
-            'alertMsg'
+            'alertMsg',
+            'needCancel',
+            'funcContain',
+            'funcChild'
         ])
     },
     methods:{
         ...mapMutations([
-            'unshowAlert'
-        ])
+            'alertEventHandle'
+        ]),
+
+
     },
     created(){
 
@@ -61,11 +72,11 @@ export default {
 .wrapper{
     width: 27.5rem;
     height: 20rem;
-    background: white;
+
     border-radius: 10px;
 }
 .msg-area{
-    border-radius: 10px 10px 0 0;
+   
     width: 100%;
     height: 77.5%;
     padding: 0 5% 2.5% 5%;
@@ -78,9 +89,11 @@ export default {
 }
 .icon{
     width: 5rem;
-    color: white;
+    height: 5rem;
+    --icon-color: white;
     margin-bottom: 1rem;
 }
+
 .msg{
     color: white;
     font-weight: 400;
@@ -91,8 +104,9 @@ export default {
     height: 22.5%;
 
     display: grid;
-    grid-template-columns: repeat(1,1fr);
-  
+    grid-template-columns: repeat(2,1fr);
+    background: white;
+    border-radius:  0 0 10px 10px;
 
 
 }
@@ -118,9 +132,10 @@ export default {
 
 
 .ok{
- 
-    border-radius: 0 0 10px 0;
+    
+
     border-left:0.5px solid rgba(0,0,0,0.3);
+    grid-column: 2/3; 
 
 }
 </style>

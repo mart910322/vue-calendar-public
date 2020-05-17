@@ -39,7 +39,7 @@
                 <img src="../../assets/landing_content_image/work_calendar.jpg" slot="picture">
                 <span slot="title">Calendar and schedule</span>
                 <span slot="content">
-                    Manage and track your time effectively. Let you know where has the time gone. Then reduce unnecessary time spending. And get efficient lifestyle. Even do more work in a day                 
+                   It's a management panel for tracking and planning schedule.                   
                 </span>
             </landing-article>
 
@@ -249,6 +249,22 @@ main.function-box{
     font-size: 1.35rem;
 
 
+}
+.fade-left-enter-active,.fade-left-leave-active{
+    transition: 0.75s ease-out;
+    
+}
+.fade-left-leave-active{
+    position: absolute;
+}
+.fade-left-enter,.fade-left-leave-to{
+    opacity: 0;
+
+    transform: translateX(0%);
+}
+.fade-left-leave,.fade-left-enter-to{
+    opacity: 1;
+    transform: translateX(0%)
 }
 }
 </style>

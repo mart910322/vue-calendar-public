@@ -15,15 +15,17 @@
                         <serach-piece></serach-piece>
                     </div>
 
-                    <div class="date-selector">
+                    <div class="date-selector-area">
 
                         <div class="date-selector-mobile"><!-- not ready yet-->
-                            <div class="calendar-icon"></div>
-                            <div class="inputDateWrapper"><input type="date" v-model="currentDate"></div>                          
-                            <div classs="showDefaultBtn"></div>
+                        
+                            <div class="inputDateWrapper">
+                                <input type="date" v-model="currentDate" ref="dateSelector" class="dateSelector" :data-today-name="titleDate" @change="$refs.calendar.emitDate()">
+                                <calendar-icon class="calendar-icon" @iconClicked="$refs.calendar.initializeDate()"></calendar-icon>                          
+                            </div>                          
                         </div>
 
-                        <calendar @dayChanged="changeInputDateValue($event)" ref="calendar"></calendar>
+                        <calendar @dayChanged="changeInputDateValue($event)" ref="calendar" class="calendar"></calendar>
                     </div>
 
                     <div class="notes-board">
@@ -44,6 +46,7 @@ import calendarTemplate from '../../../template/calendar.vue'
 import noteAndToDoPiece from './components/notes_to_do_piece.vue'
 import scheduleBoard from './components/schedule_borad.vue'
 import serachPiece from './components/serach_piece.vue'
+import calendarIcon from '../../../svg_component/calendar_square.vue'
 
 import {mapState,mapActions,mapMutations,mapGetters} from 'vuex'
 
@@ -56,18 +59,21 @@ export default {
         'calendar':calendarTemplate,
         'note-and-to-do':noteAndToDoPiece,
         'schedule-board':scheduleBoard,
-        'serach-piece':serachPiece
+        'serach-piece':serachPiece,
+        'calendar-icon':calendarIcon
     },
     computed:{
         ...mapState([
             'timeTableData',
+            'titleDate'
             
 
         ]),
         ...mapGetters([
             'secondsFormatCurrentDay',
             'secondsFormatEndDay'
-        ])
+        ]),
+
     },
     data(){
         return{
@@ -88,6 +94,7 @@ export default {
                // this.$store.state.currentDay = {year,month,day};
   
                 this.$refs.calendar.changeDay(year,month,day);    
+            
                          
             }
 
@@ -119,10 +126,17 @@ export default {
         },//change input[type:date].value when the calendar is changed 
         fetchTimetable(year,month,day){
             let startDate = new Date(year,month,day);
-            let nextDate = new Date(year,month,day + 2);
+            let nextDate = new Date(year,month,day + 1);
 
-            this.getUserTimetable({startDate:startDate, endDate: nextDate});
+            this.getUserTimetable({startTimeLine:startDate, endTimeLine: nextDate});
         },  
+        test(){
+            console.log(this.$refs.dateSelector)
+            let dateSelector = this.$refs.dateSelector;
+
+ 
+
+        }
         
     },
     mounted(){
@@ -154,7 +168,8 @@ export default {
     
     display: grid;
     grid-template-columns: 3fr 19rem;
-    grid-column-gap:3rem; 
+    grid-column-gap:2vw; 
+    padding: 0 1rem;
 
 }
 
@@ -168,7 +183,9 @@ export default {
 }
 .schedule-board{
 
-    height: 50rem;
+ 
+
+
   
     
 }
@@ -178,7 +195,7 @@ export default {
     width: 100%;
    
 }
-.date-selector{
+.date-selector-area{
 
     
 
@@ -186,13 +203,13 @@ export default {
 .date-selector-mobile{
     display: none;
 }
-.date-selector-mobile .calendar-icon{
+.calendar-icon{
 
 }
-.date-selector-mobile .inputDateWrapper{
+.inputDateWrapper{
 
 }
-.date-selector-mobile .showDefaultBtn{
+.showDefaultBtn{
 
 }
 
@@ -204,5 +221,128 @@ export default {
     height: 10rem;
 
 }
+@media screen and (max-width: 1065px){
+.content{
 
+/*
+    width: 100%;
+    
+    margin: 2rem auto;
+*/
+    max-width: 700px;
+    display: flex;
+    flex-direction: column-reverse;
+
+    padding: 0rem;
+    
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16)
+
+}  
+.calendar{
+    display: none;
+}
+.function-pieces-wrapper{
+    
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    grid-row-gap: 0rem;
+    padding-top: 0rem;
+   
+}
+.date-selector-area{
+
+    
+
+}
+.inputDateWrapper{
+    cursor: pointer;
+    display: flex;
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+}
+.date-selector-mobile{
+    display: block;
+}
+
+.dateSelector{
+    width: 100%;
+    position: relative;
+
+    outline: none;
+    border: none;
+    background: none;
+
+    cursor: text;
+    font-size: 1.2rem;
+}
+.dateSelector::after{
+    content: attr(data-today-name);
+    position: absolute;
+    right: 1.75rem;
+}
+.calendar-icon{
+    padding: 0.6rem;
+    width: 2.575rem;
+    height: 2.5rem;
+    border-left: 1px solid var(--gray-border);
+
+    --icon-color:var(--gray-border);
+    
+}
+
+
+
+.dateSelector::-webkit-clear-button {
+    display: none
+}
+.dateSelector::-webkit-inner-spin-button{
+    display: none
+}
+.dateSelector::-webkit-calendar-picker-indicator{
+    cursor: pointer;
+    opacity:1;
+
+}
+.notes-board{
+    display: none;
+}
+}
+@media screen and (max-width: 768px){
+.content{
+
+
+
+    margin: 0.05rem auto;
+
+    max-width: 100%;
+
+
+} 
+   
+.schedule-container{
+
+    width:100vw;
+
+
+
+}    
+}
+@media screen and (max-width: 500px){
+.function-pieces-wrapper{
+    
+
+    grid-template-columns: 1fr;
+    grid-auto-rows: minmax(2.5rem,auto)
+
+   
+}  
+.inputDateWrapper{
+
+    height: 2.5rem;
+    
+}
+.dateSelector{
+    font-size: 1.25rem;
+}
+}
 </style>

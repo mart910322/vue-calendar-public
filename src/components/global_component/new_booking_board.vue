@@ -1,8 +1,8 @@
 <template>
-    <div class="back-borad" v-if="doesBookingBoardShow">
+    <div class="back-board" v-if="doesBookingBoardShow">
         <div class="container">
             <header class="head">
-                <div class="title">New booking appointment</div>
+                <div class="title">Booking appointment</div>
                 <cross-icon class="cross icon" @iconClicked="cancelBooking"></cross-icon>
             </header>
             <section class="typing-title-area">
@@ -38,38 +38,38 @@
                     </div>
                     <div class="not-regular row" v-if="!isItRegular">
                         <clock-icon class="clock icon"></clock-icon>
-                        <select class="select-year start date-option" v-model="norRegularStartTime.year">
+                        <select class="select-year start date-option" v-model="notRegularStartTime.year">
                             <option :value="2020 + index" v-for="(year,index) in new Array(30)" :key="index" >{{ 2020 + index }}</option>
                         </select>
 
-                        <select class="select-month start date-option "  v-model="norRegularStartTime.month">
+                        <select class="select-month start date-option "  v-model="notRegularStartTime.month">
                             <option :value="index" v-for="(month,index) in monthsName" :key="index" >{{ month}}</option>
                         </select>     
 
-                        <select class="select-day start date-option" v-model="norRegularStartTime.day">
+                        <select class="select-day start date-option" v-model="notRegularStartTime.day">
                             <option :value="index + 1" v-for="(day,index) in new Array(31)" :key="index">{{ index + 1 | plusZero}}</option>
                         </select>  
 
-                        <select class="select-time start date-option" v-model="norRegularStartTime.time">
-                            <option :value="index" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
+                        <select class="select-time start date-option" v-model="notRegularStartTime.time">
+                            <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
                         </select>  
 
                         <span class="separate-symbol">-</span>
 
-                        <select class="select-time start date-option"  v-model="norRegularEndTime.time">
-                            <option :value="index" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
+                        <select class="select-time start date-option"  v-model="notRegularEndTime.time">
+                            <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
                         </select> 
                         
 
-                        <select class="select-day end date-option" v-model="norRegularEndTime.day">
+                        <select class="select-day end date-option" v-model="notRegularEndTime.day">
                             <option :value="index + 1" v-for="(day,index) in new Array(31)" :key="index">{{ index + 1 | plusZero}}</option>
                         </select>    
                         
-                        <select class="select-month end date-option" v-model="norRegularEndTime.month">
+                        <select class="select-month end date-option" v-model="notRegularEndTime.month">
                             <option :value="index" v-for="(month,index) in monthsName" :key="index" >{{  month }}</option>
                         </select>  
 
-                        <select class="select-year-end date-option" v-model="norRegularEndTime.year">
+                        <select class="select-year-end date-option" v-model="notRegularEndTime.year">
                             <option :value="2020 + index" v-for="(year,index) in new Array(30)" :key="index">{{ 2020 + index }}</option>
                         </select>
 
@@ -89,8 +89,9 @@
             <transition name="fade">
                 <footer class="floor" v-if="didYesOrNoClick">
                     <div class="btn-container">
-                        <div class="cancel btn" @click="cancelBooking">cancel</div>
                         <div class="save btn" @click="dataFormatErrorChecker">save</div>
+                        <div class="cancel btn" @click="cancelBooking">cancel</div>
+                        
                     </div>
                 </footer>
             </transition>
@@ -164,17 +165,17 @@ export default {
             regularStartTime:'00:00',
             regularEndTime:'00:00',
 
-            norRegularStartTime:{
+            notRegularStartTime:{
                 year:2020,
                 month:0,
                 day:0,
-                time:'0'
+                time:'00:00'
             },
-            norRegularEndTime:{
+            notRegularEndTime:{
                 year:2020,
                 month:0,
                 day:0,
-                time:'0'
+                time:'00:00'
             },
             errorText:'',
 
@@ -207,8 +208,8 @@ export default {
             this.regularStartTime = '00:00';
             this.regularEndTime = '00:00';
 
-            this.norRegularStartTime = initializeDate();
-            this.norRegularEndTime = initializeDate();
+            this.notRegularStartTime = initializeDate();
+            this.notRegularEndTime = initializeDate();
 
 
             function initializeDate(){
@@ -218,7 +219,7 @@ export default {
                     year:getToday.getFullYear(),
                     month:getToday.getMonth(),
                     day:getToday.getDate(),
-                    time:'0'
+                    time:'00:00'
                 }
             }
             
@@ -228,8 +229,7 @@ export default {
                             { day:'SAT', wasSelected:false }];            
         },
         cancelBooking(){
-            this.didYesOrNoClick = false;
-            this.toggleBookingState();
+            this.endingAction();
         },
         selectingDays(index){
 
@@ -237,9 +237,70 @@ export default {
      
         },
         dataFormatErrorChecker(){
-            this.newAppointment();
+            let formatedStartDate,formatedEndDate,startTime,endTime ;
+
+
+            if(this.title.length > 25){
+                    this.errorText = 'title only can be 25 character';
+                    return
+            }
+       
+            if(this.isItRegular){
+                
+                var daySelectedChecker = this.dayNames.filter(eachDay => {
+                    return eachDay.wasSelected;
+                })
+        
+                if(daySelectedChecker.length == 0){
+                    this.errorText = 'you have not selected any day';
+                    return
+                }
+
+                [startTime,endTime ] = [this.formatTime(this.regularStartTime),this.formatTime(this.regularEndTime)];
+              
+
+
+                if(startTime[0] + startTime[1] > endTime[0] + endTime[1]){
+                    this.errorText = 'time format error'
+                    return                    
+                }
+
+                [formatedStartDate,formatedEndDate] = [this.regularStartTime,this.regularEndTime];
+
+            }else{
+                startTime = this.notRegularStartTime;
+                endTime = this.notRegularEndTime;
+
+                var formatedStartTime = this.formatTime(startTime.time);
+                var formatedEndTime = this.formatTime(endTime.time);
+     
+                [formatedStartDate,formatedEndDate] = [new Date(startTime.year,startTime.month,startTime.day,formatedStartTime[0],formatedStartTime[1] ),new Date(endTime.year,endTime.month,endTime.day,formatedEndTime[0],formatedEndTime[1] )];
+            
+                if(formatedStartDate.getTime > formatedEndDate.getTime()){
+                    this.errorText = 'time format error'
+                    return                         
+                }
+            
+                
+            }
+
+
+            this.errorText = '';
+            this.newAppointment(formatedStartDate,formatedEndDate);
         },
-        newAppointment(){
+        endingAction(DidItNeedLoading){
+            this.errorText = '';
+            this.getUserTimetable({startTimeLine:this.secondsFormatCurrentDay, endTimeLine: this.secondsFormatEndDay});
+            this.initializeAllData();
+            this.toggleBookingState();
+            if(DidItNeedLoading){
+                this.loading();
+            }
+        },//this a funtion for after the add new booking appointment has finished
+        newAppointment(startTime,endTime){
+
+
+
             this.loading();
             var currentUser = firebase.auth().currentUser;
 
@@ -260,34 +321,55 @@ export default {
                 db.collection('user-profile').doc(currentUser.uid).collection('user-timetable-regular').add({
                     title:this.title,
                     content:this.details,
-                    startTime:this.regularStartTime,
-                    endTime:this.regularEndTime,
+                    startTime:startTime,
+                    endTime:endTime,
                     isItRegular:this.isItRegular,
                     days:days,
             
                  
                 }).then(() => {
-                    this.getUserTimetable({startDate:this.secondsFormatCurrentDay, endDate: this.secondsFormatEndDay});
-                    this.loading();
-                    this.initializeAllData();
-                    this.toggleBookingState();
 
+                    this.endingAction(true);
+      
                 }).catch(err => {
-                    this.getUserTimetable({startDate:this.secondsFormatCurrentDay, endDate: this.secondsFormatEndDay});
-                    this.loading();
-                    this.initializeAllData();
-                    this.toggleBookingState();
 
-                    this.errorText =err;
+                    this.endingAction(true);
+                    
+
+                    this.errorText = err;
                     console.log(err);
                 });
 
             }else{
-                console.log('asd');
+
+     
+
+                db.collection('user-profile').doc(currentUser.uid).collection('user-timetable').add({
+                    title:this.title,
+                    content:this.details,
+                    startTime:startTime,
+                    endTime:endTime,
+                    isItRegular:this.isItRegular,
+
+
+                }).then(() => {
+                    this.endingAction(true);
+           
+                }).catch(err => {
+                    this.endingAction(true);
+        
+                    this.errorText = err;
+                    console.log(err);
+                })
+   
             }
 
         },
-
+        formatTime(time){
+            var splitedTime = time.split(':');
+   
+            return [parseInt(splitedTime[0]),parseInt(splitedTime[1])]
+        }
 
     },
     created(){
@@ -299,7 +381,7 @@ export default {
 </script>
  
 <style scoped>
-.back-borad{
+.back-board{
     position:fixed;
     width: 100%;
     height: 100%;
@@ -357,9 +439,13 @@ export default {
     border: none;
     border-bottom: 1.5px solid var(--gray-border);
     outline: none;
-    font-size: 1.65rem;
+    font-size: 1.675rem;
     font-weight: 300;
     margin-top: 0.75rem;
+    padding: 0.15rem 0;
+}
+.appointment-title:focus{
+   border-bottom: 1.5px solid var(--normal-blue);
 }
 .is-it-regular-question-area{
     display: grid;
@@ -405,16 +491,20 @@ export default {
 .btn.yes{
     background: var(--normal-blue);
     color: var(--white);
+    opacity: 0.8;
 }
 
 .btn.no{
     border: 1px solid var(--normal-blue);
     color: var(--normal-blue);
+    
 }
-.btn:hover{
-    background: var(--dark-gray);
+.btn.yes:hover{
+    opacity: 1;
+}
+.btn.no:hover{
+    background: var(--normal-blue);
     color: var(--white);
-    border:0;
 }
 .fade-enter-active,.fade-leave-active{
     transition: opacity 0.5s ease-in;
@@ -544,19 +634,23 @@ select.date-option::-ms-expand {
 .btn.cancel{
     border: 1px solid var(--normal-blue);
     color: var(--normal-blue);
-    margin-right: 1rem;
     
-}
-.btn.cancel:hover{
-    color: var(--white);
-    border:1px solid var(--dark-gray);
+    
 }
 .btn.save{
     background: var(--normal-blue);
     color:var(--white);
+    margin-right: 1rem;
+    opacity: 0.8;
   
 }
 .btn.save:hover{
-    background: var(--dark-gray);
+    opacity: 1;
 }
+.btn.cancel:hover{
+    background: var(--normal-blue);
+    color: var(--white);
+}
+
+
 </style>

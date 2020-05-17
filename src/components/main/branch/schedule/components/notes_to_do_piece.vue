@@ -4,40 +4,71 @@
             <span class="title-text">Notes / To do list</span>
         </header>
         <section class="notes">
-            <div class="note" v-for="(task,index) in taskData" :key="index">
+            <div class="note" v-for="(task,index) in taskData" :key="index" @click="finished(task.ref)">
                 <span class="task-title">{{task.title}}</span>
                 <div class="tick-box"><span class="tick-symbol">&#10003;</span></div>
             </div>
+            <div class="have-no-note-text" v-if="taskData.length == 0">no result...</div>
         </section>
         <footer class="btn-container">
-            <div class="btn">+add a new note</div>
+            <div class="btn" @click="toggleNewTaskState">+add a new note</div>
         </footer>
     </div>
 </template>
 
 <script>
-import {mapState,mapActions} from 'vuex'
+import {mapState,mapActions,mapMutations} from 'vuex'
+import db from '../../../../../firebase/firebaseinit.js'
+import firebase from 'firebase'
 export default {
     computed:{
         ...mapState([
-            'taskData'
+            'taskData',
+
         ])
     },
     methods:{
         ...mapActions([
-            'getUserTask'
-        ])
+            'getUserTask',
+            
+        ]),
+        ...mapMutations([
+            'toggleNewTaskState' ,
+            'loading'
+        ]),
+        finished(ref){
+            this.loading();
+            var currentUser = firebase.auth().currentUser;
+            db.collection('user-profile').doc(currentUser.uid).collection('user-task').doc(ref).update({
+                isItFinished:true
+            }).then(() => {
+                this.getUserTask().then(() => {
+                    this.loading();
+                });
+                
+                
+            }).catch(err => {
+                console.log(err);
+                this.loading();
+            })
+
+        },
+
     },
+
     mounted(){
         this.getUserTask();
+        
     }
 }
 </script>
 
 <style scoped>
+
 .cotainer{
+
     width: 100%;
-    height: 20rem;
+    min-height: 20rem;
     background: var(--white);
     box-shadow: 0px 3px 6px rgba(0,0,0,0.16);
     border-radius: 6px;
@@ -47,6 +78,8 @@ export default {
     grid-template-rows: 2.75rem 1fr 3rem;
 
     color:var(--black);
+
+    
 }
 
 header.title{
@@ -141,5 +174,34 @@ footer.btn-container{
 }
 .btn:hover{
     opacity: 1;
+}
+.have-no-note-text{
+    font-size: 1.25rem;
+    font-weight: 300;
+}
+@media screen and (max-width: 1065px){
+header.title{
+    border-bottom: 1px solid var(--light-gray);
+    /*
+    background: var(--light-blue);
+    border-bottom: none;
+    */
+}    
+.cotainer{
+
+    box-shadow:none;
+    min-height: 12.5rem;
+
+}
+}
+
+@media screen and (max-width: 550px){
+header.title{
+
+
+    background: var(--light-blue);
+    border-bottom: none;
+ 
+}        
 }
 </style>

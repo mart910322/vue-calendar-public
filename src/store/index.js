@@ -10,21 +10,32 @@ export default new Vuex.Store({
         user:{
             
         },
+        mobileMenuShow:false,
+
+
         currentDay:{},
 
         titleDate:'',
         timeTableData:[],
+
         searchKeyword:'',
         
         taskData:[],
-        taskDataRefs:[],
+
         loading:false,
 
 
         doesAlertShow:false,
+        needCancel:false,
         alertMsg:'',
+        funcContain:null,
+        funcChild:null,
+
+
+
 
         doesBookingBoardShow:false,
+        doesNewTaskBoardShow:false,
 
 
         
@@ -38,7 +49,7 @@ export default new Vuex.Store({
 
         },
         secondsFormatEndDay({currentDay}){
-            var dateTransition = new Date(currentDay.year,currentDay.month,currentDay.day+ 2);
+            var dateTransition = new Date(currentDay.year,currentDay.month,currentDay.day+ 1);
             return dateTransition;
 
         },
@@ -81,7 +92,7 @@ export default new Vuex.Store({
 
             let handleTimeTableData = getter.filteredTimeTableData.map(eachData => {
 
-                var {title,content,startTime,endTime} = eachData ;
+                var {title,content,startTime,endTime,ref,isItRegular} = eachData ;
                 
       
                 startTime = new Date(eachData.startTime.seconds * 1000); 
@@ -99,9 +110,9 @@ export default new Vuex.Store({
                     var hourPart = Math.floor(timeClockFormat);
                     var minutesPart = timeClockFormat % 1 * 60 ;
                  
-                    if(minutesPart < 10){
+                    /*if(minutesPart < 10){
                         minutesPart = '0' + minutesPart.toString();
-                    }
+                    }*/
 
                     return{
                         hourPart,
@@ -117,6 +128,8 @@ export default new Vuex.Store({
                     content:content,
                     startTime:startTime,
                     endTime:endTime,
+                    ref:ref,
+                    isItRegular:isItRegular,
           
                     duringTime:{hour:hourPart,minutes:minutesPart}
                     /*
@@ -132,6 +145,9 @@ export default new Vuex.Store({
         }
     },
     mutations: {
+        toggleMobileMenuState(state){
+            state.mobileMenuShow = !state.mobileMenuShow
+        },
         currentDayGetter(state,date){
             state.currentDay = date;
            
@@ -145,23 +161,39 @@ export default new Vuex.Store({
             state.loading = !state.loading;
             
         },//toggle loading state
-        showAlert(state,msg){
+
+        showAlert(state,{msg,needCancel,func,funcChild}){
+            state.needCancel = needCancel;
             state.alertMsg = msg;
             state.doesAlertShow = true;
+            state.funcContain = func;
+            state.funcChild = funcChild;
+            
 
-        },
-        unshowAlert(state){
+        },//save the data to state and show the alert
+    
+        alertEventHandle(state,{func,funcChild}){
+     
+            if(func != null || func != undefined){
+                func(funcChild);
+            }
+
             state.doesAlertShow = false;
-        },
+        },//execute the function if user clicked yes
+
+
         formatDateTitle(state,dateVal){
             var dayNames =['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
             var dateValSplit = dateVal.split('-');
             var getDay = new Date(dateValSplit [0],parseInt(dateValSplit [1]) - 1,parseInt(dateValSplit [2]));
 
-            state.titleDate = dateVal + ' ' + dayNames [getDay.getDay()];
+            state.titleDate = dayNames [getDay.getDay()];
         },
         toggleBookingState(state){
             state.doesBookingBoardShow = !state.doesBookingBoardShow;
+        },
+        toggleNewTaskState(state){
+            state.doesNewTaskBoardShow = !state.doesNewTaskBoardShow;
         }
     },
     actions: {
@@ -204,7 +236,7 @@ export default new Vuex.Store({
 
                         commit('loading');//turn loading state to false
 
-                        commit('showAlert','Create account successful. please verify your email before the first time login')
+                        commit('showAlert',{msg:'Create account successful. please verify your email before the first time login',needCancel:false})
             
 
                         firebase.auth().signOut();
@@ -227,26 +259,28 @@ export default new Vuex.Store({
             });
             return registerState;
         },
-        getUserTimetable({commit,state},{startDate,endDate}){//this jsut fetch data. then the data will sent to handledTimeTableData of getter
+        getUserTimetable({commit,state},{startTimeLine,endTimeLine}){//this jsut fetch data. then the data will sent to handledTimeTableData of getter
 
-            state.timeTableData = [];//clean the variable
+           
             let currentUser = firebase.auth().currentUser;
 
             let returnTimeTableData = new Promise((resolve,reject) => {
 
                 db.collection('user-profile').doc(currentUser.uid).collection('user-timetable').get().then((snapshot) => {
                 //fetch data from firebase   
-
-                    let startTime,endTime;
+                    state.timeTableData = [];//clean the variable
+                    let startTime,endTime,indexCount = 0;
 
                     snapshot.forEach(doc => {
            
                         startTime = doc.data().startTime.seconds * 1000;
                         endTime = doc.data().endTime.seconds * 1000;//turn the time to nanosecond
                      
-                        if(startTime >= startDate &&  endTime  <= endDate){//filtering the data by time
-                            
+                        //if(startTime > startTimeLine &&  endTime  <= endTimeLine){//filtering the data by time
+                        if(!(startTime < startTimeLine && endTime < startTimeLine || startTime > endTimeLine && endTime > endTimeLine) ){    
                             state.timeTableData.push(doc.data());
+                            state.timeTableData[indexCount].ref = doc.ref.id;
+                            indexCount ++;
                         }
                 
                     });
@@ -257,7 +291,7 @@ export default new Vuex.Store({
                         
                         snapshot.forEach(doc => {
                             var data = doc.data();
-                            var dateStartPoint = new Date(startDate);
+                            var dateStartPoint = new Date(startTimeLine);
 
                             data.days.forEach(regularDay => {
 
@@ -272,9 +306,14 @@ export default new Vuex.Store({
                                         endTime:{seconds:formatedEndTime.getTime() / 1000},
                                         content:data.content,
                                         title:data.title,
+                                        isItRegular:data.isItRegular
                                     }
                                     state.timeTableData.push(toNotRegularFormat);
+                                    state.timeTableData[indexCount].ref = doc.ref.id;
+                                    indexCount ++;     
+                                                               
                                 }
+
 
                                 function timeFormater(timeString,year,month,date){     
                                     var splitTime = timeString.split(':').map(toInt => {
@@ -314,20 +353,25 @@ export default new Vuex.Store({
 
 
         },
-        getUserTask({commit,state}){
-            state.taskData = [];//clean the variable
+        getUserTask({commit,state},needFinishedTask){
+            
             let currentUser = firebase.auth().currentUser;
+            let indexCount = 0;
 
             let returnTaskData = new Promise((resolve,reject) => {
 
                 db.collection('user-profile').doc(currentUser.uid).collection('user-task').get().then((snapshot) => {
                     //fetch data from firebase   
-                 
+                    state.taskData = [];//clean the variable
                     snapshot.forEach(doc => {    
                         
-                    
-                        state.taskData.push(doc.data());  
-                        state.taskDataRefs.push(doc.ref.id);
+                        if(!doc.data().isItFinished || needFinishedTask){
+                            state.taskData.push(doc.data());  
+                            state.taskData[indexCount].ref = doc.ref.id;
+                            indexCount++;
+                        }
+
+    
 
                     });
                     resolve(state.taskData);
@@ -341,6 +385,32 @@ export default new Vuex.Store({
 
 
         },
+        cancelSchedule({commit,getters,dispatch},{ref,isItRegular}){
+            commit('loading');
+            let deleteSchedule = new Promise((resolve,reject) => {
+                let currentUser = firebase.auth().currentUser;
+                let databaseDestination = isItRegular ? 'user-timetable-regular':'user-timetable';
+                
+    
+                db.collection('user-profile').doc(currentUser.uid).collection(databaseDestination).doc(ref).delete().then(() => {
+                                
+                    dispatch('getUserTimetable',{startTimeLine:getters.secondsFormatCurrentDay,endTimeLine:getters.secondsFormatEndDay}).then(() => {
+                        commit('loading');
+                    }).catch(err => {
+                        console.log(err);
+                        reject(err);
+                        commit('loading');
+                    });
+
+                }).catch(err => {
+                    console.log(err);
+                    reject(err);
+                    commit('loading');
+                })
+            })
+
+            return deleteSchedule;
+        }
     },
     modules: {
     }
