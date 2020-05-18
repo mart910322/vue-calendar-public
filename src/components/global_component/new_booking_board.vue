@@ -360,6 +360,7 @@ export default {
         
                     this.errorText = err;
                     console.log(err  );
+                    console.log(err  );
                 })
    
             }
