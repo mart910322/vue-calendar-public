@@ -76,6 +76,7 @@ export default {
 }
 .mobile-menu-btn{
     --icon-color: var(--normal-blue);
+
     width: 2rem;
     cursor: pointer;
 

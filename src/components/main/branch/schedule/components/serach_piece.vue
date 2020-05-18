@@ -75,7 +75,13 @@ export default {
 }
 @media screen and (max-width: 500px){
 .container{
-    grid-auto-rows: 2.5rem;
+    grid-auto-rows: 3rem;
 }   
+.search-btn-wrapper{
+
+    padding:0.85rem 0.65rem 0.45rem 0.65rem;
+
+    
+}
 }
 </style>
