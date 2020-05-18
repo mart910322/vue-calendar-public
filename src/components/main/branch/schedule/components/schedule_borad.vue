@@ -123,8 +123,8 @@ export default {
                     
                     var menus = document.getElementsByClassName('menu-wrapper');
                     if(!(el == event.target || el.contains(event.target) )){
-
-                        if(!(event.target.tagName == 'svg' || event.target.tagName == 'path' || event.target.classList == 'menu-option' || event.target.classList == 'menu-option-name') ){
+                        console.log(event.target)
+                        if(!(event.target.tagName == 'svg' || event.target.tagName == 'path' || event.target.classList.contains('menu-option') || event.target.classList.contains('menu-option-name') || event.target.classList.contains('wrapper')) ){
                             binding.value(null);
                           
                         }   
@@ -332,20 +332,32 @@ header.title{
 
 .event-menu-btn-wrapper{
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
     position: relative;
 }
 .event-menu-btn-wrapper.show .menu-wrapper{
     display: block;
 }
+
 .event-menu-btn{
 
     --icon-color:var(--normal-blue);
+    --icon-width:0.65rem;
     opacity: 0.6;
-    width: 0.65rem;
+    width:100%;
+    height: 100%;
+
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center
+
+}
+.event-menu-btn.show{
+    opacity: 1;
+}
+.event-menu-btn:hover{
+    opacity: 1;
 }
 .menu-wrapper{
     position: absolute;
@@ -400,12 +412,7 @@ header.title{
 
 
 
-.event-menu-btn.show{
-    opacity: 1;
-}
-.event-menu-btn:hover{
-    opacity: 1;
-}
+
 .no-event-propmt{
     height: 2.5rem;
     font-weight: 400;
@@ -495,7 +502,14 @@ header.title{
 
 
 }
+.booking-btn{
+   
 
+    margin-top: 0.25rem;
+
+
+
+}
 }
 @media screen and (max-width: 550px){
 .event-wrapper{
@@ -562,6 +576,12 @@ header.title{
 .event-menu-btn-wrapper{
 
     justify-content: center;
+
+
+}
+.event-menu-btn{
+
+
 
 
 }

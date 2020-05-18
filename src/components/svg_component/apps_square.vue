@@ -29,7 +29,8 @@ export default {
  
 }
 .icon{
-    
+    width: var(--icon-width,100%);
+    height: var(--icon-height,100%);
     fill: var(--icon-color);
 }
 </style>

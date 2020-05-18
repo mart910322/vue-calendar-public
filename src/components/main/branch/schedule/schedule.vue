@@ -332,17 +332,25 @@ export default {
     
 
     grid-template-columns: 1fr;
-    grid-auto-rows: minmax(2.5rem,auto)
+    grid-auto-rows: minmax(3rem,auto)
 
    
 }  
 .inputDateWrapper{
 
-    height: 2.5rem;
+    height:3rem;
     
 }
 .dateSelector{
     font-size: 1.25rem;
+}
+.calendar-icon{
+
+    padding:2.25% 0.6rem;
+    width: 2.575rem;
+    height: 100%;
+
+    
 }
 }
 </style>
