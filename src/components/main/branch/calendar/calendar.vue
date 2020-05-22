@@ -12,6 +12,7 @@
                     <custom-select :options="options" v-model="selectedOption" :valueBinding="selectedOption" ></custom-select>
                     {{selectedOption}}
                     <button @click="selectedOption += 10">++</button>
+                     <button @click="selectedOption -= 10">--</button>
                 </div>
             </header>
             
@@ -33,7 +34,6 @@ export default {
         return{
             options:[10,20,30,40,50],
             selectedOption:40,
-            selectedNumber:0
         }
     },
     computed:{

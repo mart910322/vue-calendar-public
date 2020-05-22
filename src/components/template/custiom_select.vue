@@ -19,20 +19,8 @@ import goArrowIcon from '../svg_component/go_v.vue'
 export default {
 
 
-    props:{
-        options:{
 
-        },
-        selectedNumber:{
-            type:Number,
-            default:0,
-        },
-
-        valueBinding:{
-
-        }
-
-    },
+    props:['options','valueBinding'],
     watch:{
         valueBinding(val){
          
@@ -80,7 +68,13 @@ export default {
 
         },
         getBindingValueIndex(val){
-            this.localSelectedNumber = this.options.indexOf(val);
+            let index = this.options.indexOf(val);
+
+            if(index >= this.options.length || index < 0){  
+                this.emitValue(this.localSelectedNumber);
+            }//emit the last value, then trigger this function again. therefore it can't exceed the option range
+
+            this.localSelectedNumber = index;
         },
         optionSelected(index){
 
