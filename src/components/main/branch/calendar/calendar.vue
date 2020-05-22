@@ -9,7 +9,7 @@
 
                 </div>
                 <div class="selects-container">
-                    <custom-select :options="options" :selectedOption.sync="selectedOption" :selectedNumber="selectedNumber"></custom-select>
+                    <custom-select :options="options" v-model="selectedOption" :selectedNumber="selectedNumber"></custom-select>
                     {{selectedOption}}
                     <button @click="selectedOption += 10">++</button>
                 </div>
