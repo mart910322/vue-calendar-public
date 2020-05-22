@@ -1,7 +1,7 @@
 <template>
     <div class="container" :class="{'extended' : extend }" v-click-outside="closeMenu">
         <header class="head" @click="extend = !extend">
-            <span class="selected-option">{{  options[selectedNumber] }}</span>
+            <span class="selected-option">{{  options[localSelectedNumber] }}</span>
             <go-arrow-icon class="arrow-icon" ></go-arrow-icon>
         </header>
         <transition name="fade-down">
@@ -27,8 +27,17 @@ export default {
             type:Number,
             default:0,
         },
-        
 
+        valueBinding:{
+
+        }
+
+    },
+    watch:{
+        valueBinding(val){
+         
+            this.getBindingValueIndex(val);
+        }
     },
     components:{
         'go-arrow-icon':goArrowIcon
@@ -38,7 +47,7 @@ export default {
 
 
         return{
-    
+            localSelectedNumber:0,
             extend:false,
       
         }
@@ -65,12 +74,18 @@ export default {
     methods:{
         initialize(){
        
-
-            this.emitValue(this.selectedNumber);
+            this.localSelectedNumber = this.selectedNumber;
+            this.getBindingValueIndex(this.valueBinding);
+        //    this.emitValue(this.selectedNumber);
 
         },
+        getBindingValueIndex(val){
+            this.localSelectedNumber = this.options.indexOf(val);
+        },
         optionSelected(index){
-            this.selectedNumber = index;
+
+            this.localSelectedNumber = index;
+           // this.$emit('updateIndex',index);
             this.emitValue(index);
             this.closeMenu()
         },

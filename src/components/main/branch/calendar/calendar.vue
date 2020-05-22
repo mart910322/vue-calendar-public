@@ -9,7 +9,7 @@
 
                 </div>
                 <div class="selects-container">
-                    <custom-select :options="options" v-model="selectedOption" :selectedNumber="selectedNumber"></custom-select>
+                    <custom-select :options="options" v-model="selectedOption" :valueBinding="selectedOption" ></custom-select>
                     {{selectedOption}}
                     <button @click="selectedOption += 10">++</button>
                 </div>
@@ -28,17 +28,11 @@ import {mapState,mapActions,mapMutations,mapGetters} from 'vuex'
 
 
 export default {
-    watch:{
-        selectedOption(val){
-            
-            this.selectedNumber = this.options.indexOf(val);
-            console.log(this.selectedNumber ,val);
-        }
-    },
+
     data(){
         return{
             options:[10,20,30,40,50],
-            selectedOption:10,
+            selectedOption:40,
             selectedNumber:0
         }
     },
