@@ -19,7 +19,7 @@ import timetable from '../components/main/branch/calendar/branch/timetable.vue'
 import notFound from '../components/template/404error.vue'
 
 
-
+import store from '../store/index.js'
 
 Vue.use(VueRouter)
 
@@ -124,6 +124,11 @@ router.beforeEach((to,from,next) => {
       next({path:'/'});
     }
     else{
+      
+      if(store.state.mobileMenuShow && window.matchMedia("(max-width: 550px)".matches)){
+        store.commit('toggleMobileMenuState');
+      }
+      
       next();
     }
   }

@@ -43,13 +43,8 @@ export default new Vuex.Store({
     getters:{
 
         
-        secondsFormatCurrentDay({currentDay}){
+        dateFormatCurrentDay({currentDay}){
             var dateTransition = new Date(currentDay.year,currentDay.month,currentDay.day);
-            return dateTransition;
-
-        },
-        secondsFormatEndDay({currentDay}){
-            var dateTransition = new Date(currentDay.year,currentDay.month,currentDay.day+ 1);
             return dateTransition;
 
         },
@@ -148,7 +143,7 @@ export default new Vuex.Store({
         toggleMobileMenuState(state){
             state.mobileMenuShow = !state.mobileMenuShow
         },
-        currentDayGetter(state,date){
+        emitCurrentDay(state,date){
             state.currentDay = date;
            
         },
@@ -276,8 +271,7 @@ export default new Vuex.Store({
                         startTime = doc.data().startTime.seconds * 1000;
                         endTime = doc.data().endTime.seconds * 1000;//turn the time to nanosecond
                      
-                        //if(startTime > startTimeLine &&  endTime  <= endTimeLine){//filtering the data by time
-                        if(!(startTime < startTimeLine && endTime < startTimeLine || startTime > endTimeLine && endTime > endTimeLine) ){    
+                        if(!(startTime < startTimeLine && endTime < startTimeLine || startTime > endTimeLine && endTime > endTimeLine) ){  //filtering the data by time  
                             state.timeTableData.push(doc.data());
                             state.timeTableData[indexCount].ref = doc.ref.id;
                             indexCount ++;
@@ -292,42 +286,51 @@ export default new Vuex.Store({
                         snapshot.forEach(doc => {
                             var data = doc.data();
                             var dateStartPoint = new Date(startTimeLine);
+                            var dateEndPoint = new Date(endTimeLine);
 
-                            data.days.forEach(regularDay => {
-
+                            for(var i = 0; dateEndPoint.getDate() - dateStartPoint.getDate() ; i++ ){
                                 
-                                if(regularDay == dateStartPoint.getDay()){
+                            
 
-                                    var formatedStartTime = timeFormater(data.startTime,dateStartPoint.getFullYear(),dateStartPoint.getMonth(),dateStartPoint.getDate());
-                                    var formatedEndTime = timeFormater(data.endTime,dateStartPoint.getFullYear(),dateStartPoint.getMonth(),dateStartPoint.getDate());
+                                data.days.forEach(regularDay => {
+
                                     
-                                    var toNotRegularFormat = {
-                                        startTime:{seconds:formatedStartTime.getTime() / 1000},
-                                        endTime:{seconds:formatedEndTime.getTime() / 1000},
-                                        content:data.content,
-                                        title:data.title,
-                                        isItRegular:data.isItRegular
-                                    }
-                                    state.timeTableData.push(toNotRegularFormat);
-                                    state.timeTableData[indexCount].ref = doc.ref.id;
-                                    indexCount ++;     
-                                                               
-                                }
+                                    if(regularDay == dateStartPoint.getDay()){ 
 
-
-                                function timeFormater(timeString,year,month,date){     
-                                    var splitTime = timeString.split(':').map(toInt => {
-                               
-                                        return parseInt(toInt);
+                                        var formatedStartTime = timeFormater(data.startTime,dateStartPoint.getFullYear(),dateStartPoint.getMonth(),dateStartPoint.getDate());
+                                        var formatedEndTime = timeFormater(data.endTime,dateStartPoint.getFullYear(),dateStartPoint.getMonth(),dateStartPoint.getDate());
                                         
-                                    });
-                                    var dateTransition = new Date(year,month,date,splitTime[0],splitTime[1]);
-                                    
-                                    return dateTransition
-                                    
-                                } 
+                                        var toNotRegularFormat = {
+                                            startTime:{seconds:formatedStartTime.getTime() / 1000},
+                                            endTime:{seconds:formatedEndTime.getTime() / 1000},
+                                            content:data.content,
+                                            title:data.title,
+                                            isItRegular:data.isItRegular
+                                        }
+                                        state.timeTableData.push(toNotRegularFormat);
+                                        state.timeTableData[indexCount].ref = doc.ref.id;
+                                        indexCount ++;    
+                                        
+                                        
+                                                                
+                                    }
 
-                            });
+
+                                    function timeFormater(timeString,year,month,date){     
+                                        var splitTime = timeString.split(':').map(toInt => {
+                                
+                                            return parseInt(toInt);
+                                            
+                                        });
+                                        var dateTransition = new Date(year,month,date,splitTime[0],splitTime[1]);
+                                        
+                                        return dateTransition
+                                        
+                                    } 
+
+                                });
+                                dateStartPoint.setDate(dateStartPoint.getDate() + 1);
+                            }
                       
                           
                         });
@@ -393,8 +396,11 @@ export default new Vuex.Store({
                 
     
                 db.collection('user-profile').doc(currentUser.uid).collection(databaseDestination).doc(ref).delete().then(() => {
+
+                    let endDay = new Date(getters.dateFormatCurrentDay.getTime());
+                    endDay.setDate(endDay.getDate() + 1);
                                 
-                    dispatch('getUserTimetable',{startTimeLine:getters.secondsFormatCurrentDay,endTimeLine:getters.secondsFormatEndDay}).then(() => {
+                    dispatch('getUserTimetable',{startTimeLine:getters.dateFormatCurrentDay,endTimeLine:endDay}).then(() => {
                         commit('loading');
                     }).catch(err => {
                         console.log(err);

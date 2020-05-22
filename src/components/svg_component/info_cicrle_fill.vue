@@ -7,20 +7,11 @@
 </template>
 
 <script>
-import colorChanger from './color_changer_directive.js'
-import hoveringColor from './hovering_color_change_directive.js'
+import iconMixins from './script/mixin.js'
+import './style/icon_style.css'
 export default {
-    props:['color','hoveringColor'],
-    directives:{
-        color:colorChanger,
-        'hovering-color':hoveringColor
-    },
-    methods:{
-       emitClickEvent(){
-         
-           this.$emit('iconClicked');
-        }
-    }
+    mixins:[iconMixins],
+
 }
 </script>
 
@@ -29,13 +20,5 @@ export default {
     fill-rule:evenodd;
  
 }
-.wrapper{
-    background: var(--icon-background-color);
-
-}
-.icon{
-    width: var(--icon-width,100%);
-    height: var(--icon-height,100%);    
-    fill: var(--icon-color);
-}
 </style>
+

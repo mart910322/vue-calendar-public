@@ -300,6 +300,7 @@ export default {
         font-size: 1.1rem;
         font-weight: 400;
         color: var(--dark-blue);
+        box-shadow: 0px 3px 6px  rgba(0,0,0,0.05);
     }
 
     .default-btn:hover{

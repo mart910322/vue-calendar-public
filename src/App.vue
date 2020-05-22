@@ -72,6 +72,9 @@ body,html{
 
 
 }
+
+
+
 @media screen and (min-width: 2750px){
 html{
   font-size: calc(20.5px + 0.25vw);

@@ -38,42 +38,43 @@
                     </div>
                     <div class="not-regular row" v-if="!isItRegular">
                         <clock-icon class="clock icon"></clock-icon>
-                        <select class="select-year start date-option" v-model="notRegularStartTime.year">
-                            <option :value="2020 + index" v-for="(year,index) in new Array(30)" :key="index" >{{ 2020 + index }}</option>
-                        </select>
+                        <div class="date-picker-container">
+                            <select class="select-year start date-option" v-model="notRegularStartTime.year">
+                                <option :value="2020 + index" v-for="(year,index) in new Array(30)" :key="index" >{{ 2020 + index }}</option>
+                            </select>
 
-                        <select class="select-month start date-option "  v-model="notRegularStartTime.month">
-                            <option :value="index" v-for="(month,index) in monthsName" :key="index" >{{ month}}</option>
-                        </select>     
+                            <select class="select-month start date-option "  v-model="notRegularStartTime.month">
+                                <option :value="index" v-for="(month,index) in monthsName" :key="index" >{{ month}}</option>
+                            </select>     
 
-                        <select class="select-day start date-option" v-model="notRegularStartTime.day">
-                            <option :value="index + 1" v-for="(day,index) in new Array(31)" :key="index">{{ index + 1 | plusZero}}</option>
-                        </select>  
+                            <select class="select-day start date-option" v-model="notRegularStartTime.day">
+                                <option :value="index + 1" v-for="(day,index) in new Array(31)" :key="index">{{ index + 1 | plusZero}}</option>
+                            </select>  
 
-                        <select class="select-time start date-option" v-model="notRegularStartTime.time">
-                            <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
-                        </select>  
+                            <select class="select-time start date-option" v-model="notRegularStartTime.time">
+                                <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
+                            </select>  
 
-                        <span class="separate-symbol">-</span>
+                            <span class="separate-symbol">-</span>
 
-                        <select class="select-time start date-option"  v-model="notRegularEndTime.time">
-                            <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
-                        </select> 
-                        
+                            <select class="select-time end date-option"  v-model="notRegularEndTime.time">
+                                <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
+                            </select> 
+                            
 
-                        <select class="select-day end date-option" v-model="notRegularEndTime.day">
-                            <option :value="index + 1" v-for="(day,index) in new Array(31)" :key="index">{{ index + 1 | plusZero}}</option>
-                        </select>    
-                        
-                        <select class="select-month end date-option" v-model="notRegularEndTime.month">
-                            <option :value="index" v-for="(month,index) in monthsName" :key="index" >{{  month }}</option>
-                        </select>  
+                            <select class="select-day end date-option" v-model="notRegularEndTime.day">
+                                <option :value="index + 1" v-for="(day,index) in new Array(31)" :key="index">{{ index + 1 | plusZero}}</option>
+                            </select>    
+                            
+                            <select class="select-month end date-option" v-model="notRegularEndTime.month">
+                                <option :value="index" v-for="(month,index) in monthsName" :key="index" >{{  month }}</option>
+                            </select>  
 
-                        <select class="select-year-end date-option" v-model="notRegularEndTime.year">
-                            <option :value="2020 + index" v-for="(year,index) in new Array(30)" :key="index">{{ 2020 + index }}</option>
-                        </select>
+                            <select class="select-year-end date-option" v-model="notRegularEndTime.year">
+                                <option :value="2020 + index" v-for="(year,index) in new Array(30)" :key="index">{{ 2020 + index }}</option>
+                            </select>
 
-   
+                        </div>
 
                     </div>
                     <div class="datails-container row">
@@ -122,8 +123,8 @@ export default {
             'currentDay'
         ]),
         ...mapGetters([
-            'secondsFormatCurrentDay',
-            'secondsFormatEndDay'
+            'dateFormatCurrentDay',
+  
         ]),
         timeSelection(){
             let timeSelection = [],handledTimeSelection = [];
@@ -289,8 +290,11 @@ export default {
             this.newAppointment(formatedStartDate,formatedEndDate);
         },
         endingAction(DidItNeedLoading){
+            let endDay = new Date(this.dateFormatCurrentDay.getTime());
+            endDay.setDate(endDay.getDate() + 1);       
+
             this.errorText = '';
-            this.getUserTimetable({startTimeLine:this.secondsFormatCurrentDay, endTimeLine: this.secondsFormatEndDay});
+            this.getUserTimetable({startTimeLine:this.dateFormatCurrentDay, endTimeLine: endDay});
             this.initializeAllData();
             this.toggleBookingState();
             if(DidItNeedLoading){
@@ -470,7 +474,7 @@ export default {
 }
 .question-text{
     font-size: 1.55rem;
-    font-weight: 300;
+    font-weight: 400;
     color: var(--dark-gray);
     margin-bottom: 0.25rem;
 }
@@ -487,6 +491,7 @@ export default {
 
     cursor: pointer;
     transition: 0.25s;
+        
 
 }
 .btn.yes{
@@ -542,7 +547,9 @@ export default {
    
 }
 .regular-days-container{
-    margin-left: 0.25rem
+    margin-left: 0.25rem;
+    display: flex;
+    align-items: center;
 }
 .regular-days{
     margin-right: 0.75rem;
@@ -559,7 +566,8 @@ export default {
 }
 
 .row.not-regular{
-    
+    display: grid;
+    grid-template-columns: 3rem 1fr;
 }
 .icon.clock{
     margin-top: 0.25rem;
@@ -594,10 +602,16 @@ select.date-option:focus{
 select.date-option::-ms-expand {
     display: none;
 }
-
+.date-picker-container{
+    display: flex;
+}
 .separate-symbol{
     font-size: 1.5rem;
     width:0.85rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+
 
 }
 .icon.details{
@@ -652,6 +666,277 @@ select.date-option::-ms-expand {
     background: var(--normal-blue);
     color: var(--white);
 }
+@media screen and (max-width:550px) {
+.back-board{
+ 
+    background: var(--gray-background);
 
+    align-items: flex-start;
+}
+.container{
+    width: 100%;
+    height: auto;
+
+    padding: 0rem;
+
+}  
+.head{
+  
+
+
+    grid-template-columns: 1fr 2rem;
+    align-items: center;
+
+    padding:0 0.5rem;
+    width: 100%;
+    height: 4rem;
+
+    border-bottom: 1px solid var(--gray-border);
+}  
+.icon.cross{
+       
+    width:1.45rem;
+  
+    --icon-color: var(--black);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+}
+.title{
+    font-size: 2rem;
+
+}
+.typing-title-area{
+    width: 100%;
+    padding: 0 0.75rem;
+    margin-bottom: 0rem;    
+
+    border-bottom: 1px solid var(--gray-border);
+}
+.appointment-title{
+    width: 100%;
+    height: auto;
+
+    border: none;
+
+    font-size: 1.75rem;
+
+    margin: 0;
+    padding:1rem 0;
+}
+.appointment-title:focus{
+   border-bottom: none;
+}
+.is-it-regular-question-area{
+    display: grid;
+    grid-template-columns: 3rem 1fr 3rem 1fr;
+    grid-row-gap: 1rem;
+    grid-column-gap: 1rem;
+   
+
+
+    padding: 1rem 0.75rem;
+    height:auto;
+
+    border-bottom: 1px solid var(--gray-border);
+} 
+.calendar{
+    
+}
+.icon{
+    width: 2.5rem;
+
+    margin-right: 1rem;
+} 
+.question-text{
+    font-size: 1.85rem;
+    grid-column: 2 / 5;
+    margin-bottom: 0rem;
+    
+} 
+.btn{
+    width: 100%;
+    padding: 0.15rem 0;
+
+    font-size: 1.325rem;
+
+    cursor: pointer;
+    transition: 0.25s;
+
+
+
+}
+.btn.yes{
+
+    grid-column: 1 / 3;
+    opacity: 1;
+
+        
+}
+
+.btn.no{
+
+    grid-column: 3 / 5;
+}
+
+.btn.no:hover{
+    background: none;
+    color: var(--normal-blue)
+}
+
+.body{
+    display: grid;
+    grid-template-columns: 1fr;
+
+  
+    
+  
+}
+
+.row{
+    padding: 1rem 0.75rem;
+    display: flex;
+    border-bottom: 1px solid var(--gray-border);
+}
+.regular.row{
+   
+}
+.regular-days-container{
+    margin-left: 0.25rem;
+    
+    
+}
+.regular-days{
+    margin-right: 0.75rem;
+
+    font-size: 1.35rem;
+
+}
+
+
+.not-regular.row {
+
+    grid-template-columns: 3.75rem 1fr;
+}
+
+.icon.clock{
+    margin-top: 0.15rem;
+    height: 3.25rem;
+
+
+    
+}
+
+select.date-option{
+
+    padding: 0 0.25rem;
+   
+
+    margin-right: 0.5rem;
+    border: none;
+
+
+    font-size: 1.5rem;
+    outline-color: var(--normal-blue);
+
+}
+.select-time.end{
+    order: 6;
+}
+.select-day.end {
+    order: 5;
+}
+.select-month.end {
+    order: 4;
+}
+
+.row.not-regular select.date-option{
+    padding: 0 0.15rem;
+    margin-right: calc(4.5% + 0.25rem);
+}
+select.date-option:focus{
+    color: var(--normal-blue);
+}
+
+
+.separate-symbol{
+    font-size: 2rem;
+    width:auto;
+    margin-right: 0.5rem;
+
+
+}
+.date-picker-container{
+
+    
+    display: flex;
+    flex-flow: wrap;
+
+}
+.not-regular  .separate-symbol{
+    width: calc(100% - 22.5rem);
+  
+}
+.icon.details{
+    margin-top: 0.15rem;
+}
+.datalis-input-area{
+ 
+    width: 85%;
+    height: 9rem;
+
+    font-size: 1.35rem;
+
+
+    outline-color: var(--normal-blue);
+
+    border-radius: 0;
+    border:1px solid var(--gray-border);
+
+}
+.error-text{
+    margin-left: 3.25rem;
+    font-size: 1.25rem;
+    color: red;
+}
+
+.floor{
+    display: flex;
+    justify-content: center;
+    margin-top: 0rem;
+    padding: 1rem 0;
+  
+}
+.btn-container{
+
+
+    width: 100%;
+  
+}
+.btn-container .btn{
+    
+    width: 100%;
+}
+.btn.cancel{
+    border: 1px solid var(--normal-blue);
+    color: var(--normal-blue);
+    
+    
+}
+.btn.save{
+
+    margin-right: 1rem;
+    opacity:1;
+  
+}
+.btn.save:hover{
+    opacity: 1;
+}
+.btn.cancel:hover{
+    background: none;
+    color: var(--normal-blue);
+}
+}
 
 </style>

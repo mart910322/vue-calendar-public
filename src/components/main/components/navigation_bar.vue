@@ -1,6 +1,6 @@
 <template>
 
-    <div class="container" :class="{ 'show':mobileMenuShow }">
+    <div class="container" :class="{ 'show':mobileMenuShow }" v-touch:left="testTouch">
         <header class="nav-header" @click="$router.push('/home')"><h1 class="logo-text">logo</h1></header>
         <section class="nav-body">
             <div v-for="(cell,index) in navNames" :key="index" class="nav-element-wrapper" @click="linkTo(index)" :class="{'current-path': matchCurrentPath(index)}">
@@ -11,8 +11,8 @@
         </section>
         <footer class="nav-footer">
             <div class="nav-element-wrapper"  @click="linkTo(5)">
-                <logout-icon  class="nav-icon"></logout-icon>
-                <span class="nav-name">log out</span>
+                <support-icon  class="nav-icon"></support-icon>
+                <span class="nav-name">support</span>
             </div>
         </footer>
     </div>
@@ -29,7 +29,9 @@ import settingIcon from '../../svg_component/setting_slim_line.vue'
 import logoutIcon from '../../svg_component/logout_door.vue'
 import supportIcon from '../../svg_component/support_question.vue'
 
-import {mapState} from 'vuex'
+import {mapMutations,mapState} from 'vuex'
+
+
 export default {
     components: {
         'home-icom':homeIcom,    
@@ -44,7 +46,7 @@ export default {
     },
     data(){
         return{
-            navNames:["home","calendar","task board","setting","support"],
+            navNames:["home","calendar","task board","setting","log out"],
         }
     },
     computed:{
@@ -53,9 +55,12 @@ export default {
         ])
     },
     methods:{
+        ...mapMutations([
+            'toggleMobileMenuState'
+        ]),
         matchCurrentPath(index){
         
-            return this.$route.name.toLowerCase() == this.navNames[index].trim();
+            return this.$route.name.toLowerCase() == this.navNames[index].trim().replace(/ /g,'');
         },//matching which current path and icon name for distinguish where is the user  
         navIcons(index){
             switch(index){
@@ -63,7 +68,7 @@ export default {
                 case 1 : return calendarIcon;
                 case 2 : return taskboardIcon;
                 case 3 : return settingIcon;
-                case 4 : return supportIcon;
+                case 4 : return logoutIcon;
             }
         },//variable for dynamic component,it used for nav-icon
         linkTo(index){
@@ -75,11 +80,17 @@ export default {
                 case 1 : router.push('/home/calendar');break;
                 case 2 : router.push('/home/taskBoard');break;
                 case 3 : router.push('/home/setting');break;
-                case 4 : router.push('/');break;
-                case 5 : firebase.auth().signOut();router.push('/');break;
+                case 4 : firebase.auth().signOut();router.push('/');break;
+                case 5 : router.push('/');break;
+                
             }  
 
-        }//when the nav element was clicked, this event redirect to next destination
+        },//when the nav element was clicked, this event redirect to next destination
+        testTouch(){
+            if(window.matchMedia("(max-width: 768px)").matches){
+                this.toggleMobileMenuState();
+            }
+        }   
     }
 }
 </script>
@@ -170,7 +181,7 @@ export default {
     width: 100%;
 
 }
-@media screen and (max-height: 650px){
+@media screen and (max-height: 650px) and (min-width: 768px){
 .nav-body{
   
 
@@ -202,8 +213,9 @@ export default {
     min-width: 20rem;
 
     overflow: hidden;
-    min-height: 300px;
-
+    min-height: 0px;
+    height: 100vh;
+  
 }
 
 .container.show{
@@ -212,8 +224,18 @@ export default {
     /* this effect better than display transition, but it will trigger a bug on ios*/
 
 }
+.nav-element-wrapper{
+
+
+
+    
+
+
+}
 .container.show .nav-name{
     opacity: 1; 
 }
 }
+
+
 </style>

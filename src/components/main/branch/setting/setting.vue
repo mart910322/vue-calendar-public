@@ -1,15 +1,27 @@
 <template>
     <div>
-   
+
     </div>
 </template>
 
 <script>
-export default {
 
+export default {
+    data(){
+        return{
+
+        }
+    },
+    components: {
+      
+
+    },
+    mounted(){
+   
+    }
 }
 </script>
 
-<style>
+<style >
 
 </style>

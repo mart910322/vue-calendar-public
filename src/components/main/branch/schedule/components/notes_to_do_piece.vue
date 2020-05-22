@@ -171,6 +171,8 @@ footer.btn-container{
     opacity: 0.8;
     font-size: 1.1rem;
     cursor: pointer;
+
+    box-shadow: 0px 3px 6px  rgba(0,0,0,0.05);
 }
 .btn:hover{
     opacity: 1;
@@ -191,17 +193,35 @@ header.title{
 
     box-shadow:none;
     min-height: 12.5rem;
+    grid-template-rows: 2.75rem 1fr 3.25rem;
 
 }
+.btn{
+
+    font-size: 1.25rem;
+
+}
+
 }
 
 @media screen and (max-width: 550px){
+.cotainer{
+
+
+    grid-template-rows: 2.75rem 1fr 3.425rem;
+
+}
 header.title{
 
 
     background: var(--light-blue);
     border-bottom: none;
  
-}        
+}  
+.btn{
+    padding: 0.5rem 0;
+    font-size: 1.35rem;
+
+}      
 }
 </style>

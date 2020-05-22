@@ -2,7 +2,7 @@
     <div class="container">
         <div class="wrapper">
             <div  class="separate">
-                <component :is="mobileMenuShow ? 'cross-icon': 'menu-icon' " class="mobile-menu-btn" @iconClicked="toggleMobileMenuState"></component>
+                <component :is="mobileMenuShow ? 'cross-icon': 'menu-icon' " class="mobile-menu-btn"  :class="{'cross-icon' : mobileMenuShow }" @iconClicked="toggleMobileMenuState"></component>
                 <span class="title"><slot name="title"></slot></span>
             </div>
             <span class="button"><slot name="button"></slot></span>
@@ -52,6 +52,7 @@ export default {
 .separate{
     display: flex;
 }
+
 .title{
     color:var(--normal-blue);
     font-weight: 400;
@@ -61,10 +62,14 @@ export default {
     cursor: pointer;
     
 }
+.mobile-menu-btn{
+    display: none;
+
+}
 @media screen and (max-width: 768px){
 .container{
     width: 100vw;
-
+    
 } 
 .separate{
     justify-content: space-between;
@@ -75,11 +80,21 @@ export default {
     transform: translateX(50%)
 }
 .mobile-menu-btn{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
     --icon-color: var(--normal-blue);
 
     width: 2rem;
+ 
     cursor: pointer;
 
+
+
+}
+.cross-icon{
+    --icon-width: 80%;
 }
 .button{
     min-width: 2rem;

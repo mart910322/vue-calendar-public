@@ -70,8 +70,8 @@ export default {
 
         ]),
         ...mapGetters([
-            'secondsFormatCurrentDay',
-            'secondsFormatEndDay'
+          
+
         ]),
 
     },
@@ -106,12 +106,13 @@ export default {
         ]),
         ...mapMutations([
             'formatDateTitle',
-            'currentDayGetter'
+            'emitCurrentDay'
         ]),
         changeInputDateValue({year,month,day}){
 
             this.fetchTimetable(year,month,day);
-            this.currentDayGetter({year,month,day});
+   
+            this.emitCurrentDay({year,month,day});
 
             month += 1;
             if(month < 10){
@@ -130,13 +131,7 @@ export default {
 
             this.getUserTimetable({startTimeLine:startDate, endTimeLine: nextDate});
         },  
-        test(){
-            console.log(this.$refs.dateSelector)
-            let dateSelector = this.$refs.dateSelector;
 
- 
-
-        }
         
     },
     mounted(){

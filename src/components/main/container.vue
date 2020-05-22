@@ -1,9 +1,9 @@
 <template>
      <div class="main_container" :class="{'nav-show':mobileMenuShow}">
         <slide-nav></slide-nav>
-        <keep-alive>
-            <router-view></router-view>
-        </keep-alive>
+    
+        <router-view></router-view>
+ 
  
     </div>
 </template>

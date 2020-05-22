@@ -7,6 +7,11 @@ import 'font-awesome/css/font-awesome.css'
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+import touch from 'vue-directive-touch';
+Vue.use(touch);
+
+
+
 /*
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
@@ -24,6 +29,7 @@ firebase.auth().onAuthStateChanged(() => {
 
   if(!app){
     app = new Vue({
+ 
       created() {
         AOS.init({});
       },

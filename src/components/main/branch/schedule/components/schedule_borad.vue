@@ -69,7 +69,7 @@ export default {
     mounted(){
         
         let self = this;
-        function myFunction(x) {
+        function mobileTitle(x) {
             if (x.matches) { // If media query matches
             
                 self.titleDateLocal ='day';
@@ -79,8 +79,8 @@ export default {
             }
         }
 
-        var x = window.matchMedia("(max-width: 550px)")
-        x.addListener(myFunction);
+        let x = window.matchMedia("(max-width: 550px)");
+        x.addListener(mobileTitle);
 
 
     },
@@ -122,8 +122,7 @@ export default {
                 el.clickOutside = function(event){
                     
                     var menus = document.getElementsByClassName('menu-wrapper');
-                    if(!(el == event.target || el.contains(event.target) )){
-                        console.log(event.target)
+                    if(!(el == event.target || el.contains(event.target) )){                 
                         if(!(event.target.tagName == 'svg' || event.target.tagName == 'path' || event.target.classList.contains('menu-option') || event.target.classList.contains('menu-option-name') || event.target.classList.contains('wrapper')) ){
                             binding.value(null);
                           
@@ -240,6 +239,7 @@ header.title{
     margin-top: 0.5rem;
 
     cursor: pointer;
+    box-shadow: 3px 3px 6px  rgba(0,0,0,0.025);
 
 }
 .booking-btn:hover{
@@ -363,6 +363,7 @@ header.title{
     position: absolute;
     z-index: 10;
     right: 0;
+    top: 0;
     transform: translateX(100%);
     width: 15rem;
  
@@ -435,6 +436,7 @@ header.title{
 }
 .menu-wrapper{
     position: fixed;
+      top: none;
     bottom: 0;
     right: 0;
     width: 100%;
@@ -549,11 +551,14 @@ header.title{
 
     justify-content:flex-start;   
     font-size: 1.325rem;
-
+    
   
 }
+.time-delimiter{
+    margin: 0 0.25rem;
+}
 .day{
-    margin-bottom: 0.15rem
+    margin-bottom: 0.15rem;
 }
 .during-time-total{
    
@@ -580,6 +585,10 @@ header.title{
 
 }
 .event-menu-btn{
+
+
+    --icon-width:0.8rem;
+
 
 
 

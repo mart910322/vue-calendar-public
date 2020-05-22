@@ -271,17 +271,168 @@ export default {
     
     
 }
-.btn.cancel:hover{
-    color: var(--white);
-    border:1px solid var(--dark-gray);
-}
 .btn.save{
     background: var(--normal-blue);
     color:var(--white);
     margin-right: 1rem;
+    opacity: 0.8;
   
 }
 .btn.save:hover{
-    background: var(--dark-gray);
+    opacity: 1;
 }
+.btn.cancel:hover{
+    background: var(--normal-blue);
+    color: var(--white);
+}
+@media screen and (max-width:550px) {
+.back-board{
+ 
+    background: var(--gray-background);
+
+    align-items: flex-start;
+}
+.container{
+    width: 100%;
+    height: auto;
+
+    padding: 0rem;
+
+}  
+.head{
+  
+
+
+    grid-template-columns: 1fr 2rem;
+    align-items: center;
+
+    padding:0 0.5rem;
+    width: 100%;
+    height: 4rem;
+
+    border-bottom: 1px solid var(--gray-border);
+}  
+.icon.cross{
+       
+    width:1.45rem;
+  
+    --icon-color: var(--black);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+}
+.title{
+    font-size: 2rem;
+
+}
+.typing-title-area{
+    width: 100%;
+    padding: 0 0.75rem;
+    margin-bottom: 0rem;    
+
+    border-bottom: 1px solid var(--gray-border);
+}
+.new-task-notes-title{
+    width: 100%;
+    height: auto;
+
+    border: none;
+
+    font-size: 1.75rem;
+
+    margin: 0;
+    padding:1rem 0;
+}
+.new-task-notes-title:focus{
+   border-bottom: none;
+}
+
+.calendar{
+    
+}
+.icon{
+    width: 2.5rem;
+
+    margin-right: 1rem;
+} 
+
+.btn{
+    width: 100%;
+    padding: 0.15rem 0;
+
+    font-size: 1.325rem;
+
+    cursor: pointer;
+    transition: 0.25s;
+    
+
+}
+
+.body{
+    border-bottom: 1px solid var(--gray-border);
+    padding: 1rem 0;
+}
+.icon.details{
+    margin-top: 0.15rem
+}
+.datalis-input-area{
+ 
+    width: 85%;
+    height: 9rem;
+
+    font-size: 1.35rem;
+
+
+    outline-color: var(--normal-blue);
+
+    border-radius: 0;
+    border:1px solid var(--gray-border);
+
+
+}
+.error-text{
+    margin-left: 3.25rem;
+    font-size: 1.25rem;
+    color: red;
+}
+
+.floor{
+    display: flex;
+    justify-content: center;
+    margin-top: 0rem;
+    padding: 1rem 0;
+
+    border-bottom: 1px solid var(--gray-border);
+  
+}
+.btn-container{
+
+
+    width: 100%;
+  
+}
+.btn-container .btn{
+    width: 100%;
+}
+.btn.cancel{
+
+    
+    
+}
+.btn.save{
+
+    margin-right: 1rem;
+    opacity:1;
+  
+}
+.btn.save:hover{
+    opacity: 1;
+}
+.btn.cancel:hover{
+    background: none;
+    color: var(--normal-blue);
+}
+}
+
 </style>

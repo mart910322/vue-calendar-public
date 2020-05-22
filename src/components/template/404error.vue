@@ -4,7 +4,7 @@
         <div class="content">
             <span class="num">404</span>
             <div>not found</div>
-            <div class="homeBtn" @click="$router.push('/')">home</div>
+            <div class="homeBtn" @click="$router.push('/home')">home</div>
         </div>
     </div>
 </template>
