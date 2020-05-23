@@ -148,7 +148,7 @@ export default {
     overflow-x: hidden;
     overflow-y: auto;
     
-    width:calc(100vw - 5.75rem);
+    width:var(--router-component-width);
 
     background: var(--gray-background);
 

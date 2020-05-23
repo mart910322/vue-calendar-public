@@ -33,13 +33,14 @@ export default {
     display: flex;
     min-width: calc(100vw + 20rem);
 
-    
+    --router-component-width:calc(100vw - 5.75rem);
 }
 @media screen and (max-width:768px){
 .main_container{
     position: relative;
     left: -20rem;
     transition: 0.5s ease-out;
+    --router-component-width:100vw;
 }
 .main_container.nav-show{
     transition: 0.5s ease-in;

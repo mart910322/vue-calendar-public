@@ -102,21 +102,24 @@ export default {
 <style scoped>
 .container{
    
-    width: var(--custom-select-width,12.5rem);
+    width: var(--entire-select-width,12.5rem);
     background: var(--normal-blue);
     position: relative;
     border-radius: 10rem;
-
-    --option-font-size:1.35rem;
-    --option-font-color:var(--white);
-    --option-padding:0.25rem 1rem;
-
-    
 
     transition: 0.5s linear;
 
     transition: 0s border-radius;
     animation: 1s border-radius-animation ;
+
+    --option-font-color:var(--white);
+
+
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 
 }
 @keyframes  border-radius-animation {
@@ -135,11 +138,13 @@ export default {
 .head{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding:var(--option-padding);
     
     cursor: pointer;
 
-
+    width: 100%;
+    height: 100%;
     
 }
 .selected-option{
@@ -148,6 +153,7 @@ export default {
 
     transition: 0.5s;
     
+   
 }
 .arrow-icon{
     --icon-color:var(--white);
@@ -155,6 +161,10 @@ export default {
     
     transition: 0.5s;
     --icon-transition:0.5s;
+
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
 .container.extended{
     border-radius: 0px;
@@ -184,16 +194,24 @@ export default {
     margin: 0;
     position: absolute;
 
-    width: var(--custom-select-width,100%);
+    width: var(--entire-select-width,100%);
 
     border: 1px solid var(--normal-blue);
 
     border-radius: 0 0 4px 4px;
+
+    max-height: 30rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    bottom: 0;
+    transform: translateY(100%);
  
 }
 .each-option{
     padding:var(--option-padding);
     width: 100%;
+ 
 
     background: var(--white);
     font-size: var(--option-font-size);
