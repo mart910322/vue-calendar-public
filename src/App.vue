@@ -1,19 +1,20 @@
 <template>
     <div id="app">
-        <router-view/>  
+      <router-view/>  
 
-        <custom-alert></custom-alert>
-        <loading></loading>
-        <booking-board></booking-board>
-        <adding-task-note-borad></adding-task-note-borad>
-
+      <custom-alert></custom-alert>
+      <loading></loading>
+      <book-appointment-board></book-appointment-board>
+      <adding-task-note-borad></adding-task-note-borad>
+      <custom-prompt></custom-prompt>
     </div>
 </template>
 <script>
 import customAlert from './components/template/alert_custom.vue'
 import loading from './components/template/loading_animated_component.vue'
-import bookingBoard from './components/global_component/new_booking_board.vue'
+import bookAppointmentBoard from './components/global_component/new_appointment_board.vue'
 import addingTaskNoteBorad from './components/global_component/new_task_note_board.vue'
+import customPrompt from './components/global_component/prompt_finished.vue'
 export default {
     data(){
         return{
@@ -26,8 +27,9 @@ export default {
     components:{
       'custom-alert':customAlert,
       'loading':loading,
-      'booking-board':bookingBoard,
-      'adding-task-note-borad':addingTaskNoteBorad
+      'book-appointment-board':bookAppointmentBoard,
+      'adding-task-note-borad':addingTaskNoteBorad,
+      'custom-prompt':customPrompt
     },
     computed:{
     
@@ -53,7 +55,11 @@ export default {
     --light-gray:#EBEBEB;
     --dark-gray:#707070;
 
+    --dark-green:#45A04E;
+    --light-green:#81DA84;
 
+    --normal-red:#E33A3A;
+    --dark-red:#A04545;
 
     --white:#ffffff;
     --black:#000000;

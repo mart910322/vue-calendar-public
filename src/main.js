@@ -10,7 +10,12 @@ import "aos/dist/aos.css";
 import touch from 'vue-directive-touch';
 Vue.use(touch);
 
-
+Vue.filter("plusZero",val => {
+  if(val < 10){
+    return '0' + val.toString();
+  }
+  return  val;
+});
 
 /*
 import { library } from '@fortawesome/fontawesome-svg-core'

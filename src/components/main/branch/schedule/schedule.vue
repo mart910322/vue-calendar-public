@@ -314,13 +314,7 @@ export default {
 
 } 
    
-.schedule-container{
 
-    width:100vw;
-
-
-
-}    
 }
 @media screen and (max-width: 500px){
 .function-pieces-wrapper{

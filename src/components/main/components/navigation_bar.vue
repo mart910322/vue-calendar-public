@@ -56,7 +56,7 @@ export default {
     },
     methods:{
         ...mapMutations([
-            'toggleMobileMenuState'
+            'toggleMobileMenuStatus'
         ]),
         matchCurrentPath(index){
         
@@ -88,7 +88,7 @@ export default {
         },//when the nav element was clicked, this event redirect to next destination
         testTouch(){
             if(window.matchMedia("(max-width: 768px)").matches){
-                this.toggleMobileMenuState();
+                this.toggleMobileMenuStatus();
             }
         }   
     }

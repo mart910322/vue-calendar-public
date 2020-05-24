@@ -66,8 +66,9 @@ export default {
     },
     methods:{
         ...mapMutations([
-           'toggleNewTaskState',
-           'loading' 
+           'toggleNewTaskStatus',
+           'loading',
+           'togglePropmtStatus'
         ]),
         ...mapActions([
             'getUserTask'
@@ -100,9 +101,11 @@ export default {
                 
             }).then(() => {
                 this.endingAction(true);
+                this.emitStatus(true);
             }).catch(err => {
                 console.log(err);
                 this.errorText = err;
+                this.emitStatus(false);
             });
 
         },
@@ -110,10 +113,20 @@ export default {
             this.errorText = '';
             this.initializeData();
             this.getUserTask();
-            this.toggleNewTaskState();
+            this.toggleNewTaskStatus();
             if(DidItNeedLoading){
                 this.loading();
             }
+        },
+        emitStatus(doesItSuccess){
+            let msg = '';
+            if(doesItSuccess){
+                msg = 'added a new note successful';
+            }else{
+                msg = 'failed added a note';
+            }
+
+            this.togglePropmtStatus({success:doesItSuccess,msg:msg});
         }
 
 

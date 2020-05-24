@@ -2,7 +2,7 @@
     <div class="container">
         <header class="title">
             <div class="title-text">{{ titleDateLocal  }}'s schedule</div>
-            <div class="booking-btn" @click="toggleBookingState">+ book appointment </div>
+            <div class="booking-btn" @click="toggleBookingStatus">+ book appointment </div>
         </header>
         <section class="schedule-events-container">
             <div class="event-wrapper" v-for="({title,content,startTime,endTime,duringTime,ref,isItRegular},index) in handledTimeTableData" :key="index">
@@ -97,12 +97,7 @@ export default {
         }
     },
     filters:{
-        plusZero(val){
-            if(val < 10){
-                return '0' + val.toString();
-            }
-            return  val;
-        }
+        //plusZero registered globally
     },
 
     computed:{
@@ -145,7 +140,7 @@ export default {
     },
     methods:{
         ...mapMutations([
-            'toggleBookingState',
+            'toggleBookingStatus',
             'showAlert'
 
         ]),

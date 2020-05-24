@@ -126,7 +126,7 @@ router.beforeEach((to,from,next) => {
     else{
       
       if(store.state.mobileMenuShow && window.matchMedia("(max-width: 550px)".matches)){
-        store.commit('toggleMobileMenuState');
+        store.commit('toggleMobileMenuStatus');
       }
       
       next();

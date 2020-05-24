@@ -2,7 +2,7 @@
     <div class="container">
         <div class="wrapper">
             <div  class="separate">
-                <component :is="mobileMenuShow ? 'cross-icon': 'menu-icon' " class="mobile-menu-btn"  :class="{'cross-icon' : mobileMenuShow }" @iconClicked="toggleMobileMenuState"></component>
+                <component :is="mobileMenuShow ? 'cross-icon': 'menu-icon' " class="mobile-menu-btn"  :class="{'cross-icon' : mobileMenuShow }" @iconClicked="toggleMobileMenuStatus"></component>
                 <span class="title"><slot name="title"></slot></span>
             </div>
             <span class="button"><slot name="button"></slot></span>
@@ -21,7 +21,7 @@ export default {
     },
     methods:{
         ...mapMutations([
-            'toggleMobileMenuState'
+            'toggleMobileMenuStatus'
         ])
     },
     computed:{

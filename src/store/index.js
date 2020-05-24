@@ -7,33 +7,36 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        user:{
-            
-        },
+
         mobileMenuShow:false,
-
-
+        /* schedule borad */
         currentDay:{},
 
         titleDate:'',
-        timeTableData:[],
-
+        
+        timeTableData:[],     
         searchKeyword:'',
         
         taskData:[],
+        /* schedule borad */
 
         loading:false,
 
-
+        /* custom Alert  */
         doesAlertShow:false,
         needCancel:false,
         alertMsg:'',
         funcContain:null,
         funcChild:null,
 
+        /* custom Alert  */
 
-
-
+        /* custom propmt */
+        doesPropmtShow:false,
+        promptMsg:'',
+        promptShowTick:false,
+        /* custom propmt */
+        
         doesBookingBoardShow:false,
         doesNewTaskBoardShow:false,
 
@@ -140,7 +143,7 @@ export default new Vuex.Store({
         }
     },
     mutations: {
-        toggleMobileMenuState(state){
+        toggleMobileMenuStatus(state){
             state.mobileMenuShow = !state.mobileMenuShow
         },
         emitCurrentDay(state,date){
@@ -166,7 +169,15 @@ export default new Vuex.Store({
             
 
         },//save the data to state and show the alert
-    
+        togglePropmtStatus(state,{success,msg}){
+            state.doesPropmtShow = true;
+            state.propmtMsg = msg;
+            state.promptShowTick = success;
+
+            setTimeout(() => {
+                state.doesPropmtShow = false;
+            }, 2500);
+        },
         alertEventHandle(state,{func,funcChild}){
      
             if(func != null || func != undefined){
@@ -184,10 +195,10 @@ export default new Vuex.Store({
 
             state.titleDate = dayNames [getDay.getDay()];
         },
-        toggleBookingState(state){
+        toggleBookingStatus(state){
             state.doesBookingBoardShow = !state.doesBookingBoardShow;
         },
-        toggleNewTaskState(state){
+        toggleNewTaskStatus(state){
             state.doesNewTaskBoardShow = !state.doesNewTaskBoardShow;
         }
     },
@@ -256,7 +267,7 @@ export default new Vuex.Store({
         },
         getUserTimetable({commit,state},{startTimeLine,endTimeLine}){//this jsut fetch data. then the data will sent to handledTimeTableData of getter
 
-           
+            
             let currentUser = firebase.auth().currentUser;
 
             let returnTimeTableData = new Promise((resolve,reject) => {
@@ -270,7 +281,7 @@ export default new Vuex.Store({
            
                         startTime = doc.data().startTime.seconds * 1000;
                         endTime = doc.data().endTime.seconds * 1000;//turn the time to nanosecond
-                     
+                  
                         if(!(startTime < startTimeLine && endTime < startTimeLine || startTime > endTimeLine && endTime > endTimeLine) ){  //filtering the data by time  
                             state.timeTableData.push(doc.data());
                             state.timeTableData[indexCount].ref = doc.ref.id;
@@ -284,21 +295,24 @@ export default new Vuex.Store({
                     db.collection('user-profile').doc(currentUser.uid).collection('user-timetable-regular').get().then(snapshot =>{
                         
                         snapshot.forEach(doc => {
-                            var data = doc.data();
-                            var dateStartPoint = new Date(startTimeLine);
-                            var dateEndPoint = new Date(endTimeLine);
+                            let data = doc.data();
+                         
+                            let dateStartPoint = new Date(startTimeLine);
+                            let dateEndPoint = new Date(endTimeLine);
 
-                            for(var i = 0; dateEndPoint.getDate() - dateStartPoint.getDate() ; i++ ){
+                            let dateDifference = Math.ceil((dateEndPoint - dateStartPoint) / (1000 * 60 * 60 * 24));
+                
+                            for(var i = 0; i < dateDifference ; i++ ){
                                 
-                            
+                                
 
                                 data.days.forEach(regularDay => {
 
                                     
                                     if(regularDay == dateStartPoint.getDay()){ 
 
-                                        var formatedStartTime = timeFormater(data.startTime,dateStartPoint.getFullYear(),dateStartPoint.getMonth(),dateStartPoint.getDate());
-                                        var formatedEndTime = timeFormater(data.endTime,dateStartPoint.getFullYear(),dateStartPoint.getMonth(),dateStartPoint.getDate());
+                                        var formatedStartTime = timeFormater(data.startTime/* timetable-regular used (hour:minutes) and type = string as time format */,dateStartPoint);
+                                        var formatedEndTime = timeFormater(data.endTime,dateStartPoint); /*keep it year,month,date as the same. because reuglar timetable just continue within a day */
                                         
                                         var toNotRegularFormat = {
                                             startTime:{seconds:formatedStartTime.getTime() / 1000},
@@ -316,13 +330,13 @@ export default new Vuex.Store({
                                     }
 
 
-                                    function timeFormater(timeString,year,month,date){     
+                                    function timeFormater(timeString,dateObj){     
                                         var splitTime = timeString.split(':').map(toInt => {
                                 
                                             return parseInt(toInt);
                                             
                                         });
-                                        var dateTransition = new Date(year,month,date,splitTime[0],splitTime[1]);
+                                        var dateTransition = new Date(dateObj.getFullYear(),dateObj.getMonth(),dateObj.getDate(),splitTime[0],splitTime[1]);
                                         
                                         return dateTransition
                                         
@@ -334,9 +348,9 @@ export default new Vuex.Store({
                       
                           
                         });
+    
 
-
-
+                        resolve(state.timeTableData);
                     }).catch(err => {
                         console.log(err);
                     });
@@ -345,7 +359,7 @@ export default new Vuex.Store({
                     /*
 
                     */
-                    resolve(state.timeTableData);
+                    
                 }).catch(err => {
                     console.log(err);
                     reject(err);

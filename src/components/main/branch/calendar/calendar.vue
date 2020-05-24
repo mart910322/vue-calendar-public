@@ -19,23 +19,23 @@
                 </div>
             </header>
             <section class="schedule-container">
-                <div class="each-day" v-for="(e,iindex) in new Array(5)" :key="iindex">
+                <div class="each-day" v-for="({date,month,year,events},index) in eachDay" :key="index">
                     <header class="each-day-title" >
                         <div class="month-date">
-                            March 15
+                            {{month + " " + date}}
                         </div>
                         <div class="year">
-                            2020
+                            {{year}}
                         </div>
                     </header>
-                    <div class="each-event"  v-for="(event,index) in new Array(4)" :key="index">
-                        <div class="event-title">event title</div>
-                        <div class="event-time">15:30-18:15</div>
+                    <div class="each-event" v-for="({startTime,title,duringTime},eventIndex) in events" :key="eventIndex">
+                        <div class="event-title">{{ title }}</div>
+                        <div class="event-time">{{ startTime.getHours() | plusZero }}{{':'}}{{ startTime.getMinutes() | plusZero }}</div>
                     </div>
                 </div>
             </section>
             
- 
+            {{ handledTimeTableData.length }}
         </main>
    
     </div>
@@ -65,6 +65,11 @@ export default {
             yearOptions,
             yearSelectedOption:2020,
 
+
+            eachDay:[],
+
+
+
         }
     },
     computed:{
@@ -78,10 +83,64 @@ export default {
         'custom-select':cusSelect
 
     },
+    filters:{
+        //plusZero registered globally
+    },
     methods:{
         ...mapActions([
             'getUserTimetable'
         ]),
+
+        showCalendar(year,month){
+            this.eachDay = [];
+            let date = new Date(year, month);
+     
+            
+            let totaldaysInMonth = 32 - new Date(year, month, 32).getDate();
+            
+
+            for(var l = 1; l <= totaldaysInMonth; l++ ){
+                date.setDate(l);
+           
+                
+                let dataTemp = [];
+
+                this.handledTimeTableData.forEach(eachData => {
+                    let resetTimeForCompare = new Date(eachData.startTime.getTime());
+                    
+                    resetTimeForCompare.setHours(0,0);
+
+                    if(resetTimeForCompare.getTime() == date.getTime()){
+                        
+                        dataTemp.push(eachData);
+                        
+                        
+                    }
+                });
+                
+                
+                let dayTemp = {
+                    year:date.getFullYear(),
+                    month:this.months[date.getMonth()],
+                    date:date.getDate(),
+                    events:dataTemp
+
+                }
+            
+
+                this.eachDay.push(dayTemp);
+                
+            }//render the day   
+      
+            
+        },
+        fetchData(startTimeLine,endTimeLine){
+            this.getUserTimetable({startTimeLine:startTimeLine,endTimeLine:endTimeLine}).then(() => {
+        
+                this.showCalendar(2020,4);
+            });            
+        }
+
 
     },
     mounted(){
@@ -90,12 +149,20 @@ export default {
 
         let first = new Date();
         first.setDate(1);
-        let totaldaysInMonth = 32 - new Date(first.getFullYear(),first.getMonth(), 32).getDate();
-        let end = new Date(first.getFullYear(),first.getMonth(),totaldaysInMonth);
+        let totaldaysInMonth = 32 - (new Date(first.getFullYear(),first.getMonth(), 32)).getDate();
+  
+        let end = new Date(first.getFullYear(),first.getMonth(),totaldaysInMonth + 1);
 
-        this.getUserTimetable({startTimeLine:first,endTimeLine:end});
+        this.fetchData(first,end )
+        //bug:there can not print the event of the last day
 
 
+
+        
+ 
+        
+
+        
     }
 }
 </script>
@@ -126,7 +193,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 .date-title-container{
     display: grid;
@@ -184,13 +251,15 @@ export default {
     display: grid;
     grid-template-columns: repeat(5,1fr);
     grid-auto-rows: minmax(15rem,auto);
-    grid-column-gap: 1.5rem;
+    grid-gap: 1.5rem;
+
+
 }
 .each-day{
     width: 100%;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16);
     border-radius: 4px;
-  
+   
 }
 .each-day-title{
     display: flex;
@@ -231,11 +300,17 @@ export default {
 
 }
 @media screen and (max-width:1370px){
+.body{
+    margin: 0rem auto;
+    border-top: 1px solid var(--gray-border);
+    border-radius: 0px;
+
+}
 .schedule-container{
 
     grid-template-columns: repeat(4,1fr);
     grid-auto-rows: minmax(15rem,auto);
-    grid-column-gap: 3vw;
+    grid-gap: 4vw;
 }    
 }
 @media screen and (max-width:1065px){
@@ -243,10 +318,117 @@ export default {
 
     grid-template-columns: repeat(3,1fr);
     grid-auto-rows: minmax(15rem,auto);
-    grid-column-gap: 4.5vw;
+    grid-gap: 4.5vw;
 }    
 }
 @media screen and (max-width: 768px){
-  
+
+.container{
+    
+}
+
+.body{
+    background: none;
+    padding: 0rem;
+ 
+}
+.head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+
+    background: var(--white);
+
+}    
+
+.date-title-container{
+
+    grid-template-columns:5rem 5rem;
+
+    font-size: 1.75rem;
+    padding: 1rem;
+}
+.go-icon{
+    
+    display: none;
+}  
+.schedule-container{
+
+    grid-template-columns: repeat(2,1fr);
+    grid-auto-rows: minmax(15rem,auto);
+    grid-gap: 5vw;
+    padding:0 1rem;
+} 
+}
+@media screen and (max-width: 550px){
+.selects-container{
+    display: flex;
+    padding:0 0.25rem; 
+}
+.selection{
+    --option-font-size:1.25rem;
+    --option-padding:0.25rem 1.25rem 0.3rem 1.25rem;
+
+
+}
+.month-select{
+
+    --entire-select-width:10rem;
+    margin-right: 1.5rem;
+} 
+.year-select{
+    --entire-select-width:6.75rem;
+}
+
+.schedule-container{
+
+    grid-template-columns: repeat(1,20.5rem);
+    grid-auto-rows: minmax(19rem,auto);
+    grid-gap: 2.5rem;
+    justify-content: center;
+} 
+.each-day-title{
+
+    padding: 0.25rem 0.625rem 0.25rem 0.625rem;
+    font-size: 1.75rem;
+
+}
+
+.each-event{
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.35rem;
+    font-weight: 300;
+    padding:0.5rem 0.325rem;
+}
+}
+@media screen and (max-width: 410px){
+.date-title-container{
+
+    grid-template-columns:5rem 5rem;
+
+    font-size: 1.75rem;
+    padding:1rem 0rem 1rem 0.5rem;
+
+}
+.selects-container{
+    display: flex;
+    padding:0 0.25rem 0 0.25rem; 
+}
+.selection{
+    --option-font-size:1.25rem;
+    --option-padding:0.25rem 1.25rem 0.3rem 1.25rem;
+
+
+}
+.month-select{
+
+    --entire-select-width:10rem;
+    margin-right: 0.75rem;
+} 
+.year-select{
+    --entire-select-width:6.75rem;
+}
 }
 </style>

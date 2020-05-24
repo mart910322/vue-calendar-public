@@ -194,8 +194,10 @@ export default {
 
 
         ...mapMutations([
-            'toggleBookingState',
-            'loading'
+            'toggleBookingStatus',
+            'loading',
+            'togglePropmtStatus'
+
         ]),
         ...mapActions([
             'getUserTimetable'
@@ -296,7 +298,7 @@ export default {
             this.errorText = '';
             this.getUserTimetable({startTimeLine:this.dateFormatCurrentDay, endTimeLine: endDay});
             this.initializeAllData();
-            this.toggleBookingState();
+            this.toggleBookingStatus();
             if(DidItNeedLoading){
                 this.loading();
             }
@@ -334,6 +336,7 @@ export default {
                 }).then(() => {
 
                     this.endingAction(true);
+                    this.emitStatus(true);
       
                 }).catch(err => {
 
@@ -342,6 +345,7 @@ export default {
 
                     this.errorText = err;
                     console.log(err);
+                    this.emitStatus(false);
                 });
 
             }else{
@@ -358,13 +362,14 @@ export default {
 
                 }).then(() => {
                     this.endingAction(true);
+                    this.emitStatus(true);
            
                 }).catch(err => {
                     this.endingAction(true);
         
                     this.errorText = err;
                     console.log(err  );
-                    console.log(err  );
+                    this.emitStatus(false);
                 })
    
             }
@@ -374,6 +379,16 @@ export default {
             var splitedTime = time.split(':');
    
             return [parseInt(splitedTime[0]),parseInt(splitedTime[1])]
+        },
+        emitStatus(doesItSuccess){
+            let msg = '';
+            if(doesItSuccess){
+                msg = 'booked  anew appointment successful';
+            }else{
+                msg = 'failed to book appointment';
+            }
+
+            this.togglePropmtStatus({success:doesItSuccess,msg:msg});
         }
 
     },
