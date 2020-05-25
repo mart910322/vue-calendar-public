@@ -92,7 +92,7 @@ header.title{
 }
 section.notes{
     display: grid;
-    grid-auto-rows: 3rem;
+    grid-auto-rows: 2.75rem;
     padding: 0 0.5rem;
   
     align-items: center;
@@ -103,8 +103,9 @@ div.note{
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
- 
+    padding: 0;
 }
+
 div.note:hover{
 
 }

@@ -124,7 +124,7 @@ main.function-box{
     width: 100%;
 
     height:calc(100vh - 8rem - 3.85rem);
-    min-height: 500px;
+    min-height: 550px;
     max-height: 1080px;
     background-image:linear-gradient(rgba(0,33,48,0.5) 0%, rgba(0,33,48,0.5) 100%) ,url('../../assets/background_image/landing_page_background.jpg');
     background-size: cover ;
@@ -231,7 +231,8 @@ article.swim-lane{
 
 }
 main.function-box{
-    max-height: 600px
+    max-height: 600px;
+
 }
 }
 @media screen and (max-width: 550px){

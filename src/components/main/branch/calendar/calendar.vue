@@ -35,7 +35,7 @@
                 </div>
             </section>
             
-            {{ handledTimeTableData.length }}
+      
         </main>
    
     </div>
