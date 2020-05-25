@@ -11,7 +11,7 @@
        
         <custom-btn class="login-btn" @onClick="commitLogin"><span slot="btn-name">log in</span></custom-btn>
         <span class="no-account-text" @click="$router.push('/resetPassword')">did you forget the password? click here</span>
-        <go-back-arrow class="go-back-btn" @iconClicked="$router.push('/')"></go-back-arrow>
+        <!-- <go-back-arrow class="go-back-btn" @iconClicked="$router.push('/')"></go-back-arrow>-->
   
         
     </div>
@@ -29,7 +29,7 @@ export default {
     },
     components:{
         'custom-btn':btnTemplate,
-        'go-back-arrow':arrow,
+       // 'go-back-arrow':arrow,
         'input-area':inputTemplate
  
     },
@@ -81,7 +81,7 @@ export default {
 .container{
     color: white;
     margin-left: 5vw;
-    width: 20rem;
+    width: 21.5rem;
     margin-bottom: 4.25%;
    
 }
@@ -142,13 +142,28 @@ export default {
     opacity:1;
     --icon-color:var(--normal-blue);
 }
+@media screen and (max-width:1368px){
+.container{
 
-@media screen and (max-width:700px){
+    width: 23.5rem;
+
+}
+
+}
+@media screen and (max-width:1024px){
 .container{
 
     margin:0 3vw ;
-    width: 47.5%;
-    height: 90%;
+    width: 40%;
+    min-width: 23.5rem;
+    margin-bottom: 10vh;
+}   
+}
+@media screen and (max-width:768px){
+.container{
+
+
+    margin-bottom: 10vh;
 }    
 .errMsg{
 
@@ -160,8 +175,9 @@ export default {
 
 
     width: 100%;
-     height: 100%;
-
+    height: 100%;
+    min-width: 0rem;
+    margin-bottom: 0vh;
 }
 .title{
 
@@ -169,7 +185,7 @@ export default {
 }
 .input-container{
 
-    height: 10.5rem;
+    height: 11rem;
     
 }
 .errMsg{

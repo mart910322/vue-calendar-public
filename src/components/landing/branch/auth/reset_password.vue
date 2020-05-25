@@ -79,7 +79,7 @@ export default {
 .container{
     color: white;
     margin-left: 5vw;
-    width: 20rem;
+    width: 21.5rem;
     margin-bottom: 5%;
 }
 .title{
@@ -142,6 +142,7 @@ export default {
 
     margin:0 3vw ;
     width: 47.5%;
+    
     height: 90%;
 }    
 .errMsg{

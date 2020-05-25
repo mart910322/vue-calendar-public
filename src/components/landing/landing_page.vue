@@ -125,7 +125,7 @@ main.function-box{
 
     height:calc(100vh - 8rem - 3.85rem);
     min-height: 500px;
-
+    max-height: 1080px;
     background-image:linear-gradient(rgba(0,33,48,0.5) 0%, rgba(0,33,48,0.5) 100%) ,url('../../assets/background_image/landing_page_background.jpg');
     background-size: cover ;
     background-position: center ;
@@ -223,14 +223,16 @@ article.swim-lane{
     opacity: 1;
     transform: translateX(-10%)
 }
-@media screen and (max-width: 700px){
+@media screen and (max-width: 768px){
 .landing-page .nav-icons-container{
    
     grid-template-columns: repeat(2,1fr);
     grid-auto-rows: minmax(8rem,auto);
 
 }
-
+main.function-box{
+    max-height: 600px
+}
 }
 @media screen and (max-width: 550px){
 main.function-box{

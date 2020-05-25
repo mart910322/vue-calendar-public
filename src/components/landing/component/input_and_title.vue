@@ -78,9 +78,19 @@ export default {
 .input-area:focus{
     
 }
-@media screen and (max-width: 700px){
+@media screen and (max-width: 1368px){
 .input-area{
- 
+
+    padding: 0.1125rem ;
+}
+}
+@media screen and (max-width: 550px){
+.title{
+    font-size: 1.65rem
+}
+.input-area{
+    font-size: 1.35rem;
+    padding: 0.15rem ;
 }
 }
 </style>

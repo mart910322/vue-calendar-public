@@ -103,14 +103,10 @@ html{
 }
 @media screen and (max-width: 1370px){
 html{
-  font-size: 14.5px;
+  font-size: 14.75px;
 }
 }
-@media screen and (max-width: 1024px){
-html{
-  font-size: 13.75px;
-}
-}
+
 @media screen and (max-width: 550px){
 html{
   font-size: 12.5px;

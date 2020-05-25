@@ -76,7 +76,7 @@ export default {
 .container{
     color: white;
     margin-left: 5vw;
-    width: 20rem;
+    width: 21.5rem;
     margin-bottom: 5%;
 }
 .title{
@@ -122,12 +122,29 @@ export default {
 .no-account-text:hover{
     border-bottom: 1px solid white;
 }
+@media screen and (max-width:1368px){
+.container{
 
-@media screen and (max-width:700px){
+    width: 23.5rem;
+   
+}
+
+}
+@media screen and (max-width:1024px){
 .container{
 
     margin:0 3vw ;
-    width: 47.5%;
+    width: 40%;
+    min-width: 23.5rem;
+
+
+}   
+}
+@media screen and (max-width:768px){
+.container{
+
+
+
     height: 90%;
 }   
 .errMsg{
@@ -140,7 +157,8 @@ export default {
 
 
     width: 100%;
-     height: 100%;
+    min-width: 0rem;
+    height: 100%;
 
 }
 .title{
