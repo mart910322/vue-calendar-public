@@ -4,7 +4,7 @@
             <span class="title-text">Notes / To do list</span>
         </header>
         <section class="notes">
-            <div class="note" v-for="(task,index) in taskData" :key="index" @click="finished(task.ref)">
+            <div class="note" v-for="(task,index) in taskData" :key="index" @click="userTaskHaveFinished(task.ref)">
                 <span class="task-title">{{task.title}}</span>
                 <div class="tick-box"><span class="tick-symbol">&#10003;</span></div>
             </div>
@@ -30,29 +30,14 @@ export default {
     methods:{
         ...mapActions([
             'getUserTask',
+            'userTaskHaveFinished'
             
         ]),
         ...mapMutations([
             'toggleNewTaskStatus' ,
-            'loading'
-        ]),
-        finished(ref){
-            this.loading();
-            var currentUser = firebase.auth().currentUser;
-            db.collection('user-profile').doc(currentUser.uid).collection('user-task').doc(ref).update({
-                isItFinished:true
-            }).then(() => {
-                this.getUserTask().then(() => {
-                    this.loading();
-                });
-                
-                
-            }).catch(err => {
-                console.log(err);
-                this.loading();
-            })
 
-        },
+        ]),
+
 
     },
 

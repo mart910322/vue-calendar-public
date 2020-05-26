@@ -6,10 +6,11 @@
         <main class="body">
             <header class="head">
                 <div class="date-title-container">
-                    <go-arrow-icon class="left-side go-icon"></go-arrow-icon>
-                    <go-arrow-icon class="right-side go-icon"></go-arrow-icon>
-                    <span class="title-month">March</span>
-                    <span class="title-year">2020</span>
+                    <go-arrow-icon class="left-side go-icon" @iconClicked="nextMonth(-1)"></go-arrow-icon>
+                    <go-arrow-icon class="right-side go-icon" @iconClicked="nextMonth(1)"></go-arrow-icon>
+                    <span class="title-year">{{yearSelectedOption}}</span>
+                    <span class="title-month">{{ monthSelectedOption }}</span>
+                    
                 </div>
                 <div class="selects-container">
 
@@ -19,7 +20,7 @@
                 </div>
             </header>
             <section class="schedule-container">
-                <div class="each-day" v-for="({date,month,year,events},index) in eachDay" :key="index">
+                <div class="each-day" v-for="({date,month,year,events},index) in eachDay" :key="index" @click="$router.push({name:'timetable', params:{year,month:months.indexOf(month) + 1,day:date}})">
                     <header class="each-day-title" >
                         <div class="month-date">
                             {{month + " " + date}}
@@ -55,12 +56,14 @@ export default {
         for(let i = 2020; i < 2050 ; i++){
             yearOptions.push(i);
         }
-        let months = ['January','February','March','April','MAY','June','July','August','September','October','November','December'];
+        let months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         return{ 
             months,
 
             monthOptions:months,
             monthSelectedOption:'January',
+
+            
 
             yearOptions,
             yearSelectedOption:2020,
@@ -68,7 +71,18 @@ export default {
 
             eachDay:[],
 
+            fetchIngDate:false,
 
+        }
+    },
+    watch:{
+        monthSelectedOption(val){
+            this.dateChanger();
+    
+        },
+        yearSelectedOption(val){
+
+            this.dateChanger();
 
         }
     },
@@ -90,12 +104,45 @@ export default {
         ...mapActions([
             'getUserTimetable'
         ]),
+        ...mapMutations([
+            'togglePropmtStatus'
+        ]),
+        nextMonth(value/* +1 or -1*/){
+            let index = this.monthOptions.indexOf(this.monthSelectedOption) + value;
 
+            let yearOptionIndex = this.yearOptions.indexOf(this.yearSelectedOption);
+            
+            if(index >= this.monthOptions.length){
+                index = 0;
+        
+                if(yearOptionIndex >= this.yearOptions.length -1){
+
+                    this.yearSelectedOption = this.yearOptions.length - 1;
+                    this.togglePropmtStatus({success:false,msg:'No longer date is available'});
+                    return
+                }
+                this.yearSelectedOption++;
+
+            }else if(index < 0){
+                index = this.monthOptions.length - 1;
+                
+                if(yearOptionIndex <= 0){
+                    this.yearSelectedOption = 0;
+                    this.togglePropmtStatus({success:false,msg:'No longer date is available'});
+                    return
+                }
+                this.yearSelectedOption--;
+                
+                
+            }            
+            this.monthSelectedOption = this.monthOptions[index];
+    
+
+        },
         showCalendar(year,month){
             this.eachDay = [];
             let date = new Date(year, month);
-     
-            
+
             let totaldaysInMonth = 32 - new Date(year, month, 32).getDate();
             
 
@@ -134,35 +181,50 @@ export default {
       
             
         },
-        fetchData(startTimeLine,endTimeLine){
-            this.getUserTimetable({startTimeLine:startTimeLine,endTimeLine:endTimeLine}).then(() => {
+        dateChanger(){
+            let year = this.yearSelectedOption;
+            let month = this.monthOptions.indexOf(this.monthSelectedOption);
         
-                this.showCalendar(2020,4);
-            });            
+            
+            this.fetchData(year,month);
+            
+        },
+        initialize(){
+
+            let today = new Date();
+
+            let [year,month] = [today.getFullYear(),today.getMonth()]
+            
+            this.monthSelectedOption = this.monthOptions[month];
+            this.yearSelectedOption = this.yearOptions[year];
+     
+
+                        
+        },
+        fetchData(year,month/*number*/){
+        
+            if(!this.fetchIngDate && year != undefined && month != undefined){
+                this.fetchIngDate = true;//prevent the function trigger twice
+                let start = new Date(year,month);
+                let end = new Date(start.getFullYear(),start.getMonth() + 1 ,1);
+
+                start.setDate(1);
+
+                this.getUserTimetable({startTimeLine:start,endTimeLine:end}).then(() => {
+            
+                    this.showCalendar(year,month);
+                    this.fetchIngDate = false;
+                });
+            }
+        
         }
 
 
     },
     mounted(){
      
+        this.initialize();
 
-
-        let first = new Date();
-        first.setDate(1);
-        let totaldaysInMonth = 32 - (new Date(first.getFullYear(),first.getMonth(), 32)).getDate();
-  
-        let end = new Date(first.getFullYear(),first.getMonth(),totaldaysInMonth + 1);
-
-        this.fetchData(first,end )
-        //bug:there can not print the event of the last day
-
-
-
-        
- 
-        
-
-        
     }
 }
 </script>
@@ -189,7 +251,7 @@ export default {
 
     border-radius: 12px;
 }
-.head{
+.body .head{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -197,7 +259,7 @@ export default {
 }
 .date-title-container{
     display: grid;
-    grid-template-columns: 2rem 3rem  5rem 5rem;
+    grid-template-columns: 2rem 2.5rem  5rem minmax(5rem,auto);
 
     justify-items: center;
     align-items: center;
@@ -223,7 +285,7 @@ export default {
 
 }
 .date-title-container .title-month{
-
+    margin:0 0.25rem;
 }
 .date-title-container .title-year{
 
@@ -332,7 +394,7 @@ export default {
     padding: 0rem;
  
 }
-.head{
+.body .head{
     display: flex;
     justify-content: space-between;
     align-items: center;

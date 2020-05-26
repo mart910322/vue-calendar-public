@@ -59,8 +59,13 @@ export default {
             'toggleMobileMenuStatus'
         ]),
         matchCurrentPath(index){
-        
-            return this.$route.name.toLowerCase() == this.navNames[index].trim().replace(/ /g,'');
+            let name = this.$route.name.toLowerCase();
+            
+            if(name == 'timetable'){
+                name = 'calendar';
+            }
+     
+            return name == this.navNames[index].trim().replace(/ /g,'');
         },//matching which current path and icon name for distinguish where is the user  
         navIcons(index){
             switch(index){

@@ -18,6 +18,9 @@ export default new Vuex.Store({
         searchKeyword:'',
         
         taskData:[],
+
+        fetchingTimetable:false,
+        fetchingTask:false,
         /* schedule borad */
 
         loading:false,
@@ -267,141 +270,176 @@ export default new Vuex.Store({
         },
         getUserTimetable({commit,state},{startTimeLine,endTimeLine}){//this jsut fetch data. then the data will sent to handledTimeTableData of getter
 
-            
-            let currentUser = firebase.auth().currentUser;
+            if(!state.fetchingTimetable && startTimeLine!= undefined && endTimeLine != undefined){
+                state.fetchingTimetable = true;
 
-            let returnTimeTableData = new Promise((resolve,reject) => {
+                let currentUser = firebase.auth().currentUser;
 
-                db.collection('user-profile').doc(currentUser.uid).collection('user-timetable').get().then((snapshot) => {
-                //fetch data from firebase   
-                    state.timeTableData = [];//clean the variable
-                    let startTime,endTime,indexCount = 0;
+                let returnTimeTableData = new Promise((resolve,reject) => {
 
-                    snapshot.forEach(doc => {
-           
-                        startTime = doc.data().startTime.seconds * 1000;
-                        endTime = doc.data().endTime.seconds * 1000;//turn the time to nanosecond
-                  
-                        if(!(startTime < startTimeLine && endTime < startTimeLine || startTime > endTimeLine && endTime > endTimeLine) ){  //filtering the data by time  
-                            state.timeTableData.push(doc.data());
-                            state.timeTableData[indexCount].ref = doc.ref.id;
-                            indexCount ++;
-                        }
-                
-                    });
+                    db.collection('user-profile').doc(currentUser.uid).collection('user-timetable').get().then((snapshot) => {
+                    //fetch data from firebase   
+                        state.timeTableData = [];//clean the variable
+                        let startTime,endTime,indexCount = 0;
 
-
-
-                    db.collection('user-profile').doc(currentUser.uid).collection('user-timetable-regular').get().then(snapshot =>{
-                        
                         snapshot.forEach(doc => {
-                            let data = doc.data();
-                         
-                            let dateStartPoint = new Date(startTimeLine);
-                            let dateEndPoint = new Date(endTimeLine);
-
-                            let dateDifference = Math.ceil((dateEndPoint - dateStartPoint) / (1000 * 60 * 60 * 24));
-                
-                            for(var i = 0; i < dateDifference ; i++ ){
-                                
-                                
-
-                                data.days.forEach(regularDay => {
-
-                                    
-                                    if(regularDay == dateStartPoint.getDay()){ 
-
-                                        var formatedStartTime = timeFormater(data.startTime/* timetable-regular used (hour:minutes) and type = string as time format */,dateStartPoint);
-                                        var formatedEndTime = timeFormater(data.endTime,dateStartPoint); /*keep it year,month,date as the same. because reuglar timetable just continue within a day */
-                                        
-                                        var toNotRegularFormat = {
-                                            startTime:{seconds:formatedStartTime.getTime() / 1000},
-                                            endTime:{seconds:formatedEndTime.getTime() / 1000},
-                                            content:data.content,
-                                            title:data.title,
-                                            isItRegular:data.isItRegular
-                                        }
-                                        state.timeTableData.push(toNotRegularFormat);
-                                        state.timeTableData[indexCount].ref = doc.ref.id;
-                                        indexCount ++;    
-                                        
-                                        
-                                                                
-                                    }
-
-
-                                    function timeFormater(timeString,dateObj){     
-                                        var splitTime = timeString.split(':').map(toInt => {
-                                
-                                            return parseInt(toInt);
-                                            
-                                        });
-                                        var dateTransition = new Date(dateObj.getFullYear(),dateObj.getMonth(),dateObj.getDate(),splitTime[0],splitTime[1]);
-                                        
-                                        return dateTransition
-                                        
-                                    } 
-
-                                });
-                                dateStartPoint.setDate(dateStartPoint.getDate() + 1);
+            
+                            startTime = doc.data().startTime.seconds * 1000;
+                            endTime = doc.data().endTime.seconds * 1000;//turn the time to nanosecond
+                    
+                            if(!(startTime < startTimeLine && endTime < startTimeLine || startTime > endTimeLine && endTime > endTimeLine) ){  //filtering the data by time  
+                                state.timeTableData.push(doc.data());
+                                state.timeTableData[indexCount].ref = doc.ref.id;
+                                indexCount ++;
                             }
-                      
-                          
+                    
                         });
-    
 
-                        resolve(state.timeTableData);
+
+
+                        db.collection('user-profile').doc(currentUser.uid).collection('user-timetable-regular').get().then(snapshot =>{
+                            
+                            snapshot.forEach(doc => {
+                                let data = doc.data();
+                            
+                                let dateStartPoint = new Date(startTimeLine);
+                                let dateEndPoint = new Date(endTimeLine);
+
+                                let dateDifference = Math.ceil((dateEndPoint - dateStartPoint) / (1000 * 60 * 60 * 24));
+                    
+                                for(var i = 0; i < dateDifference ; i++ ){
+                                    
+                                    
+
+                                    data.days.forEach(regularDay => {
+
+                                        
+                                        if(regularDay == dateStartPoint.getDay()){ 
+
+                                            var formatedStartTime = timeFormater(data.startTime/* timetable-regular used (hour:minutes) and type = string as time format */,dateStartPoint);
+                                            var formatedEndTime = timeFormater(data.endTime,dateStartPoint); /*keep it year,month,date as the same. because reuglar timetable just continue within a day */
+                                            
+                                            var toNotRegularFormat = {
+                                                startTime:{seconds:formatedStartTime.getTime() / 1000},
+                                                endTime:{seconds:formatedEndTime.getTime() / 1000},
+                                                content:data.content,
+                                                title:data.title,
+                                                isItRegular:data.isItRegular
+                                            }
+                                            state.timeTableData.push(toNotRegularFormat);
+                                            state.timeTableData[indexCount].ref = doc.ref.id;
+                                            indexCount ++;    
+                                            
+                                            
+                                                                    
+                                        }
+
+
+                                        function timeFormater(timeString,dateObj){     
+                                            var splitTime = timeString.split(':').map(toInt => {
+                                    
+                                                return parseInt(toInt);
+                                                
+                                            });
+                                            var dateTransition = new Date(dateObj.getFullYear(),dateObj.getMonth(),dateObj.getDate(),splitTime[0],splitTime[1]);
+                                            
+                                            return dateTransition
+                                            
+                                        } 
+
+                                    });
+                                    dateStartPoint.setDate(dateStartPoint.getDate() + 1);
+                                }
+                        
+                            
+                            });
+        
+
+                            resolve(state.timeTableData);
+                            state.fetchingTimetable = false;
+                        }).catch(err => {
+                            console.log(err);
+                            reject(err);
+                            state.fetchingTimetable = false;
+                        });
+
+
+                        /*
+
+                        */
+                        
                     }).catch(err => {
                         console.log(err);
+                        state.fetchingTimetable = false;
+                        reject(err);
                     });
-
-
-                    /*
-
-                    */
                     
-                }).catch(err => {
-                    console.log(err);
-                    reject(err);
-                });
-                
-            })
-            return returnTimeTableData;//the promise is used for add some function after finish this function
+                })
+                return returnTimeTableData;//the promise is used for add some function after finish this function
+            }
+            
 
 
         },
         getUserTask({commit,state},needFinishedTask){
             
-            let currentUser = firebase.auth().currentUser;
-            let indexCount = 0;
-
-            let returnTaskData = new Promise((resolve,reject) => {
-
-                db.collection('user-profile').doc(currentUser.uid).collection('user-task').get().then((snapshot) => {
-                    //fetch data from firebase   
-                    state.taskData = [];//clean the variable
-                    snapshot.forEach(doc => {    
-                        
-                        if(!doc.data().isItFinished || needFinishedTask){
-                            state.taskData.push(doc.data());  
-                            state.taskData[indexCount].ref = doc.ref.id;
-                            indexCount++;
-                        }
-
+            if(!state.fetchingTask){
+                state.fetchingTask = true;
+                let currentUser = firebase.auth().currentUser;
+                let indexCount = 0;
     
-
+                let returnTaskData = new Promise((resolve,reject) => {
+    
+                    db.collection('user-profile').doc(currentUser.uid).collection('user-task').get().then((snapshot) => {
+                        //fetch data from firebase   
+                        state.taskData = [];//clean the variable
+                        snapshot.forEach(doc => {    
+                            
+                            if(!doc.data().isItFinished || needFinishedTask){
+                                state.taskData.push(doc.data());  
+                                state.taskData[indexCount].ref = doc.ref.id;
+                                indexCount++;
+                            }
+    
+        
+    
+                        });
+                        resolve(state.taskData);
+                        state.fetchingTask = false;
+                    }).catch(err => {
+                        state.fetchingTask = false;
+                        console.log(err);
+                        reject(err);
                     });
-                    resolve(state.taskData);
-                }).catch(err => {
-                    console.log(err);
-                    reject(err);
-                });
-                
-            })
-            return returnTaskData;//the promise is used for add some function after finish this function
+                    
+                })
+                return returnTaskData;//the promise is used for add some function after finish this function
+            }
+
 
 
         },
+        userTaskHaveFinished({state,commit,dispatch},ref){
+
+            commit('loading');
+            var currentUser = firebase.auth().currentUser;
+            db.collection('user-profile').doc(currentUser.uid).collection('user-task').doc(ref).update({
+                isItFinished:true
+            }).then(() => {
+                dispatch('getUserTask').then(() => {
+                    commit('loading');
+                });
+
+      
+                
+                
+            }).catch(err => {
+                console.log(err);
+                commit('loading');
+            });    
+
+        },
+
         cancelSchedule({commit,getters,dispatch},{ref,isItRegular}){
             commit('loading');
             let deleteSchedule = new Promise((resolve,reject) => {

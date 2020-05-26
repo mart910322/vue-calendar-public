@@ -12,7 +12,7 @@ import verifyEamil from '../components/landing/branch/auth/verify_email.vue'
 import containerPage from '../components/main/container.vue'
 import schedule from '../components/main/branch/schedule/schedule.vue'
 import calendar from '../components/main/branch/calendar/calendar.vue'
-import taskBoard from '../components/main/branch/task_management/task_management.vue'
+import taskBoard from '../components/main/branch/task_management/task_board.vue'
 import setting from '../components/main/branch/setting/setting.vue'
 import timetable from '../components/main/branch/calendar/branch/timetable.vue'
 
@@ -79,6 +79,9 @@ Vue.use(VueRouter)
         name:'calendar',
         component:calendar,
         meta: { requiresAuth : true },
+        children:[
+          
+        ]
       },
       {
         path:'timetable/:year/:month/:day',
