@@ -196,7 +196,7 @@ export default {
         ...mapMutations([
             'toggleBookingStatus',
             'loading',
-            'togglePropmtStatus'
+            'showPropmt'
 
         ]),
         ...mapActions([
@@ -388,7 +388,7 @@ export default {
                 msg = 'failed to book appointment';
             }
 
-            this.togglePropmtStatus({success:doesItSuccess,msg:msg});
+            this.showPropmt({success:doesItSuccess,msg:msg});
         }
 
     },

@@ -177,7 +177,7 @@ main.function-box{
 
 
 article.swim-lane{
-    overflow-x: hidden;
+    overflow: hidden;
 }
 .landing-footer{
     height: 15rem;

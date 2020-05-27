@@ -172,7 +172,7 @@ export default new Vuex.Store({
             
 
         },//save the data to state and show the alert
-        togglePropmtStatus(state,{success,msg}){
+        showPropmt(state,{success,msg}){
             state.doesPropmtShow = true;
             state.propmtMsg = msg;
             state.promptShowTick = success;
@@ -361,6 +361,7 @@ export default new Vuex.Store({
                             console.log(err);
                             reject(err);
                             state.fetchingTimetable = false;
+                            commit('showPropmt',{success:true,msg:'connect datebase error'})
                         });
 
 
@@ -372,6 +373,7 @@ export default new Vuex.Store({
                         console.log(err);
                         state.fetchingTimetable = false;
                         reject(err);
+                        commit('showPropmt',{success:true,msg:'connect datebase error'})
                     });
                     
                 })
@@ -410,6 +412,7 @@ export default new Vuex.Store({
                         state.fetchingTask = false;
                         console.log(err);
                         reject(err);
+                        commit('showPropmt',{success:true,msg:'connect datebase error'})
                     });
                     
                 })
@@ -426,16 +429,17 @@ export default new Vuex.Store({
             db.collection('user-profile').doc(currentUser.uid).collection('user-task').doc(ref).update({
                 isItFinished:true
             }).then(() => {
+         
                 dispatch('getUserTask').then(() => {
                     commit('loading');
-                });
+                    commit('showPropmt',{success:true,msg:'A work have been finished'})
 
-      
-                
+                });
                 
             }).catch(err => {
                 console.log(err);
                 commit('loading');
+                commit('showPropmt',{success:false,msg:'error'})
             });    
 
         },
@@ -454,16 +458,19 @@ export default new Vuex.Store({
                                 
                     dispatch('getUserTimetable',{startTimeLine:getters.dateFormatCurrentDay,endTimeLine:endDay}).then(() => {
                         commit('loading');
+                        commit('showPropmt',{success:true,msg:'canceled a appointment successful'})
                     }).catch(err => {
                         console.log(err);
                         reject(err);
                         commit('loading');
+                        commit('showPropmt',{success:true,msg:'update schedule error'})
                     });
 
                 }).catch(err => {
                     console.log(err);
                     reject(err);
                     commit('loading');
+                    commit('showPropmt',{success:true,msg:'connect datebase error'})
                 })
             })
 

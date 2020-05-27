@@ -105,7 +105,7 @@ export default {
             'getUserTimetable'
         ]),
         ...mapMutations([
-            'togglePropmtStatus'
+            'showPropmt'
         ]),
         nextMonth(value/* +1 or -1*/){
             let index = this.monthOptions.indexOf(this.monthSelectedOption) + value;
@@ -118,7 +118,7 @@ export default {
                 if(yearOptionIndex >= this.yearOptions.length -1){
 
                     this.yearSelectedOption = this.yearOptions.length - 1;
-                    this.togglePropmtStatus({success:false,msg:'No longer date is available'});
+                    this.showPropmt({success:false,msg:'No longer date is available'});
                     return
                 }
                 this.yearSelectedOption++;
@@ -128,7 +128,7 @@ export default {
                 
                 if(yearOptionIndex <= 0){
                     this.yearSelectedOption = 0;
-                    this.togglePropmtStatus({success:false,msg:'No longer date is available'});
+                    this.showPropmt({success:false,msg:'No longer date is available'});
                     return
                 }
                 this.yearSelectedOption--;
@@ -326,7 +326,7 @@ export default {
 .each-day-title{
     display: flex;
     justify-content: space-between;
-    padding: 0.25rem 0.625rem 0.25rem 0.625rem;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
     font-size: 1.5rem;
     color: var(--normal-blue);
 }

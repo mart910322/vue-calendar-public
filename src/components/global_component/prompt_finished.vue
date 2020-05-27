@@ -2,7 +2,7 @@
     <transition name="fade-up">
         <div class="container" v-if="doesPropmtShow">
             <component :is="promptShowTick ? 'tick-icon' : 'cross-icon'" class="icon" :class="promptShowTick ? 'tick' : 'cross'"></component>
-            <span class="msg">{{ propmtMsg }}</span>
+            <span class="msg">{{ propmtMsg }} </span>
         </div>
     </transition>
 </template>
@@ -27,7 +27,7 @@ export default {
     },
     methods:{
         ...mapMutations([
-            'togglePropmtStatus'
+            'showPropmt'
         ])
     }
 }
@@ -51,7 +51,8 @@ export default {
 
 }
 .icon{
-    
+    display: flex;
+    align-items: center;
 }
 .icon.tick{
     --icon-color:var(--light-green)
@@ -75,5 +76,11 @@ export default {
     transform:  rotateX(0deg);
     bottom: 2.5%;
     opacity: 1;
+}
+@media screen and (max-width:550px){
+.container{
+
+
+}   
 }
 </style>

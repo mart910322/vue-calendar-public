@@ -68,7 +68,7 @@ export default {
         ...mapMutations([
            'toggleNewTaskStatus',
            'loading',
-           'togglePropmtStatus'
+           'showPropmt'
         ]),
         ...mapActions([
             'getUserTask'
@@ -126,7 +126,7 @@ export default {
                 msg = 'failed added a note';
             }
 
-            this.togglePropmtStatus({success:doesItSuccess,msg:msg});
+            this.showPropmt({success:doesItSuccess,msg:msg});
         }
 
 
