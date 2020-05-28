@@ -101,4 +101,10 @@ export default {
     
 }
 }
+@media screen and (max-width: 768px){
+.title{
+
+    font-size: 2.35rem;
+}    
+}
 </style>

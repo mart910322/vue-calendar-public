@@ -1,10 +1,12 @@
 <template>
-    <transition name="fade-up">
-        <div class="container" v-if="doesPropmtShow">
-            <component :is="promptShowTick ? 'tick-icon' : 'cross-icon'" class="icon" :class="promptShowTick ? 'tick' : 'cross'"></component>
-            <span class="msg">{{ propmtMsg }} </span>
+
+    <transition-group class="container" v-if="eachPrompt.length >= 1" tag="div" name="propmt-list" @leave="leaveAnimation" @after-leave="cancelAnimation" :css="false">
+        <div class="each-prompt" v-for="({success,msg},index) in eachPrompt" :key="index" :class="{'animation': triggerAnimation && index == 0}">
+            <component :is="success ? 'tick-icon' : 'cross-icon'" class="icon" :class="success ? 'tick' : 'cross'"></component>
+            <span class="msg">{{ msg }} </span>
         </div>
-    </transition>
+    </transition-group>
+
 </template>
 
 <script>
@@ -16,20 +18,37 @@ export default {
         'tick-icon':tickIcon,
         'cross-icon':crossIcon
     },
+    data(){
+        return{
+            triggerAnimation:false
+        }
+    },
     computed:{
         ...mapState([
-            'doesPropmtShow',
-            'propmtMsg',
-            'promptShowTick'
+            'doespromptShow',
+            'promptMsg',
+            'promptShowTick',
+            'eachPrompt'
 
         ]),
+
 
     },
     methods:{
         ...mapMutations([
-            'showPropmt'
-        ])
-    }
+            'showprompt'
+        ]),
+        leaveAnimation(el,done){
+            console.log(el);
+           // el.style.opacity = '0.3'
+            done();
+        
+        },
+        cancelAnimation(){
+     
+        }
+    },
+        
 }
 </script>
 
@@ -38,21 +57,42 @@ export default {
     position: fixed;
     bottom: 2.5%;
     right: 2.5%;
+
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.each-prompt{
+    display: inline-flex;
     min-width: 15rem;
-    height: 4rem;
+    min-height: 4rem;
+    padding: 0 1rem;
+    margin-top: 1rem;
     background: var(--normal-blue);
 
-    display: grid;
-    grid-template-columns: 2rem 1fr;
-    grid-column-gap: 1rem;
-    align-items: center;
 
-    padding: 0 1rem;
-
+    transition: 0.5s,0s min-width;
 }
+
+/*.each-prompt.animation{
+    animation: leaveFade 0.5s ;
+}*/
+@keyframes leaveFade {
+    0%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+}
+
 .icon{
     display: flex;
     align-items: center;
+    min-height: 4rem;
+    width: 2rem;
+    margin-right: 1rem
+    
 }
 .icon.tick{
     --icon-color:var(--light-green)
@@ -62,21 +102,15 @@ export default {
 }
 .msg{
     font-size: 1.5rem;
+    min-height: 4rem;
     color: var(--white);
+    display: flex;
+    align-items: center;
+
+
 }
-.fade-up-enter-active,.fade-up-leave-active{
-    transition: 0.5s;
-}
-.fade-up-enter,.fade-up-leave-to{
-    transform: rotateX(90deg);
-    bottom: -5%;
-    opacity:0.3;
-}
-.fade-up-enter-to,.fade-up-leave{
-    transform:  rotateX(0deg);
-    bottom: 2.5%;
-    opacity: 1;
-}
+
+
 @media screen and (max-width:550px){
 .container{
 

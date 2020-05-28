@@ -313,7 +313,13 @@ export default {
 
 
 } 
+.function-pieces-wrapper{
+    
+
+    grid-template-columns: 1fr 1fr;
+
    
+}
 
 }
 @media screen and (max-width: 500px){
@@ -340,6 +346,14 @@ export default {
     height: 100%;
 
     
+}
+}
+@media not all and (hover:hover) {
+.schedule-container{
+
+
+    max-height: var(--mobile-height,100vh);
+  
 }
 }
 </style>

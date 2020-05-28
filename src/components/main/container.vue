@@ -34,6 +34,7 @@ export default {
     min-width: calc(100vw + 20rem);
 
     --router-component-width:calc(100vw - 5.75rem);
+
 }
 @media screen and (max-width:768px){
 .main_container{

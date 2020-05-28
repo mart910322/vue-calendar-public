@@ -190,6 +190,9 @@ export default {
  
         border-bottom: 1px solid var(--dark-gray);
 
+        
+        color: var(--black);
+
     }
     .year-and-month{
         font-size: 1.625rem;
@@ -235,6 +238,8 @@ export default {
         width: 100%;
         display: block;
         padding: 0 0.5rem 0% 0.5rem;
+        
+        color: var(--black);
       
     }
     tr{

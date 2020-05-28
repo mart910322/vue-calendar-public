@@ -35,7 +35,13 @@ export default {
     
     },
     mounted(){
-   
+
+      const mobileHeight = () => {
+            const doc = document.documentElement
+            doc.style.setProperty('--mobile-height', `${window.innerHeight}px`)
+      }
+      window.addEventListener('resize', mobileHeight);
+      mobileHeight();//preventing 100vh get over the screen
     
     }
 }
@@ -64,6 +70,7 @@ export default {
     --white:#ffffff;
     --black:#000000;
 
+    --mobile-height:100%
 }
 *,*::before,*::after{
     box-sizing: border-box;
@@ -78,6 +85,19 @@ body,html{
 
 
 }
+
+.fade-enter-active,.fade-leave-active{
+    transition: opacity 0.5s;
+}
+.fade-enter,.fade-leave-to{
+    opacity: 0;
+
+}
+.fade-enter-to,.fade-leave{
+    opacity: 1;
+
+}
+
 
 
 
@@ -110,6 +130,20 @@ html{
 @media screen and (max-width: 550px){
 html{
   font-size: 12.5px;
+}
+
+.roll-up-enter-active,.roll-up-leave-active{
+    transition:0.75s ease-in-out;
+
+
+}
+.roll-up-enter,.roll-up-leave-to{
+    transform: translateY(200%)
+
+}
+.roll-up-enter-to,.roll-up-leave{
+    transform: translateY(0%)
+
 }
 }
 </style>

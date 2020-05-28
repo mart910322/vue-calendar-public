@@ -1,39 +1,41 @@
 <template>
-    <div class="back-board" v-if="doesNewTaskBoardShow">
-        <div class="container">
+    <transition name="roll-up">
+        <div class="back-board" v-if="doesNewTaskBoardShow">
+            <div class="container">
 
-            <header class="head">
-                <div class="title">New notes / to do list</div>
-                <cross-icon class="cross icon" @iconClicked="endingAction(false)"></cross-icon>
-            </header>
+                <header class="head">
+                    <div class="title">New notes / to do list</div>
+                    <cross-icon class="cross icon" @iconClicked="endingAction(false)"></cross-icon>
+                </header>
 
-            <section class="typing-title-area">
-                <input type="text" class="new-task-notes-title" placeholder="type the title..." v-model="title">
-            </section>
+                <section class="typing-title-area">
+                    <input type="text" class="new-task-notes-title" placeholder="type the title..." v-model="title">
+                </section>
 
-            <section class="body">               
-                <div class="datails-container row">
-                    <details-icon class="details icon"></details-icon>
-                    <textarea class="datalis-input-area" placeholder="type your appointment datails..." v-model="details"></textarea>
-                </div>
-                <div class="error-text-wrapper row" v-if="errorText != ''">
-            
-                    <div class="error-text">{{ errorText }}</div>
-                </div>
-            </section>
+                <section class="body">               
+                    <div class="datails-container row">
+                        <details-icon class="details icon"></details-icon>
+                        <textarea class="datalis-input-area" placeholder="type your appointment datails..." v-model="details"></textarea>
+                    </div>
+                    <div class="error-text-wrapper row" v-if="errorText != ''">
+                
+                        <div class="error-text">{{ errorText }}</div>
+                    </div>
+                </section>
 
-     
-            <footer class="floor">
-                <div class="btn-container">
-                    <div class="save btn" @click="formatChecker">save</div>
-                    <div class="cancel btn" @click="endingAction(false)">cancel</div>
-                    
-                </div>
-            </footer>
-     
+        
+                <footer class="floor">
+                    <div class="btn-container">
+                        <div class="save btn" @click="formatChecker">save</div>
+                        <div class="cancel btn" @click="endingAction(false)">cancel</div>
+                        
+                    </div>
+                </footer>
+        
+            </div>
+
         </div>
-
-    </div>
+    </transition>
 </template>
 
 <script>
@@ -68,7 +70,7 @@ export default {
         ...mapMutations([
            'toggleNewTaskStatus',
            'loading',
-           'showPropmt'
+           'showprompt'
         ]),
         ...mapActions([
             'getUserTask'
@@ -85,7 +87,10 @@ export default {
                 return
             }
 
-
+            if(this.title.length <= 0){
+                this.errorText = 'title can not be empty'
+                return                
+            }
 
             this.submitNewNotes();
             
@@ -126,7 +131,7 @@ export default {
                 msg = 'failed added a note';
             }
 
-            this.showPropmt({success:doesItSuccess,msg:msg});
+            this.showprompt({success:doesItSuccess,msg:msg});
         }
 
 
@@ -301,7 +306,7 @@ export default {
 @media screen and (max-width:550px) {
 .back-board{
  
-    background: var(--gray-background);
+    background: var(--white);
 
     align-items: flex-start;
 }

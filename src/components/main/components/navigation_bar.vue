@@ -242,5 +242,12 @@ export default {
 }
 }
 
+@media not all and (hover:hover) {
+.container{
 
+
+    height: var(--mobile-height,100vh);
+  
+}
+}
 </style>

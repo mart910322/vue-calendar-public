@@ -2,7 +2,7 @@
     <div class="article-area" :class="layout"> 
         <div class="article-container" :class="layout">    
             <div class="article-picture" :class="layout" :data-aos="[isContentFirst? 'fade-up' : 'fade-right']" data-aos-once="ture"><slot name="picture"></slot></div>
-            <div class="content-wrapper" :class="layout" :data-aos="[isContentFirst? 'fade-up' : 'fade-right']" data-aos-once="ture">
+            <div class="content-wrapper" :class="layout" :data-aos="[isContentFirst? 'fade-right' : 'fade-up']" data-aos-once="ture">
                 <h1 class="title"><slot name="title"></slot></h1>
                 <p class="content"><slot name="content"></slot></p>
             </div>

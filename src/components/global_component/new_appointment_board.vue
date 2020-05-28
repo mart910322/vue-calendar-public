@@ -1,104 +1,106 @@
 <template>
-    <div class="back-board" v-if="doesBookingBoardShow">
-        <div class="container">
-            <header class="head">
-                <div class="title">Booking appointment</div>
-                <cross-icon class="cross icon" @iconClicked="cancelBooking"></cross-icon>
-            </header>
-            <section class="typing-title-area">
-                <input type="text" class="appointment-title" placeholder="type the title..." v-model="title">
-            </section>
-            <section class="is-it-regular-question-area" v-if="!didYesOrNoClick">
-                <calendar-icon class="calendar icon"></calendar-icon>
-                <span class="question-text">Is it regular?</span>
-                <div class="yes btn" @click="didYesOrNoClick = true;isItRegular = true;">Yes</div>
-                <div class="no btn" @click="didYesOrNoClick = true;isItRegular = false;">No</div>
-            </section>
-            
-            <transition name="fade">
-                <section class="body" v-if="didYesOrNoClick">               
-                    <div class="regular" v-if="isItRegular">
-                        <div class="row">
-                            <calendar-icon class="calendar icon"></calendar-icon>
-                            <div class="regular-days-container">
-                                <span v-for="({day,wasSelected},index) in dayNames" :key="index" class="regular-days" :class="{'selected' : wasSelected }" @click="selectingDays(index)">{{ day }}</span>
+    <transition name="roll-up">
+        <div class="back-board" v-if="doesBookingBoardShow">
+            <div class="container">
+                <header class="head">
+                    <div class="title">Booking appointment</div>
+                    <cross-icon class="cross icon" @iconClicked="cancelBooking"></cross-icon>
+                </header>
+                <section class="typing-title-area">
+                    <input type="text" class="appointment-title" placeholder="type the title..." v-model="title">
+                </section>
+                <section class="is-it-regular-question-area" v-if="!didYesOrNoClick">
+                    <calendar-icon class="calendar icon"></calendar-icon>
+                    <span class="question-text">Is it regular?</span>
+                    <div class="yes btn" @click="didYesOrNoClick = true;isItRegular = true;">Yes</div>
+                    <div class="no btn" @click="didYesOrNoClick = true;isItRegular = false;">No</div>
+                </section>
+                
+                <transition name="fade">
+                    <section class="body" v-if="didYesOrNoClick">               
+                        <div class="regular" v-if="isItRegular">
+                            <div class="row">
+                                <calendar-icon class="calendar icon"></calendar-icon>
+                                <div class="regular-days-container">
+                                    <span v-for="({day,wasSelected},index) in dayNames" :key="index" class="regular-days" :class="{'selected' : wasSelected }" @click="selectingDays(index)">{{ day }}</span>
 
+                                </div>
+                            </div>
+                            <div class="row">
+                                <clock-icon class="clock icon"></clock-icon>
+                                <select class="select-time start date-option" v-model="regularStartTime">
+                                    <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
+                                </select>  
+                                <span class="separate-symbol">-</span>
+                                <select class="select-time start date-option" v-model="regularEndTime">
+                                    <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
+                                </select> 
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="not-regular row" v-if="!isItRegular">
                             <clock-icon class="clock icon"></clock-icon>
-                            <select class="select-time start date-option" v-model="regularStartTime">
-                                <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
-                            </select>  
-                            <span class="separate-symbol">-</span>
-                            <select class="select-time start date-option" v-model="regularEndTime">
-                                <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
-                            </select> 
-                        </div>
-                    </div>
-                    <div class="not-regular row" v-if="!isItRegular">
-                        <clock-icon class="clock icon"></clock-icon>
-                        <div class="date-picker-container">
-                            <select class="select-year start date-option" v-model="notRegularStartTime.year">
-                                <option :value="2020 + index" v-for="(year,index) in new Array(30)" :key="index" >{{ 2020 + index }}</option>
-                            </select>
+                            <div class="date-picker-container">
+                                <select class="select-year start date-option" v-model="notRegularStartTime.year">
+                                    <option :value="2020 + index" v-for="(year,index) in new Array(30)" :key="index" >{{ 2020 + index }}</option>
+                                </select>
 
-                            <select class="select-month start date-option "  v-model="notRegularStartTime.month">
-                                <option :value="index" v-for="(month,index) in monthsName" :key="index" >{{ month}}</option>
-                            </select>     
+                                <select class="select-month start date-option "  v-model="notRegularStartTime.month">
+                                    <option :value="index" v-for="(month,index) in monthsName" :key="index" >{{ month}}</option>
+                                </select>     
 
-                            <select class="select-day start date-option" v-model="notRegularStartTime.day">
-                                <option :value="index + 1" v-for="(day,index) in new Array(31)" :key="index">{{ index + 1 | plusZero}}</option>
-                            </select>  
+                                <select class="select-day start date-option" v-model="notRegularStartTime.day">
+                                    <option :value="index + 1" v-for="(day,index) in new Array(31)" :key="index">{{ index + 1 | plusZero}}</option>
+                                </select>  
 
-                            <select class="select-time start date-option" v-model="notRegularStartTime.time">
-                                <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
-                            </select>  
+                                <select class="select-time start date-option" v-model="notRegularStartTime.time">
+                                    <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
+                                </select>  
 
-                            <span class="separate-symbol">-</span>
+                                <span class="separate-symbol">-</span>
 
-                            <select class="select-time end date-option"  v-model="notRegularEndTime.time">
-                                <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
-                            </select> 
-                            
+                                <select class="select-time end date-option"  v-model="notRegularEndTime.time">
+                                    <option :value="time" v-for="(time,index) in timeSelection" :key="index">{{ time }}</option>
+                                </select> 
+                                
 
-                            <select class="select-day end date-option" v-model="notRegularEndTime.day">
-                                <option :value="index + 1" v-for="(day,index) in new Array(31)" :key="index">{{ index + 1 | plusZero}}</option>
-                            </select>    
-                            
-                            <select class="select-month end date-option" v-model="notRegularEndTime.month">
-                                <option :value="index" v-for="(month,index) in monthsName" :key="index" >{{  month }}</option>
-                            </select>  
+                                <select class="select-day end date-option" v-model="notRegularEndTime.day">
+                                    <option :value="index + 1" v-for="(day,index) in new Array(31)" :key="index">{{ index + 1 | plusZero}}</option>
+                                </select>    
+                                
+                                <select class="select-month end date-option" v-model="notRegularEndTime.month">
+                                    <option :value="index" v-for="(month,index) in monthsName" :key="index" >{{  month }}</option>
+                                </select>  
 
-                            <select class="select-year-end date-option" v-model="notRegularEndTime.year">
-                                <option :value="2020 + index" v-for="(year,index) in new Array(30)" :key="index">{{ 2020 + index }}</option>
-                            </select>
+                                <select class="select-year-end date-option" v-model="notRegularEndTime.year">
+                                    <option :value="2020 + index" v-for="(year,index) in new Array(30)" :key="index">{{ 2020 + index }}</option>
+                                </select>
+
+                            </div>
 
                         </div>
+                        <div class="datails-container row">
+                            <details-icon class="details icon"></details-icon>
+                            <textarea class="datalis-input-area" placeholder="type your appointment datails..." v-model="details"></textarea>
+                        </div>
+                        <div class="error-text-wrapper row" v-if="errorText != ''">
+                
+                            <div class="error-text">{{ errorText }}</div>
+                        </div>
+                    </section>
+                </transition>
+                <transition name="fade">
+                    <footer class="floor" v-if="didYesOrNoClick">
+                        <div class="btn-container">
+                            <div class="save btn" @click="dataFormatErrorChecker">save</div>
+                            <div class="cancel btn" @click="cancelBooking">cancel</div>
+                            
+                        </div>
+                    </footer>
+                </transition>
+            </div>
 
-                    </div>
-                    <div class="datails-container row">
-                        <details-icon class="details icon"></details-icon>
-                        <textarea class="datalis-input-area" placeholder="type your appointment datails..." v-model="details"></textarea>
-                    </div>
-                    <div class="error-text-wrapper row" v-if="errorText != ''">
-               
-                        <div class="error-text">{{ errorText }}</div>
-                    </div>
-                </section>
-            </transition>
-            <transition name="fade">
-                <footer class="floor" v-if="didYesOrNoClick">
-                    <div class="btn-container">
-                        <div class="save btn" @click="dataFormatErrorChecker">save</div>
-                        <div class="cancel btn" @click="cancelBooking">cancel</div>
-                        
-                    </div>
-                </footer>
-            </transition>
         </div>
-
-    </div>
+    </transition>
 </template>
 
 <script>
@@ -196,7 +198,7 @@ export default {
         ...mapMutations([
             'toggleBookingStatus',
             'loading',
-            'showPropmt'
+            'showprompt'
 
         ]),
         ...mapActions([
@@ -244,10 +246,13 @@ export default {
 
 
             if(this.title.length > 25){
-                    this.errorText = 'title only can be 25 character';
-                    return
+                this.errorText = 'title only can be 25 character';
+                return
             }
-       
+            if(this.title.length <= 0){
+                this.errorText = 'title can not be emtpy';
+                return
+            }       
             if(this.isItRegular){
                 
                 var daySelectedChecker = this.dayNames.filter(eachDay => {
@@ -388,7 +393,7 @@ export default {
                 msg = 'failed to book appointment';
             }
 
-            this.showPropmt({success:doesItSuccess,msg:msg});
+            this.showprompt({success:doesItSuccess,msg:msg});
         }
 
     },
@@ -526,17 +531,6 @@ export default {
 .btn.no:hover{
     background: var(--normal-blue);
     color: var(--white);
-}
-.fade-enter-active,.fade-leave-active{
-    transition: opacity 0.5s ease-in;
-}
-.fade-enter,.fade-leave-to{
-    opacity: 0;
-
-}
-.fade-enter-to,.fade-leave{
-    opacity: 1;
-
 }
 
 
@@ -684,7 +678,7 @@ select.date-option::-ms-expand {
 @media screen and (max-width:550px) {
 .back-board{
  
-    background: var(--gray-background);
+    background: var(--white);
 
     align-items: flex-start;
 }
@@ -913,7 +907,7 @@ select.date-option:focus{
 .error-text{
     margin-left: 3.25rem;
     font-size: 1.25rem;
-    color: red;
+    color: var(--normal-red);
 }
 
 .floor{

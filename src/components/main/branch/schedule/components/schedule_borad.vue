@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="handledTimeTableData.length == 0" class="no-event-propmt">no result...</div>
+            <div v-if="handledTimeTableData.length == 0" class="no-event-prompt">no result...</div>
             <note-and-to-do class="note-mobile"></note-and-to-do>
             
 
@@ -188,9 +188,7 @@ export default {
 
 
         },
-        testingConsole(){
-            console.log('asdasdasd');
-        }
+
 
 
     }
@@ -220,6 +218,7 @@ header.title{
 }
 .title-text{
     font-size: 1.75rem;
+    color: var(--black);
  
 }
 .booking-btn{
@@ -250,7 +249,7 @@ header.title{
     grid-auto-rows: minmax(6rem,auto);
 
     border-bottom: 1px solid var(--light-gray);
-   
+    color: var(--black);
 }
 .event-date{
     width: 100%;
@@ -345,7 +344,8 @@ header.title{
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center
+    justify-content: center;
+
 
 }
 .event-menu-btn.show{
@@ -365,7 +365,8 @@ header.title{
     background: var(--white);
     box-shadow: 2px 3px 6px rgba(0,0,0,0.16);
     display: none;
-
+    
+    color: var(--black);
 }
 
 .menu-option{
@@ -409,7 +410,7 @@ header.title{
 
 
 
-.no-event-propmt{
+.no-event-prompt{
     height: 2.5rem;
     font-weight: 400;
     font-size: 1.5rem;

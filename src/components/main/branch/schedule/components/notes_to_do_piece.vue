@@ -4,7 +4,7 @@
             <span class="title-text">Notes / To do list</span>
         </header>
         <section class="notes">
-            <div class="note" v-for="(task,index) in taskData" :key="index" @click="userTaskHaveFinished(task.ref)">
+            <div class="note" v-for="(task,index) in unfinisheTask" :key="index" @click="userTaskHaveFinished({isItFinished:task.isItFinished,ref:task.ref})">
                 <span class="task-title">{{task.title}}</span>
                 <div class="tick-box"><span class="tick-symbol">&#10003;</span></div>
             </div>
@@ -25,7 +25,17 @@ export default {
         ...mapState([
             'taskData',
 
-        ])
+        ]),
+        unfinisheTask(){
+            let task = [];
+            this.taskData.forEach(eachTask => {
+                if(!eachTask.isItFinished){
+                    task.push(eachTask);
+                }
+            });
+
+            return task 
+        }
     },
     methods:{
         ...mapActions([

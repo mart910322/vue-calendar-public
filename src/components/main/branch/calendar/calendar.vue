@@ -105,7 +105,7 @@ export default {
             'getUserTimetable'
         ]),
         ...mapMutations([
-            'showPropmt'
+            'showprompt'
         ]),
         nextMonth(value/* +1 or -1*/){
             let index = this.monthOptions.indexOf(this.monthSelectedOption) + value;
@@ -118,7 +118,7 @@ export default {
                 if(yearOptionIndex >= this.yearOptions.length -1){
 
                     this.yearSelectedOption = this.yearOptions.length - 1;
-                    this.showPropmt({success:false,msg:'No longer date is available'});
+                    this.showprompt({success:false,msg:'No longer date is available'});
                     return
                 }
                 this.yearSelectedOption++;
@@ -128,7 +128,7 @@ export default {
                 
                 if(yearOptionIndex <= 0){
                     this.yearSelectedOption = 0;
-                    this.showPropmt({success:false,msg:'No longer date is available'});
+                    this.showprompt({success:false,msg:'No longer date is available'});
                     return
                 }
                 this.yearSelectedOption--;
@@ -256,6 +256,8 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    
+    color: var(--black);
 }
 .date-title-container{
     display: grid;
@@ -274,6 +276,8 @@ export default {
     font-size: 1rem;
 
     cursor: pointer;
+
+    --icon-color:var(--black);
 }
 .go-icon:hover{
     --icon-color:var(--normal-blue)
@@ -366,7 +370,7 @@ export default {
     margin: 0rem auto;
     border-top: 1px solid var(--gray-border);
     border-radius: 0px;
-
+   
 }
 .schedule-container{
 
@@ -392,6 +396,7 @@ export default {
 .body{
     background: none;
     padding: 0rem;
+    padding-bottom: 20vh;
  
 }
 .body .head{
@@ -491,6 +496,14 @@ export default {
 } 
 .year-select{
     --entire-select-width:6.75rem;
+}
+}
+@media not all and (hover:hover) {
+.calendar-container{
+
+
+    height: var(--mobile-height,100vh);
+  
 }
 }
 </style>

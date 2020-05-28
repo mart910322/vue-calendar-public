@@ -34,15 +34,16 @@ export default new Vuex.Store({
 
         /* custom Alert  */
 
-        /* custom propmt */
-        doesPropmtShow:false,
+        /* custom prompt */
+        eachPrompt:[],
+        doespromptShow:false,
         promptMsg:'',
         promptShowTick:false,
-        /* custom propmt */
+        /* custom prompt */
         
         doesBookingBoardShow:false,
         doesNewTaskBoardShow:false,
-
+    
 
         
     },
@@ -172,14 +173,16 @@ export default new Vuex.Store({
             
 
         },//save the data to state and show the alert
-        showPropmt(state,{success,msg}){
-            state.doesPropmtShow = true;
-            state.propmtMsg = msg;
-            state.promptShowTick = success;
+        showprompt(state,{success,msg}){
+         
+            state.eachPrompt.push({success,msg});
 
-            setTimeout(() => {
-                state.doesPropmtShow = false;
-            }, 2500);
+            let timer = setTimeout(() => {
+                state.eachPrompt.splice(0,1);
+            }, 2500); 
+        
+         
+
         },
         alertEventHandle(state,{func,funcChild}){
      
@@ -361,7 +364,7 @@ export default new Vuex.Store({
                             console.log(err);
                             reject(err);
                             state.fetchingTimetable = false;
-                            commit('showPropmt',{success:true,msg:'connect datebase error'})
+                            commit('showprompt',{success:true,msg:'connect datebase error'})
                         });
 
 
@@ -373,7 +376,7 @@ export default new Vuex.Store({
                         console.log(err);
                         state.fetchingTimetable = false;
                         reject(err);
-                        commit('showPropmt',{success:true,msg:'connect datebase error'})
+                        commit('showprompt',{success:true,msg:'connect datebase error'})
                     });
                     
                 })
@@ -383,7 +386,7 @@ export default new Vuex.Store({
 
 
         },
-        getUserTask({commit,state},needFinishedTask){
+        getUserTask({commit,state}){
             
             if(!state.fetchingTask){
                 state.fetchingTask = true;
@@ -397,11 +400,11 @@ export default new Vuex.Store({
                         state.taskData = [];//clean the variable
                         snapshot.forEach(doc => {    
                             
-                            if(!doc.data().isItFinished || needFinishedTask){
-                                state.taskData.push(doc.data());  
-                                state.taskData[indexCount].ref = doc.ref.id;
-                                indexCount++;
-                            }
+                            
+                            state.taskData.push(doc.data());  
+                            state.taskData[indexCount].ref = doc.ref.id;
+                            indexCount++;
+                          
     
         
     
@@ -412,7 +415,7 @@ export default new Vuex.Store({
                         state.fetchingTask = false;
                         console.log(err);
                         reject(err);
-                        commit('showPropmt',{success:true,msg:'connect datebase error'})
+                        commit('showprompt',{success:true,msg:'connect datebase error'})
                     });
                     
                 })
@@ -422,26 +425,55 @@ export default new Vuex.Store({
 
 
         },
-        userTaskHaveFinished({state,commit,dispatch},ref){
+        userTaskHaveFinished({state,commit,dispatch},{isItFinished,ref}){
 
             commit('loading');
-            var currentUser = firebase.auth().currentUser;
-            db.collection('user-profile').doc(currentUser.uid).collection('user-task').doc(ref).update({
-                isItFinished:true
-            }).then(() => {
-         
-                dispatch('getUserTask').then(() => {
-                    commit('loading');
-                    commit('showPropmt',{success:true,msg:'A work have been finished'})
-
-                });
+            let currentUser = firebase.auth().currentUser;
+            let updated = new Promise((resolve,reject) => {
+                db.collection('user-profile').doc(currentUser.uid).collection('user-task').doc(ref).update({
+                    isItFinished:!isItFinished
+                }).then(() => {
+             
+                    dispatch('getUserTask').then(() => {
+                        commit('loading');
+                       
                 
-            }).catch(err => {
-                console.log(err);
-                commit('loading');
-                commit('showPropmt',{success:false,msg:'error'})
-            });    
+                        resolve('updated successful');
 
+                        let msg = !isItFinished ? 'A task have finished' : 'Revert a task successful';
+                        commit('showprompt',{success:true,msg})
+    
+                    });
+                    
+                }).catch(err => {
+                    console.log(err);
+                    reject(err);
+                    commit('loading');
+                    commit('showprompt',{success:false,msg:'error'})
+                });  
+            })
+            return updated
+
+        },
+        deleteUserTask({state,commit,dispatch},ref){
+            commit('loading');
+            let currentUser = firebase.auth().currentUser;
+            let deleted = new Promise((resolve,reject) => {
+                db.collection('user-profile').doc(currentUser.uid).collection('user-task').doc(ref).delete().then(() => {
+                    dispatch('getUserTask').then(() => {
+                        commit('loading');
+                        resolve('deleted successful');
+                        commit('showprompt',{success:true,msg:'deleted a task successful' })
+    
+                    });
+                }).catch(err => {
+                    commit('loading');
+                    reject(err);
+                    commit('showprompt',{success:true,msg:'failed delete a task' })
+                    console.log(err);
+                })
+            })
+            return deleted
         },
 
         cancelSchedule({commit,getters,dispatch},{ref,isItRegular}){
@@ -458,24 +490,25 @@ export default new Vuex.Store({
                                 
                     dispatch('getUserTimetable',{startTimeLine:getters.dateFormatCurrentDay,endTimeLine:endDay}).then(() => {
                         commit('loading');
-                        commit('showPropmt',{success:true,msg:'canceled a appointment successful'})
+                        commit('showprompt',{success:true,msg:'canceled a appointment successful'})
                     }).catch(err => {
                         console.log(err);
                         reject(err);
                         commit('loading');
-                        commit('showPropmt',{success:true,msg:'update schedule error'})
+                        commit('showprompt',{success:true,msg:'update schedule error'})
                     });
 
                 }).catch(err => {
                     console.log(err);
                     reject(err);
                     commit('loading');
-                    commit('showPropmt',{success:true,msg:'connect datebase error'})
+                    commit('showprompt',{success:true,msg:'connect datebase error'})
                 })
             })
 
             return deleteSchedule;
-        }
+        },
+
     },
     modules: {
     }
