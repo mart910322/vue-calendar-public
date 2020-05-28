@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from 'firebase'
 import db from '../firebase/firebaseinit.js'
-
+import {bus} from '../main.js'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -40,9 +40,14 @@ export default new Vuex.Store({
         promptMsg:'',
         promptShowTick:false,
         /* custom prompt */
+
+
         
         doesBookingBoardShow:false,
+
         doesNewTaskBoardShow:false,
+        enableEditTask:false,
+        editingTaskTemp:{},
     
 
         
@@ -186,7 +191,7 @@ export default new Vuex.Store({
         },
         alertEventHandle(state,{func,funcChild}){
      
-            if(func != null || func != undefined){
+            if(func != null && func != undefined){
                 func(funcChild);
             }
 
@@ -205,8 +210,15 @@ export default new Vuex.Store({
             state.doesBookingBoardShow = !state.doesBookingBoardShow;
         },
         toggleNewTaskStatus(state){
+            state.enableEditTask = false;
             state.doesNewTaskBoardShow = !state.doesNewTaskBoardShow;
-        }
+        },
+        toggleEditTaskStatus(state,...data){
+            state.enableEditTask = true;
+            state.doesNewTaskBoardShow = !state.doesNewTaskBoardShow;
+       
+            bus.$emit('injectData',...data);//export the editing data
+        }        
     },
     actions: {
         login({commit,state},{email,password}){

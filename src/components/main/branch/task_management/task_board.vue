@@ -23,13 +23,12 @@
                     </div> 
                     <div class="task-footer">
                         <div class="delete btn border" @click="deleteTask(ref)">delete</div>
-                        <div class="edit btn fill">edit</div>
+                        <div class="edit btn fill" @click="toggleEditTaskStatus({content,title,ref})">edit</div>
                     </div>
                 </div>
             </section>
-            <div class="new-task-btn" @click="this.toggleNewTaskStatus">
-                <add-Icon class="add icon"></add-Icon>
-            </div>
+
+            <add-button @click="toggleNewTaskStatus()"></add-button>
         </section>
 
     </div>
@@ -38,7 +37,7 @@
 <script>
 import titleHeader from '../../components/title_header.vue'
 import tickIcon from '../../../svg_component/tick.vue'
-import addIcon from '../../../svg_component/add_cross.vue'
+import addBtn from '../../components/add_plus_button.vue'
 import toggleBTn from '../../../template/toggle_button.vue'
 
 import {mapState,mapActions,mapMutations} from 'vuex'
@@ -51,12 +50,13 @@ export default {
     components:{
         'title-header':titleHeader,
         'tick-icon':tickIcon,
-        'add-Icon':addIcon,
+        'add-button':addBtn,
         'toggle-button':toggleBTn
     },
     computed:{
         ...mapState([
             'taskData',
+            'editingTaskTemp'
 
         ]),
         filteredTask(){
@@ -79,6 +79,7 @@ export default {
     ]),
     ...mapMutations([
         'toggleNewTaskStatus' ,
+        'toggleEditTaskStatus',
         'showAlert'
 
     ]),
@@ -94,6 +95,8 @@ export default {
     },
     mounted(){
         this.getUserTask();
+
+
     }
 }
 </script>
@@ -213,27 +216,27 @@ export default {
 
 
 @media screen and (min-width:550px){
-.task-head:hover .tick{
-    display: block;
-    
-}
-.task-wrapper:not(.finished) .task-head:hover .task-title::before{
-    content: '';
-    position: absolute;
+    .task-head:hover .tick{
+        display: block;
+        
+    }
+    .task-wrapper:not(.finished) .task-head:hover .task-title::before{
+        content: '';
+        position: absolute;
 
-    top: 50%;
+        top: 50%;
 
-    left: -5%;
+        left: -5%;
 
-    width: calc(100% + 1rem);
-    height: 0.15rem;
-    border-radius: 2%;
-    background: var(--normal-blue);
-    
-}    
-.task-wrapper.finished .task-head:hover .tick{
-    display: none;
-}
+        width: calc(100% + 1rem);
+        height: 0.15rem;
+        border-radius: 2%;
+        background: var(--normal-blue);
+        
+    }    
+    .task-wrapper.finished .task-head:hover .tick{
+        display: none;
+    }
 }
 
 
@@ -267,28 +270,7 @@ export default {
     padding: 0.15rem 0 0.25rem 0;
     width: 7.5rem;
 }
-.new-task-btn{
-    position: absolute;
-    right:1.25%;
-    bottom: 1.75%;
 
-    background: var(--normal-blue);
-    border-radius: 50%;
-
-    width: 3.5rem;
-    height: 3.5rem;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-}
-.add.icon{
-    width: 1.625rem;
-    --icon-color:var(--white);
-    
-}
 @media screen and (max-width: 1186px){
 .body{
     margin: 0rem auto;
@@ -329,22 +311,7 @@ export default {
 
     
 } 
-.new-task-btn{
-    position: fixed;
-    right:2.5%;
-    bottom: 2.5%;
 
-
-
-    width: 4.25rem;
-    height: 4.25rem;
-
-
-}
-.add.icon{
-    width: 1.85rem;
-
-}
 }
 @media screen and (max-width: 550px){
 .body .head{
@@ -356,6 +323,11 @@ export default {
     font-size: 1.85rem;
     color:var(--black);
   
+}
+.toggle-btn{
+    --toggle-btn-width:8.5rem;
+    --toggle-btn-height:2.4rem;
+    --toggle-btn-font-size:1.425rem;
 }
 .task-title{
     font-size: 1.65rem;

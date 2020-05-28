@@ -5,16 +5,20 @@
       <custom-alert></custom-alert>
       <loading></loading>
       <book-appointment-board></book-appointment-board>
-      <adding-task-note-borad></adding-task-note-borad>
+      <add-task-note-borad></add-task-note-borad>
+
       <custom-prompt></custom-prompt>
+
     </div>
 </template>
 <script>
 import customAlert from './components/template/alert_custom.vue'
 import loading from './components/template/loading_animated_component.vue'
 import bookAppointmentBoard from './components/global_component/new_appointment_board.vue'
-import addingTaskNoteBorad from './components/global_component/new_task_note_board.vue'
+import addTaskNoteBorad from './components/global_component/new_task_note_board.vue'
+
 import customPrompt from './components/global_component/prompt_finished.vue'
+
 export default {
     data(){
         return{
@@ -28,8 +32,9 @@ export default {
       'custom-alert':customAlert,
       'loading':loading,
       'book-appointment-board':bookAppointmentBoard,
-      'adding-task-note-borad':addingTaskNoteBorad,
-      'custom-prompt':customPrompt
+      'add-task-note-borad':addTaskNoteBorad,
+  
+      'custom-prompt':customPrompt,
     },
     computed:{
     

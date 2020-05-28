@@ -4,7 +4,7 @@
             <div class="container">
 
                 <header class="head">
-                    <div class="title">New notes / to do list</div>
+                    <div class="title">{{ enableEditTask ? 'editing' : 'new'}} notes / to do list</div>
                     <cross-icon class="cross icon" @iconClicked="endingAction(false)"></cross-icon>
                 </header>
 
@@ -44,6 +44,7 @@ import detailsIcon from '../svg_component/detail_article.vue'
 import {mapState,mapMutations,mapActions} from 'vuex'
 import db from '../../firebase/firebaseinit.js'
 import firebase from 'firebase'
+import {bus} from '../../main.js'
 export default {
     components:{
         'cross-icon':crossIcon,
@@ -51,7 +52,8 @@ export default {
     },
     computed:{
         ...mapState([
-            'doesNewTaskBoardShow'
+            'doesNewTaskBoardShow',
+            'enableEditTask'
         ]),
     },
     filters:{
@@ -64,6 +66,7 @@ export default {
             details:'',
             errorText:'',
 
+            ref:'',
         }
     },
     methods:{
@@ -78,6 +81,7 @@ export default {
         initializeData(){
             this.title = '',
             this.details = ''
+            this.ref = ''
         },
 
         formatChecker(){
@@ -91,14 +95,18 @@ export default {
                 this.errorText = 'title can not be empty'
                 return                
             }
-
-            this.submitNewNotes();
+            if(this.enableEditTask){
+                this.updateEdingTask();
+            }else{
+                this.submitNewNotes();
+            }
+            
             
         },
         submitNewNotes(){
             this.loading();
 
-            var currentUser = firebase.auth().currentUser;
+            let currentUser = firebase.auth().currentUser;
             db.collection('user-profile').doc(currentUser.uid).collection('user-task').add({
                 isItFinished:false,
                 title:this.title,
@@ -114,6 +122,22 @@ export default {
             });
 
         },
+        updateEdingTask(){
+            this.loading();
+            let currentUser = firebase.auth().currentUser;
+            db.collection('user-profile').doc(currentUser.uid).collection('user-task').doc(this.ref).update({
+                title:this.title,
+                content:this.details,                
+            }).then(() => {
+                this.emitStatus(true);
+                this.endingAction(true);
+                
+            }).catch(err => {
+                console.log(err);
+                this.errorText = err;
+                this.emitStatus(false);
+            });
+        },
         endingAction(DidItNeedLoading){
             this.errorText = '';
             this.initializeData();
@@ -126,20 +150,24 @@ export default {
         emitStatus(doesItSuccess){
             let msg = '';
             if(doesItSuccess){
-                msg = 'added a new note successful';
+                msg = this.enableEditTask ? 'edited a note successful' : 'added a new note successful';
             }else{
                 msg = 'failed added a note';
             }
 
             this.showprompt({success:doesItSuccess,msg:msg});
-        }
+        },
 
 
     },
     created(){
       
         this.initializeData();
-    
+        bus.$on('injectData',({content,title,ref}) => {
+            this.title = title;
+            this.details = content;
+            this.ref = ref;
+        })
     }
 }
 </script>

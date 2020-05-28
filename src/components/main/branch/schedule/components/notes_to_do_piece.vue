@@ -11,7 +11,7 @@
             <div class="have-no-note-text" v-if="taskData.length == 0">no result...</div>
         </section>
         <footer class="btn-container">
-            <div class="btn" @click="toggleNewTaskStatus">+add a new note</div>
+            <div class="btn" @click="toggleNewTaskStatus()">+add a new note</div>
         </footer>
     </div>
 </template>

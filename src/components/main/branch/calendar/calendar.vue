@@ -36,7 +36,8 @@
                 </div>
             </section>
             
-      
+            <add-btton class="add-btn" @click="toggleBookingStatus"></add-btton>
+        
         </main>
    
     </div>
@@ -46,6 +47,7 @@
 import titleHeader from '../../components/title_header.vue'
 import cusSelect from '../../../template/custiom_select.vue'
 import goArrowIcon from '../../../svg_component/go_v.vue'
+import addBtn from '../../components/add_plus_button.vue'
 import {mapState,mapActions,mapMutations,mapGetters} from 'vuex'
 
 
@@ -94,7 +96,8 @@ export default {
     components:{
         'title-header':titleHeader,
         'go-arrow-icon':goArrowIcon,
-        'custom-select':cusSelect
+        'custom-select':cusSelect,
+        'add-btton':addBtn
 
     },
     filters:{
@@ -105,7 +108,8 @@ export default {
             'getUserTimetable'
         ]),
         ...mapMutations([
-            'showprompt'
+            'showprompt',
+            'toggleBookingStatus'
         ]),
         nextMonth(value/* +1 or -1*/){
             let index = this.monthOptions.indexOf(this.monthSelectedOption) + value;
@@ -250,6 +254,7 @@ export default {
     box-shadow: 0 3px 6px rgba(0,0,0,0.16);
 
     border-radius: 12px;
+    position: relative;
 }
 .body .head{
     display: flex;
