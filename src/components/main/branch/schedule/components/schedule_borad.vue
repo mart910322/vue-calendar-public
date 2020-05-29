@@ -52,7 +52,7 @@ import {mapState,mapActions,mapGetters,mapMutations} from 'vuex'
 import threeDotsIcon from '../../../../svg_component/menu_three_dots.vue'
 
 import cancelIcon from '../../../../svg_component/calendar_cancel.vue'
-import rescheduleIcon from '../../../../svg_component/calendar_reschedule.vue'
+import bookAgainIcon from '../../../../svg_component/calendar_reschedule.vue'
 import editScheduleIcon from '../../../../svg_component/edit_pan.vue'
 
 import noteAndToDoPiece from './notes_to_do_piece.vue'
@@ -61,7 +61,7 @@ export default {
         'three-dots-icon':threeDotsIcon,
         'note-and-to-do':noteAndToDoPiece,
         cancelIcon,
-        rescheduleIcon,
+        bookAgainIcon,
         editScheduleIcon,
 
 
@@ -75,8 +75,8 @@ export default {
     data(){
         return{
             monthsName:["JAN","FEB","MAR","APR","MAY","JUN","JULY","AUG","SEP","OCT","NOV","DEC"],
-            menuicons:[cancelIcon,rescheduleIcon,editScheduleIcon],
-            menuNames:['Cancel & Delete','Reschedule','Edit schedule'],
+            menuicons:[cancelIcon,bookAgainIcon,editScheduleIcon],
+            menuNames:['Cancel & Delete','Book again','Edit schedule'],
 
             currentShowingMenu:null,
            

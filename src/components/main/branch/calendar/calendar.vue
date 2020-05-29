@@ -6,10 +6,15 @@
         <main class="body">
             <header class="head">
                 <div class="date-title-container">
-                    <go-arrow-icon class="left-side go-icon" @iconClicked="nextMonth(-1)"></go-arrow-icon>
-                    <go-arrow-icon class="right-side go-icon" @iconClicked="nextMonth(1)"></go-arrow-icon>
-                    <span class="title-year">{{yearSelectedOption}}</span>
-                    <span class="title-month">{{ monthSelectedOption }}</span>
+                    <div class="go-arrows-container">
+                        <go-arrow-icon class="left-side go-icon" @iconClicked="nextMonth(-1)"></go-arrow-icon>
+                        <go-arrow-icon class="right-side go-icon" @iconClicked="nextMonth(1)"></go-arrow-icon>
+                    </div>
+                    <div class="date-title-wrapper">
+                        <span class="title-year">{{yearSelectedOption}}</span>
+                        <span class="title-month">{{ monthSelectedOption }}</span>
+                    </div>
+
                     
                 </div>
                 <div class="selects-container">
@@ -273,13 +278,18 @@ export default {
     color: var(--black);
 }
 .date-title-container{
-    display: grid;
-    grid-template-columns: 2rem 2.5rem  5rem minmax(5rem,auto);
-
-    justify-items: center;
+    display: flex;
     align-items: center;
-
+    justify-content: space-between;
+    padding-left: 0.75rem;
+    width: 13rem;
     font-size: 1.75rem;
+}
+.go-arrows-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 3.25rem;
 }
 .go-icon{
     
@@ -301,11 +311,17 @@ export default {
 .right-side.go-icon{
 
 }
-.date-title-container .title-month{
-    margin:0 0.25rem;
-}
-.date-title-container .title-year{
+.date-title-wrapper{
+    display: flex;
+    align-items: center;
 
+}
+.date-title-wrapper .title-month{
+    
+  
+}
+.date-title-wrapper .title-year{
+    margin-right: 0.75rem
 }
 
 .selects-container{
@@ -349,7 +365,7 @@ export default {
     color: var(--normal-blue);
 }
 .each-day-title .month-date{
-
+ 
 }
 .each-day-title .year{
 
@@ -414,9 +430,6 @@ export default {
  
 }
 .body .head{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 
 
     background: var(--white);
@@ -425,43 +438,39 @@ export default {
 
 .date-title-container{
 
-    grid-template-columns:5rem 5rem;
-
     font-size: 1.75rem;
     padding: 1rem;
+    width: 100%;
+
+
 }
-.go-icon{
+.date-title-wrapper{
+    order: 1;
+}
+.selects-container{
     
     display: none;
 }  
-.schedule-container{
-
-    grid-template-columns: repeat(2,1fr);
-    grid-auto-rows: minmax(15rem,auto);
-    grid-gap: 5vw;
-    padding:0 1rem;
-} 
+.go-arrows-container{
+    order: 2;
+    width: 4.5rem;
+    margin-right: 0.5rem
 }
+.go-icon{
+    width: 1rem;
+    height: 1.5rem;    
+}
+
+
+}
+
+
 @media screen and (max-width: 550px){
-.selects-container{
-    display: flex;
-    padding:0 0.25rem; 
+
+.go-icon{
+    width: 1.25rem;
+    height: 1.75rem;    
 }
-.selection{
-    --option-font-size:1.25rem;
-    --option-padding:0.25rem 1.25rem 0.3rem 1.25rem;
-
-
-}
-.month-select{
-
-    --entire-select-width:10rem;
-    margin-right: 1.5rem;
-} 
-.year-select{
-    --entire-select-width:6.75rem;
-}
-
 .schedule-container{
 
     grid-template-columns: repeat(1,20.5rem);
@@ -485,14 +494,8 @@ export default {
 }
 }
 @media screen and (max-width: 410px){
-.date-title-container{
 
-    grid-template-columns:5rem 5rem;
-
-    font-size: 1.75rem;
-    padding:1rem 0rem 1rem 0.5rem;
-
-}
+/*
 .selects-container{
     display: flex;
     padding:0 0.25rem 0 0.25rem; 
@@ -511,6 +514,7 @@ export default {
 .year-select{
     --entire-select-width:6.75rem;
 }
+*/
 }
 @media not all and (hover:hover) {
 .calendar-container{
