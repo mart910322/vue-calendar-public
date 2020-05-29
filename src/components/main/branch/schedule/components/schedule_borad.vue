@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <header class="title">
-            <div class="title-text">{{ titleDateLocal  }}'s schedule</div>
+            <div class="title-text">day's schedule</div>
             <div class="booking-btn" @click="toggleBookingStatus">+ book appointment </div>
         </header>
         <section class="schedule-events-container">
@@ -30,7 +30,7 @@
                     <three-dots-icon class="event-menu-btn" @iconClicked="showMenu(index)" :class="{'show':currentShowingMenu == index}"></three-dots-icon>
              
                     <div class="menu-wrapper"  v-click-outside="showMenu" @click.self="showMenu(index)">
-                        <div class="menu-option" v-for="(cell,optionIndex) in menuicons" :key="optionIndex" @click="menuEventsHandle(optionIndex,ref,isItRegular)">
+                        <div class="menu-option" v-for="(cell,optionIndex) in menuicons" :key="optionIndex" @click="menuEventsHandle(optionIndex,ref,isItRegular,title,content)">
                             <component :is="cell" class="menu-icon"></component>
                             <span class="menu-option-name">{{ menuNames[optionIndex] }}</span>
                             
@@ -68,19 +68,7 @@ export default {
     },
     mounted(){
         
-        let self = this;
-        function mobileTitle(x) {
-            if (x.matches) { // If media query matches
-            
-                self.titleDateLocal ='day';
-            } else {
-            
-                self.titleDateLocal = self.titleDate;
-            }
-        }
 
-        let x = window.matchMedia("(max-width: 550px)");
-        x.addListener(mobileTitle);
 
 
     },
@@ -89,9 +77,7 @@ export default {
             monthsName:["JAN","FEB","MAR","APR","MAY","JUN","JULY","AUG","SEP","OCT","NOV","DEC"],
             menuicons:[cancelIcon,rescheduleIcon,editScheduleIcon],
             menuNames:['Cancel & Delete','Reschedule','Edit schedule'],
-            titleDateLocal:'day', 
 
- 
             currentShowingMenu:null,
            
         }
@@ -103,7 +89,7 @@ export default {
     computed:{
         ...mapState([
             'timeTableData',
-            'titleDate'
+   
         ]),
         ...mapGetters([
             'handledTimeTableData',
@@ -170,12 +156,12 @@ export default {
             this.currentShowingMenu = index;
         },//the number of currentShowingMenu equal the number of a menu will show
 
-        menuEventsHandle(index,ref,isItRegular){
+        menuEventsHandle(index,ref,isItRegular,title,content){
             //this.showMenu(index); //clickout directive handle this
             
 
             if(index == 0){
-                this.showAlert({msg:'Are you sure you are going to delete this?',needCancel:true,func:this.cancelSchedule,funcChild:{ref,isItRegular}});
+                this.showAlert({msg:'Are you sure to delete <' + title + '> ?',needCancel:true,func:this.cancelSchedule,funcChild:{ref,isItRegular}});
                 //                showing up the alert ,then execute the function which wrote in func ^ if user clicked  yes
             }
             if(index == 1){

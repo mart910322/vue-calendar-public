@@ -20,13 +20,13 @@
                 </div>
             </header>
             <section class="schedule-container">
-                <div class="each-day" v-for="({date,month,year,events},index) in eachDay" :key="index" @click="$router.push({name:'timetable', params:{year,month:months.indexOf(month) + 1,day:date}})">
+                <div class="each-day" v-for="({date,month,day,year,events},index) in eachDay" :key="index" @click="$router.push({name:'timetable', params:{year,month:months.indexOf(month) + 1,day:date}})">
                     <header class="each-day-title" >
                         <div class="month-date">
                             {{month + " " + date}}
                         </div>
                         <div class="year">
-                            {{year}}
+                            {{days[day]}}
                         </div>
                     </header>
                     <div class="each-event" v-for="({startTime,title,duringTime},eventIndex) in events" :key="eventIndex">
@@ -45,10 +45,11 @@
 
 <script>
 import titleHeader from '../../components/title_header.vue'
-import cusSelect from '../../../template/custiom_select.vue'
+import cusSelect from '../../../template/custom_select.vue'
 import goArrowIcon from '../../../svg_component/go_v.vue'
 import addBtn from '../../components/add_plus_button.vue'
 import {mapState,mapActions,mapMutations,mapGetters} from 'vuex'
+import {bus} from '../../../../main.js'
 
 
 export default {
@@ -60,6 +61,8 @@ export default {
         }
         let months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         return{ 
+            days:['SUN','MON','TUE','WED','THU','FRI','SAT'],
+
             months,
 
             monthOptions:months,
@@ -174,7 +177,8 @@ export default {
                     year:date.getFullYear(),
                     month:this.months[date.getMonth()],
                     date:date.getDate(),
-                    events:dataTemp
+                    day:date.getDay(),
+                    events:dataTemp,
 
                 }
             
@@ -182,7 +186,7 @@ export default {
                 this.eachDay.push(dayTemp);
                 
             }//render the day   
-      
+  
             
         },
         dateChanger(){
@@ -215,7 +219,7 @@ export default {
                 start.setDate(1);
 
                 this.getUserTimetable({startTimeLine:start,endTimeLine:end}).then(() => {
-            
+                    
                     this.showCalendar(year,month);
                     this.fetchIngDate = false;
                 });
@@ -228,7 +232,11 @@ export default {
     mounted(){
      
         this.initialize();
-
+        bus.$on('addedAppointment',() => {
+    
+            this.dateChanger();
+            
+        });
     }
 }
 </script>
@@ -330,6 +338,7 @@ export default {
     width: 100%;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16);
     border-radius: 4px;
+    cursor: pointer;
    
 }
 .each-day-title{

@@ -12,8 +12,6 @@ export default new Vuex.Store({
         /* schedule borad */
         currentDay:{},
 
-        titleDate:'',
-        
         timeTableData:[],     
         searchKeyword:'',
         
@@ -199,13 +197,7 @@ export default new Vuex.Store({
         },//execute the function if user clicked yes
 
 
-        formatDateTitle(state,dateVal){
-            var dayNames =['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-            var dateValSplit = dateVal.split('-');
-            var getDay = new Date(dateValSplit [0],parseInt(dateValSplit [1]) - 1,parseInt(dateValSplit [2]));
 
-            state.titleDate = dayNames [getDay.getDay()];
-        },
         toggleBookingStatus(state){
             state.doesBookingBoardShow = !state.doesBookingBoardShow;
         },
@@ -452,7 +444,7 @@ export default new Vuex.Store({
                 
                         resolve('updated successful');
 
-                        let msg = !isItFinished ? 'A task have finished' : 'Revert a task successful';
+                        let msg = !isItFinished ? 'updated successful' : 'reverted successful';
                         commit('showprompt',{success:true,msg})
     
                     });

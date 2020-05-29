@@ -22,7 +22,7 @@
                         {{ content }}
                     </div> 
                     <div class="task-footer">
-                        <div class="delete btn border" @click="deleteTask(ref)">delete</div>
+                        <div class="delete btn border" @click="deleteTask(ref,title)">delete</div>
                         <div class="edit btn fill" @click="toggleEditTaskStatus({content,title,ref})">edit</div>
                     </div>
                 </div>
@@ -83,11 +83,9 @@ export default {
         'showAlert'
 
     ]),
-    toggleFilter(){
-        this.showFinishedTask = !this.showFinishedTask
-    },
-    deleteTask(ref){
-        this.showAlert({msg:'Are you sure you are going to delete this?',needCancel:true,func:this.deleteUserTask,funcChild:ref});
+
+    deleteTask(ref,title){
+        this.showAlert({msg:'Are you sure to delete this <' +  title  + '> ?',needCancel:true,func:this.deleteUserTask,funcChild:ref});
     }
     
 

@@ -190,6 +190,7 @@ export default {
     width: 30rem;
     background: var(--white);
     padding: 0.75rem 0.65rem 0.75rem 0.5rem;
+    border-radius: 8px;
 }
 .head{
   

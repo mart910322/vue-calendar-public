@@ -20,7 +20,7 @@
                         <div class="date-selector-mobile"><!-- not ready yet-->
                         
                             <div class="inputDateWrapper">
-                                <input type="date" v-model="currentDate" ref="dateSelector" class="dateSelector" :data-today-name="titleDate" @change="$refs.calendar.emitDate()">
+                                <input type="date" v-model="currentDate" ref="dateSelector" class="dateSelector" :data-today-name="dayNames[currentDateSplitted.dayNameNum]" @change="$refs.calendar.emitDate()">
                                 <calendar-icon class="calendar-icon" @iconClicked="$refs.calendar.initializeDate()"></calendar-icon>                          
                             </div>                          
                         </div>
@@ -49,7 +49,7 @@ import serachPiece from './components/serach_piece.vue'
 import calendarIcon from '../../../svg_component/calendar_square.vue'
 
 import {mapState,mapActions,mapMutations,mapGetters} from 'vuex'
-
+import {bus} from '../../../../main.js'
 
 import db from '../../../../firebase/firebaseinit.js'
 import firebase from 'firebase'
@@ -65,7 +65,7 @@ export default {
     computed:{
         ...mapState([
             'timeTableData',
-            'titleDate'
+
             
 
         ]),
@@ -78,21 +78,21 @@ export default {
     data(){
         return{
 
-            
+            dayNames:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
             currentDate:null,
-
+            currentDateSplitted:{},
         }
     },
     watch:{
         currentDate(value){
      
             if(value != null || value != undefined || value != '' ){
-                this.formatDateTitle(value);
-                value = value.split('-');
+
+                let toDateFormat = new Date(value);
                 
-                var [year,month,day] = [value[0],parseInt(value[1]) - 1,parseInt(value[2])];
-               // this.$store.state.currentDay = {year,month,day};
-  
+                let [year,month,day,dayNameNum] = [toDateFormat.getFullYear(),toDateFormat.getMonth(),toDateFormat.getDate(),toDateFormat.getDay()];
+                this.currentDateSplitted = {year,month,day,dayNameNum};
+
                 this.$refs.calendar.changeDay(year,month,day);    
             
                          
@@ -105,9 +105,10 @@ export default {
             'getUserTimetable'
         ]),
         ...mapMutations([
-            'formatDateTitle',
+    
             'emitCurrentDay'
         ]),
+
         changeInputDateValue({year,month,day}){
 
             this.fetchTimetable(year,month,day);
@@ -136,7 +137,11 @@ export default {
     },
     mounted(){
        
-        
+        bus.$on('addedAppointment',() => {
+            let {year,month,day} = this.currentDateSplitted;
+            this.fetchTimetable(year,month,day);
+            
+        });
     }
 }
 </script>

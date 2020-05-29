@@ -108,7 +108,9 @@ import crossIcon from '../svg_component/cross_normal.vue'
 import calendarIcon from '../svg_component/calendar_reschedule.vue'
 import clockIcon from '../svg_component/time_for_lane.vue'
 import detailsIcon from '../svg_component/detail_article.vue'
+
 import {mapState,mapMutations,mapActions,mapGetters} from 'vuex'
+import {bus} from '../../main.js'
 import db from '../../firebase/firebaseinit.js'
 import firebase from 'firebase'
 
@@ -297,11 +299,15 @@ export default {
             this.newAppointment(formatedStartDate,formatedEndDate);
         },
         endingAction(DidItNeedLoading){
-            let endDay = new Date(this.dateFormatCurrentDay.getTime());
+
+
+           /* let endDay = new Date(this.dateFormatCurrentDay.getTime());
             endDay.setDate(endDay.getDate() + 1);       
+            
+            this.getUserTimetable({startTimeLine:this.dateFormatCurrentDay, endTimeLine: endDay});*/
+            bus.$emit('addedAppointment');
 
             this.errorText = '';
-            this.getUserTimetable({startTimeLine:this.dateFormatCurrentDay, endTimeLine: endDay});
             this.initializeAllData();
             this.toggleBookingStatus();
             if(DidItNeedLoading){
@@ -423,6 +429,7 @@ export default {
     width: 34.5rem;
     background: var(--white);
     padding: 0.75rem 0.65rem 0.75rem 0.5rem;
+    border-radius: 8px;
 }
 .head{
   
