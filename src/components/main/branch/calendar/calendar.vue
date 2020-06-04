@@ -116,7 +116,7 @@ export default {
             'getUserTimetable'
         ]),
         ...mapMutations([
-            'showprompt',
+            'showPrompt',
             'toggleBookingStatus'
         ]),
         nextMonth(value/* +1 or -1*/){
@@ -130,7 +130,7 @@ export default {
                 if(yearOptionIndex >= this.yearOptions.length -1){
 
                     this.yearSelectedOption = this.yearOptions.length - 1;
-                    this.showprompt({success:false,msg:'No longer date is available'});
+                    this.showPrompt({success:false,msg:'No longer date is available'});
                     return
                 }
                 this.yearSelectedOption++;
@@ -140,7 +140,7 @@ export default {
                 
                 if(yearOptionIndex <= 0){
                     this.yearSelectedOption = 0;
-                    this.showprompt({success:false,msg:'No longer date is available'});
+                    this.showPrompt({success:false,msg:'No longer date is available'});
                     return
                 }
                 this.yearSelectedOption--;
@@ -280,9 +280,9 @@ export default {
 .date-title-container{
     display: flex;
     align-items: center;
-    justify-content: space-between;
+
     padding-left: 0.75rem;
-    width: 13rem;
+ 
     font-size: 1.75rem;
 }
 .go-arrows-container{
@@ -290,6 +290,7 @@ export default {
     align-items: center;
     justify-content: space-between;
     width: 3.25rem;
+    margin-right: 1.25rem;
 }
 .go-icon{
     
@@ -437,9 +438,9 @@ export default {
 }    
 
 .date-title-container{
-
+    justify-content: space-between;
     font-size: 1.75rem;
-    padding: 1rem;
+    padding: 0.75rem;
     width: 100%;
 
 
@@ -458,7 +459,7 @@ export default {
 }
 .go-icon{
     width: 1rem;
-    height: 1.5rem;    
+    height: 1.325rem;    
 }
 
 

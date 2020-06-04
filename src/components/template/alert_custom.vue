@@ -68,6 +68,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    
 }
 .wrapper{
     width: 27.5rem;
@@ -86,6 +87,8 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    border-radius: 10px 10px 0 0;
 }
 .icon{
     width: 5rem;

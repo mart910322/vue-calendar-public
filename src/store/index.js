@@ -6,6 +6,7 @@ import {bus} from '../main.js'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+    
     state: {
 
         mobileMenuShow:false,
@@ -47,8 +48,10 @@ export default new Vuex.Store({
         enableEditTask:false,
         editingTaskTemp:{},
     
-
-        
+        /*user config */
+        colorConfig:{},
+        userProfile:{},
+        /*user config */
     },
     getters:{
 
@@ -70,6 +73,10 @@ export default new Vuex.Store({
 
                 }             
                 if(a.startTime.seconds == b.startTime.seconds){
+              
+                    if(a.endTime.seconds < b.endTime.seconds ){
+                        return -1
+                    }
                     return 0
 
                 }                                  
@@ -150,6 +157,26 @@ export default new Vuex.Store({
         }
     },
     mutations: {
+        revertColorConfig(state){
+            state.colorConfig = {
+                brown:'#A35D22',
+                darkBlue:'#002130',
+                lightBlue:'#D2E0E9',
+                normalBlue:'#4579A0'
+            }
+        },
+        setColorConfig(state){
+            const doc = document.documentElement;
+            let {brown,darkBlue,lightBlue,normalBlue} = state.colorConfig;
+
+            doc.style.setProperty('--dark-blue',darkBlue);
+            doc.style.setProperty('--light-blue',lightBlue);
+            doc.style.setProperty('--normal-blue',normalBlue);
+            doc.style.setProperty('--brown',brown);
+
+            
+        },
+
         toggleMobileMenuStatus(state){
             state.mobileMenuShow = !state.mobileMenuShow
         },
@@ -176,8 +203,8 @@ export default new Vuex.Store({
             
 
         },//save the data to state and show the alert
-        showprompt(state,{success,msg}){
-         
+        showPrompt(state,{success,msg}){
+        
             state.eachPrompt.push({success,msg});
 
             let timer = setTimeout(() => {
@@ -247,6 +274,13 @@ export default new Vuex.Store({
                         email:email,
                         username:username
                     });//add new user profile document
+                    db.collection('user-profile').doc(user.uid).collection('user-color-config').add({
+                        brown:'#A35D22',
+                        darkBlue:'#002130',
+                        lightBlue:'#D2E0E9',
+                        normalBlue:'#4579A0'
+                    });
+
 
                     user.sendEmailVerification().then(() => {
 
@@ -368,7 +402,7 @@ export default new Vuex.Store({
                             console.log(err);
                             reject(err);
                             state.fetchingTimetable = false;
-                            commit('showprompt',{success:true,msg:'connect datebase error'})
+                            commit('showPrompt',{success:true,msg:'connect datebase error'})
                         });
 
 
@@ -380,7 +414,7 @@ export default new Vuex.Store({
                         console.log(err);
                         state.fetchingTimetable = false;
                         reject(err);
-                        commit('showprompt',{success:true,msg:'connect datebase error'})
+                        commit('showPrompt',{success:true,msg:'connect datebase error'})
                     });
                     
                 })
@@ -419,7 +453,7 @@ export default new Vuex.Store({
                         state.fetchingTask = false;
                         console.log(err);
                         reject(err);
-                        commit('showprompt',{success:true,msg:'connect datebase error'})
+                        commit('showPrompt',{success:true,msg:'connect datebase error'})
                     });
                     
                 })
@@ -445,7 +479,7 @@ export default new Vuex.Store({
                         resolve('updated successful');
 
                         let msg = !isItFinished ? 'updated successful' : 'reverted successful';
-                        commit('showprompt',{success:true,msg})
+                        commit('showPrompt',{success:true,msg})
     
                     });
                     
@@ -453,7 +487,7 @@ export default new Vuex.Store({
                     console.log(err);
                     reject(err);
                     commit('loading');
-                    commit('showprompt',{success:false,msg:'error'})
+                    commit('showPrompt',{success:false,msg:'error'})
                 });  
             })
             return updated
@@ -467,13 +501,13 @@ export default new Vuex.Store({
                     dispatch('getUserTask').then(() => {
                         commit('loading');
                         resolve('deleted successful');
-                        commit('showprompt',{success:true,msg:'deleted a task successful' })
+                        commit('showPrompt',{success:true,msg:'deleted a task successful' })
     
                     });
                 }).catch(err => {
                     commit('loading');
                     reject(err);
-                    commit('showprompt',{success:true,msg:'failed delete a task' })
+                    commit('showPrompt',{success:true,msg:'failed delete a task' })
                     console.log(err);
                 })
             })
@@ -494,24 +528,59 @@ export default new Vuex.Store({
                                 
                     dispatch('getUserTimetable',{startTimeLine:getters.dateFormatCurrentDay,endTimeLine:endDay}).then(() => {
                         commit('loading');
-                        commit('showprompt',{success:true,msg:'canceled a appointment successful'})
+                        commit('showPrompt',{success:true,msg:'canceled a appointment successful'});
+                        resolve('canceled a schedule successful');
                     }).catch(err => {
                         console.log(err);
                         reject(err);
                         commit('loading');
-                        commit('showprompt',{success:true,msg:'update schedule error'})
+                        commit('showPrompt',{success:true,msg:'update schedule error'})
                     });
 
                 }).catch(err => {
                     console.log(err);
                     reject(err);
                     commit('loading');
-                    commit('showprompt',{success:true,msg:'connect datebase error'})
+                    commit('showPrompt',{success:true,msg:'connect datebase error'})
                 })
             })
 
             return deleteSchedule;
         },
+
+        getColorConfig({commit,state,dispatch}){
+            let currentUser = firebase.auth().currentUser;
+            let colorConfigure = new Promise((resolve,reject) => {
+                db.collection('user-profile').doc(currentUser.uid).collection('user-color-config').get().then(configs => {
+                    
+                    state.colorConfig = configs.docs[0].data();
+                    state.colorConfig.ref = configs.docs[0].ref.id;
+              
+                    resolve(state.colorConfig);
+    
+                }).catch(err => {
+                    console.log(err);
+                    reject(err);
+                });
+            });
+            return colorConfigure;
+        },
+        getUserProfile({commit,state,dispatch}){
+            let currentUser = firebase.auth().currentUser;
+            let userProfile = new Promise((resolve,reject) => {
+                db.collection('user-profile').doc(currentUser.uid).get().then(profile => {
+                    
+                    state.userProfile = profile.data();
+                    resolve(state.userProfile);
+    
+                }).catch(err => {
+                    console.log(err);
+                    reject(err);
+                });
+            });
+            return userProfile;           
+        },
+
 
     },
     modules: {

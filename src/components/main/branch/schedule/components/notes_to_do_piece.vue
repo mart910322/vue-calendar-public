@@ -80,6 +80,7 @@ export default {
 header.title{
     padding: 0.25rem 0rem 0rem 0.4rem;
     border-bottom: 1px solid var(--dark-gray);
+
 }
 .title-text{
     font-weight: 400;
@@ -107,7 +108,7 @@ div.note:hover{
 
 .task-title{
 
-    font-size: 1.45rem;
+    font-size: 1.375rem;
     font-weight: 300;
     margin-bottom: 0.25rem;
     position: relative;
@@ -197,27 +198,65 @@ header.title{
     font-size: 1.25rem;
 
 }
+section.notes{
+
+    grid-auto-rows:3.15rem;
+
+  
+
 
 }
+}
+@media screen and (max-width: 768px){
+div.note:hover .task-title{
+    color:var(--black);
+}
+div.note:hover .task-title::before{
+    content: none;
 
+}
+div.note:hover .tick-box{
+    border:1px solid var(--black);
+}
+div.note:hover .tick-symbol{
+    display: none;
+  
+}
+}
 @media screen and (max-width: 550px){
 .cotainer{
 
 
-    grid-template-rows: 2.75rem 1fr 3.425rem;
+    grid-template-rows: 3rem 1fr 3.425rem;
 
+ 
 }
 header.title{
 
 
     background: var(--light-blue);
     border-bottom: none;
- 
+    padding: 0.35rem 0rem 0rem 0.4rem;
+
+    color: var(--black)
 }  
+
 .btn{
     padding: 0.5rem 0;
     font-size: 1.35rem;
 
-}      
+}  
+.task-title{
+    font-size: 1.625rem;
+
+}
+section.notes{
+
+    grid-auto-rows:3.5rem;
+
+  
+
+
+}    
 }
 </style>

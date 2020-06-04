@@ -51,21 +51,61 @@ export default {
     },
     methods:{
         replaceData(inputValue){
-            switch(inputValue.type){
-                case 'username' : this.user.username = inputValue.data;break;
-                case 'password' : this.user.password = inputValue.data;break;
-                case 'email' : this.user.email = inputValue.data;break;
+    
+            if(inputValue.type == 'username'){
+                this.user.username = inputValue.data;
+        
+                if(this.user.username.length > 15){
+                    this.errMsg = "Username can't be more than 15 character"
+                }else if(this.user.username.length == 0){
+                    this.errMsg = "Username can't be emtpy"
+                }else{
+                    this.errMsg = '';
+                }
+
             }
 
+            if(inputValue.type == 'email'){
+                this.user.email = inputValue.data;
+                if(this.user.email.length == 0){
+
+                    this.errMsg = "Email can't be empty";
+                }else if( !(this.user.email.includes('@') )){
+                    this.errMsg = "The email address is badly formatted.";
+                }else{
+                    this.errMsg = '';
+                }
+            }
+
+            if(inputValue.type == 'password'){
+                this.user.password = inputValue.data;
+                if(this.user.password.length == 0){
+
+                    this.errMsg = "Password can't be empty";
+                }else if( this.user.password.length < 8 ){
+                    this.errMsg = "Password must be as least 8 character";
+                }else{
+                    this.errMsg = '';
+                }
+            }            
+
+
         },//convert received data to local data
+
+
+
         commitRegister(){
-            this.$store.dispatch('register',this.user).then(({state,msg}) => {
-                this.errMsg = '';
-                this.$router.push('/login');
-              
-            }).catch(({state,msg}) => {
-                this.errMsg = msg;
-            });
+
+            if(this.errMsg == ''){
+                this.$store.dispatch('register',this.user).then(({state,msg}) => {
+                    this.errMsg = '';
+                    this.$router.push('/login');
+                
+                }).catch(({state,msg}) => {
+                    this.errMsg = msg;
+                });
+            }
+
 
         }
     }
@@ -128,7 +168,10 @@ export default {
     width: 23.5rem;
    
 }
+.errMsg{
 
+    font-size: 1.2rem;
+}  
 }
 @media screen and (max-width:1024px){
 .container{
@@ -138,7 +181,8 @@ export default {
     min-width: 23.5rem;
 
 
-}   
+}  
+
 }
 @media screen and (max-width:768px){
 .container{
@@ -149,7 +193,7 @@ export default {
 }   
 .errMsg{
 
-    font-size: 1.115rem;
+    font-size: 1.225rem;
 } 
 }
 @media screen and (max-width:550px){
@@ -167,7 +211,7 @@ export default {
 }
 .errMsg{
 
-    font-size: 1.2rem;
+    font-size: 1.425rem;
 }
 .register-btn{
     padding: 0.2rem 0 0.3rem 0;

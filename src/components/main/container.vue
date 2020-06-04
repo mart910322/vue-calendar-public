@@ -17,8 +17,7 @@ export default {
         'slide-nav':slideNav
     },
     mounted(){
-  
-        
+
     },
      computed:{
         ...mapState([

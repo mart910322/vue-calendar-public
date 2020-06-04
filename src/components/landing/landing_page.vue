@@ -115,12 +115,16 @@ export default {
         }//Navigating to register when let's get started button was clicked
 
     },
+    
+    
 
 }
 </script>
 
 <style>
+
 main.function-box{
+
     width: 100%;
 
     height:calc(100vh - 8rem - 3.85rem);

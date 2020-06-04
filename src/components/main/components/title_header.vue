@@ -77,7 +77,8 @@ export default {
     width: 50%;
 }
 .title{
-    transform: translateX(50%)
+    transform: translateX(50%);
+    font-size: 2.375rem;
 }
 .mobile-menu-btn{
     display: flex;
@@ -101,10 +102,10 @@ export default {
     
 }
 }
-@media screen and (max-width: 768px){
+@media screen and (max-width: 550px){
 .title{
 
-    font-size: 2.35rem;
+    font-size: 2.25rem;
 }    
 }
 </style>

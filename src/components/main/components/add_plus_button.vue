@@ -56,8 +56,8 @@ export default {
 
 
 
-    width: 4.5rem;
-    height: 4.5rem;
+    width: 4.375rem;
+    height: 4.375rem;
 
 
 }  

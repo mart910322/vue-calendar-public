@@ -29,7 +29,7 @@ import settingIcon from '../../svg_component/setting_slim_line.vue'
 import logoutIcon from '../../svg_component/logout_door.vue'
 import supportIcon from '../../svg_component/support_question.vue'
 
-import {mapMutations,mapState} from 'vuex'
+import {mapMutations,mapState,mapActions} from 'vuex'
 
 
 export default {
@@ -56,7 +56,12 @@ export default {
     },
     methods:{
         ...mapMutations([
-            'toggleMobileMenuStatus'
+            'toggleMobileMenuStatus',
+            'setColorConfig',
+            'revertColorConfig'
+        ]),
+        ...mapActions([
+            'getColorConfig'
         ]),
         matchCurrentPath(index){
             let name = this.$route.name.toLowerCase();
@@ -96,6 +101,16 @@ export default {
                 this.toggleMobileMenuStatus();
             }
         }   
+    },
+    mounted(){
+        this.getColorConfig().then(() => {
+            this.setColorConfig();
+        });//Apply the user style setting
+    },
+    beforeDestroy(){
+        this.revertColorConfig();
+        this.setColorConfig();
+
     }
 }
 </script>

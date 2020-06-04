@@ -9,7 +9,7 @@
                 </header>
 
                 <section class="typing-title-area">
-                    <input type="text" class="new-task-notes-title" placeholder="type the title..." v-model="title">
+                    <input type="text" class="new-task-notes-title" placeholder="type the title..." v-model="title" maxlength="25">
                 </section>
 
                 <section class="body">               
@@ -73,7 +73,7 @@ export default {
         ...mapMutations([
            'toggleNewTaskStatus',
            'loading',
-           'showprompt'
+           'showPrompt'
         ]),
         ...mapActions([
             'getUserTask'
@@ -155,7 +155,7 @@ export default {
                 msg = 'failed added a note';
             }
 
-            this.showprompt({success:doesItSuccess,msg:msg});
+            this.showPrompt({success:doesItSuccess,msg:msg});
         },
 
 
@@ -261,12 +261,12 @@ export default {
     transition: 0.25s;
 
 }
-
 .btn:hover{
-    background: var(--dark-gray);
-    color: var(--white);
-    border:0;
+    background: var(--light-blue) !important;
+    border:1px solid  var(--light-blue) !important;
+    color:var(--normal-blue) !important;
 }
+
 
 .body{
     display: grid;
@@ -325,13 +325,7 @@ export default {
     opacity: 0.8;
   
 }
-.btn.save:hover{
-    opacity: 1;
-}
-.btn.cancel:hover{
-    background: var(--normal-blue);
-    color: var(--white);
-}
+
 @media screen and (max-width:550px) {
 .back-board{
  

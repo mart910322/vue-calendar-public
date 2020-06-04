@@ -499,7 +499,7 @@ header.title{
 .event-wrapper{
 
     grid-template-columns:  1fr 3rem;
-    grid-auto-rows: 2.5rem minmax(7.25rem,7.25rem);
+    grid-auto-rows: 3rem minmax(7.25rem,7.25rem);
 
     border-bottom: 1px solid var(--light-gray);
    

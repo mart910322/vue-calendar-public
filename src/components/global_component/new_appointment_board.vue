@@ -7,7 +7,7 @@
                     <cross-icon class="cross icon" @iconClicked="cancelBooking"></cross-icon>
                 </header>
                 <section class="typing-title-area">
-                    <input type="text" class="appointment-title" placeholder="type the title..." v-model="title">
+                    <input type="text" class="appointment-title" placeholder="type the title..." v-model="title" maxlength="25">
                 </section>
                 <section class="is-it-regular-question-area" v-if="!didYesOrNoClick">
                     <calendar-icon class="calendar icon"></calendar-icon>
@@ -200,7 +200,7 @@ export default {
         ...mapMutations([
             'toggleBookingStatus',
             'loading',
-            'showprompt'
+            'showPrompt'
 
         ]),
         ...mapActions([
@@ -399,7 +399,7 @@ export default {
                 msg = 'failed to book appointment';
             }
 
-            this.showprompt({success:doesItSuccess,msg:msg});
+            this.showPrompt({success:doesItSuccess,msg:msg});
         }
 
     },
@@ -524,7 +524,7 @@ export default {
 .btn.yes{
     background: var(--normal-blue);
     color: var(--white);
-    opacity: 0.8;
+
 }
 
 .btn.no{
@@ -532,14 +532,11 @@ export default {
     color: var(--normal-blue);
     
 }
-.btn.yes:hover{
-    opacity: 1;
+.btn:hover{
+    background: var(--light-blue) !important;
+    border:1px solid  var(--light-blue) !important;
+    color:var(--normal-blue) !important;
 }
-.btn.no:hover{
-    background: var(--normal-blue);
-    color: var(--white);
-}
-
 
 
 .body{
@@ -672,16 +669,11 @@ select.date-option::-ms-expand {
     background: var(--normal-blue);
     color:var(--white);
     margin-right: 1rem;
-    opacity: 0.8;
+
   
 }
-.btn.save:hover{
-    opacity: 1;
-}
-.btn.cancel:hover{
-    background: var(--normal-blue);
-    color: var(--white);
-}
+
+
 @media screen and (max-width:550px) {
 .back-board{
  

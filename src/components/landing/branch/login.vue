@@ -22,7 +22,7 @@ import arrow from '../../svg_component/arrow-circle-fill.vue'
 import btnTemplate from '../../template/vue-btton-template.vue'
 import inputTemplate from '../component/input_and_title.vue'
 import enterHandler from './directives/enter_pressed_handle.js'
-import {mapState} from 'vuex'
+import {mapState,mapActions,mapMutations} from 'vuex'
 export default {
     directives:{
         'enter-pressed-handler':enterHandler
@@ -49,6 +49,13 @@ export default {
         }
     },
     methods:{
+        ...mapActions([
+  
+            'login'
+        ]),
+        ...mapMutations([
+    
+        ]),
         replaceData(inputValue){
           
         
@@ -61,9 +68,11 @@ export default {
         },//convert received data to local data
         commitLogin(){
      
-            this.$store.dispatch('login',this.user).then(({state,msg}) => {
+            this.login(this.user).then(({state,msg}) => {
                 this.errMsg = '';
                 this.$router.push('/home');
+
+
               
             }).catch(({state,msg}) => {
                 this.errMsg = msg;

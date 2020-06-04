@@ -37,7 +37,7 @@ export default {
     },
     methods:{
         ...mapMutations([
-            'showprompt'
+            'showPrompt'
         ]),
 
     },
@@ -59,14 +59,18 @@ export default {
 
 .each-prompt{
 
-    display: inline-flex;
+    display: flex;
+    align-items: center;
+
+
+
     min-width: 15rem;
-    min-height: 4rem;
-    padding: 0 1rem;
+
+    padding: 0.85rem 1.5rem;
     margin-top: 1rem;
     background: var(--normal-blue);
     
-
+    border-radius: 4px
 }
 
 @keyframes enterFade {
@@ -82,11 +86,12 @@ export default {
 }
 
 .icon{
-    display: flex;
-    align-items: center;
-    min-height: 4rem;
-    width: 2rem;
+
+
+    width: 1.75rem;
+    height: 1.75rem;
     margin-right: 1rem
+    
     
 }
 .icon.tick{
@@ -98,11 +103,9 @@ export default {
 .msg{
     word-wrap: none;
     font-size: 1.5rem;
-    min-height: 4rem;
+
+    padding-bottom: 0.1rem;
     color: var(--white);
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
 
 }
 .propmt-list-enter-active,.propmt-list-leave-active{

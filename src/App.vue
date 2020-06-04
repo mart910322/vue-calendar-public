@@ -19,6 +19,7 @@ import addTaskNoteBorad from './components/global_component/new_task_note_board.
 
 import customPrompt from './components/global_component/prompt_finished.vue'
 
+import {mapActions,mapMutations} from 'vuex'
 export default {
     data(){
         return{
@@ -26,7 +27,13 @@ export default {
         }
     },
     methods:{
-  
+      ...mapActions([
+          'getColorConfig'
+      ]),
+      ...mapMutations([
+        'setColorConfig'
+      ])
+
     },
     components:{
       'custom-alert':customAlert,
@@ -41,9 +48,10 @@ export default {
     },
     mounted(){
 
+
       const mobileHeight = () => {
-            const doc = document.documentElement
-            doc.style.setProperty('--mobile-height', `${window.innerHeight}px`)
+        const doc = document.documentElement
+        doc.style.setProperty('--mobile-height', `${window.innerHeight}px`)
       }
       window.addEventListener('resize', mobileHeight);
       mobileHeight();//preventing 100vh get over the screen
@@ -58,9 +66,9 @@ export default {
 :root{
     --dark-blue:#002130;
     --light-blue:#D2E0E9;
-
     --normal-blue:#4579A0;
     --brown:#A35D22;
+
     --gray-background:#F9F9F9;
     --gray-border:#C7C7C7;
     --light-gray:#EBEBEB;
@@ -104,7 +112,9 @@ body,html{
 }
 
 
-
+.btn:active{
+  opacity: 0.8;
+}
 
 @media screen and (min-width: 2750px){
 html{
@@ -134,7 +144,7 @@ html{
 
 @media screen and (max-width: 550px){
 html{
-  font-size: 12.5px;
+  font-size: 13px;
 }
 
 .roll-up-enter-active,.roll-up-leave-active{

@@ -127,7 +127,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.25rem 0.75rem 0.5rem 0.5rem;
+    padding: 0.5rem 0.75rem 0.5rem 0.5rem;
     border-bottom: 1px solid var(--gray-border);
 }
 .headline{
@@ -138,20 +138,20 @@ export default {
 
 .toggle-btn{
     --toggle-btn-width:8rem;
-    --toggle-btn-height:2.25rem;
+    --toggle-btn-height:2.1rem;
     --toggle-btn-font-size:1.25rem;
 }
 .btn{
     font-size: 1.25rem;
 
-    border-radius: 4px;
+    border-radius: 2px;
     cursor: pointer;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    transition: 0.25s linear background,0.25s linear color;
+  
  
     
 
