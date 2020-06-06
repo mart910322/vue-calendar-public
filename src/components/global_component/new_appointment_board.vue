@@ -75,7 +75,7 @@
                                     <option :value="2020 + index" v-for="(year,index) in new Array(30)" :key="index">{{ 2020 + index }}</option>
                                 </select>
 
-                            </div>
+                             </div>
   
                         </div>
                         <div class="datails-container row">
