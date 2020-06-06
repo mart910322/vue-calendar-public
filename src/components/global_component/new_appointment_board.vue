@@ -76,7 +76,7 @@
                                 </select>
 
                             </div>
-
+  
                         </div>
                         <div class="datails-container row">
                             <details-icon class="details icon"></details-icon>
