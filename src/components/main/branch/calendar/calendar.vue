@@ -152,6 +152,7 @@ export default {
 
         },
         showCalendar(year,month){
+            
             this.eachDay = [];
             let date = new Date(year, month);
 
@@ -164,7 +165,7 @@ export default {
                 
                 let dataTemp = [];
 
-                this.handledTimeTableData.forEach(eachData => {
+                this.handledTimeTableData.forEach(eachData => {//bug not update
                     let resetTimeForCompare = new Date(eachData.startTime.getTime());
                     
                     resetTimeForCompare.setHours(0,0);
@@ -190,6 +191,7 @@ export default {
 
                 this.eachDay.push(dayTemp);
                 
+                
             }//render the day   
   
             
@@ -200,6 +202,8 @@ export default {
         
             
             this.fetchData(year,month);
+
+   
             
         },
         initialize(){
@@ -215,8 +219,10 @@ export default {
                         
         },
         fetchData(year,month/*number*/){
-        
+             
             if(!this.fetchIngDate && year != undefined && month != undefined){
+                
+                
                 this.fetchIngDate = true;//prevent the function trigger twice
                 let start = new Date(year,month);
                 let end = new Date(start.getFullYear(),start.getMonth() + 1 ,1);
@@ -230,18 +236,17 @@ export default {
                 });
             }
         
-        }
+        },
 
 
     },
     mounted(){
      
         this.initialize();
-        bus.$on('addedAppointment',() => {
-    
-            this.dateChanger();
-            
-        });
+        bus.$on('addedAppointment',this.dateChanger);
+    },
+    beforeDestroy(){
+        bus.$off('addedAppointment',this.dateChanger);        
     }
 }
 </script>

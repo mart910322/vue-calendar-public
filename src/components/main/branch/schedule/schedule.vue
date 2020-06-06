@@ -132,16 +132,18 @@ export default {
 
             this.getUserTimetable({startTimeLine:startDate, endTimeLine: nextDate});
         },  
-
+        updateTimeTable(){
+            let {year,month,day} = this.currentDateSplitted;
+            this.fetchTimetable(year,month,day);           
+        }
         
     },
     mounted(){
        
-        bus.$on('addedAppointment',() => {
-            let {year,month,day} = this.currentDateSplitted;
-            this.fetchTimetable(year,month,day);
-            
-        });
+        bus.$on('addedAppointment',this.updateTimeTable );
+    },
+    beforeDestroy(){
+        bus.$off('addedAppointment',this.updateTimeTable);        
     }
 }
 </script>

@@ -305,7 +305,7 @@ export default {
             endDay.setDate(endDay.getDate() + 1);       
             
             this.getUserTimetable({startTimeLine:this.dateFormatCurrentDay, endTimeLine: endDay});*/
-            bus.$emit('addedAppointment');
+            
 
             this.errorText = '';
             this.initializeAllData();
@@ -395,6 +395,7 @@ export default {
             let msg = '';
             if(doesItSuccess){
                 msg = 'booked  anew appointment successful';
+                bus.$emit('addedAppointment');
             }else{
                 msg = 'failed to book appointment';
             }
@@ -424,6 +425,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    z-index: 100;
 }
 .container{
     width: 34.5rem;

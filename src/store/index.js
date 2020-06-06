@@ -309,9 +309,10 @@ export default new Vuex.Store({
             });
             return registerState;
         },
-        getUserTimetable({commit,state},{startTimeLine,endTimeLine}){//this jsut fetch data. then the data will sent to handledTimeTableData of getter
-
+        getUserTimetable({commit,state},{startTimeLine,endTimeLine}){//this jsut fetch data. then the data will make some changing by handledTimeTableData of getter
+      
             if(!state.fetchingTimetable && startTimeLine!= undefined && endTimeLine != undefined){
+         
                 state.fetchingTimetable = true;
 
                 let currentUser = firebase.auth().currentUser;
