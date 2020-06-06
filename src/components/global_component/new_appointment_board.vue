@@ -6,7 +6,7 @@
                     <div class="title">Booking appointment</div>
                     <cross-icon class="cross icon" @iconClicked="cancelBooking"></cross-icon>
                 </header>
-                <section class="typing-title-area">
+                <section class="typing-title-area" v-if="didYesOrNoClick">
                     <input type="text" class="appointment-title" placeholder="type the title..." v-model="title" maxlength="25">
                 </section>
                 <section class="is-it-regular-question-area" v-if="!didYesOrNoClick">
@@ -432,7 +432,7 @@ export default {
     width: 34.5rem;
     background: var(--white);
     padding: 0.75rem 0.65rem 0.75rem 0.5rem;
-    border-radius: 8px;
+    border-radius: 4px;
 }
 .head{
   
@@ -483,6 +483,7 @@ export default {
    border-bottom: 1.5px solid var(--normal-blue);
 }
 .is-it-regular-question-area{
+
     display: grid;
     grid-template-columns: 2.25rem 3.25fr 3fr 3fr;
     grid-column-gap: 0.75rem;
@@ -490,7 +491,10 @@ export default {
     height: 3.5rem;
 
     align-items: center;
+
+    margin-top: 1rem;
 }   
+
 .icon{
     width: 1.85rem;
     --icon-color:var(--dark-gray);
@@ -740,6 +744,7 @@ select.date-option::-ms-expand {
    border-bottom: none;
 }
 .is-it-regular-question-area{
+
     display: grid;
     grid-template-columns: 3rem 1fr 3rem 1fr;
     grid-row-gap: 1rem;
@@ -751,6 +756,8 @@ select.date-option::-ms-expand {
     height:auto;
 
     border-bottom: 1px solid var(--gray-border);
+
+
 } 
 .calendar{
     
@@ -764,6 +771,8 @@ select.date-option::-ms-expand {
     font-size: 1.85rem;
     grid-column: 2 / 5;
     margin-bottom: 0rem;
+
+
     
 } 
 .btn{

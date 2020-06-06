@@ -8,14 +8,15 @@
                     <cross-icon class="cross icon" @iconClicked="endingAction(false)"></cross-icon>
                 </header>
 
-                <section class="typing-title-area">
-                    <input type="text" class="new-task-notes-title" placeholder="type the title..." v-model="title" maxlength="25">
+                <section class="typing-title-area" >
+                  
+                    <input type="text" class="new-task-notes-title" placeholder="type the title..." v-model="title" maxlength="25"> 
                 </section>
 
                 <section class="body">               
                     <div class="datails-container row">
-                        <details-icon class="details icon"></details-icon>
-                        <textarea class="datalis-input-area" placeholder="type your appointment datails..." v-model="details"></textarea>
+                        <details-icon class="details icon" :class="{'typing':detailTyping}"></details-icon>
+                        <textarea class="datalis-input-area" placeholder="type your appointment datails..."  v-model="details"  @focus="detailTyping = true" @focusout="detailTyping = false" ></textarea>
                     </div>
                     <div class="error-text-wrapper row" v-if="errorText != ''">
                 
@@ -67,6 +68,8 @@ export default {
             errorText:'',
 
             ref:'',
+
+            detailTyping:false
         }
     },
     methods:{
@@ -192,7 +195,7 @@ export default {
     width: 30rem;
     background: var(--white);
     padding: 0.75rem 0.65rem 0.75rem 0.5rem;
-    border-radius: 8px;
+    border-radius: 4px;
 }
 .head{
   
@@ -228,8 +231,14 @@ export default {
     width: 100%;
     padding: 0 0.75rem;
     margin-bottom: 0.75rem;
+
+    
 }
+
+
+
 .new-task-notes-title{
+   
     width: 100%;
     border: none;
     border-bottom: 1.5px solid var(--gray-border);
@@ -241,13 +250,17 @@ export default {
 }
 .new-task-notes-title:focus{
    border-bottom: 1.5px solid var(--normal-blue);
+
 }
+
 .icon{
     width: 1.85rem;
     --icon-color:var(--dark-gray);
     margin-right: 1rem;
 }
-
+.icon.typing{
+    --icon-color:var(--normal-blue);
+}
 .btn{
     width: 8.5rem;
     padding: 0.15rem 0;

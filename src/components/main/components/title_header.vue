@@ -60,8 +60,10 @@ export default {
 }
 .button{
     cursor: pointer;
+    margin-right: 2.75vw;
     
 }
+
 .mobile-menu-btn{
     display: none;
 
@@ -99,6 +101,7 @@ export default {
 }
 .button{
     min-width: 2rem;
+    display: none
     
 }
 }

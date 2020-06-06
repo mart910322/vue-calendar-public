@@ -115,7 +115,7 @@ export default {
     background: var(--white);
     width: 100%;
     max-width:1100px ;
-    min-height: 40rem;
+    min-height: 45rem;
     padding:0.5rem 0.5rem;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16);
 

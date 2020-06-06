@@ -2,11 +2,12 @@
     <div class="timetable-container">
         <title-header>
             <span slot="title">Timetable</span>
+            <span slot="button" class="prev-btn" @click="$router.push({name:'calendar'})">cadenlar &#10095;</span>
         </title-header>
         <section class="body">
             <header class="caption">
-                <span class="caption">{{monthsName[$route.params.month - 1] + ' ' + $route.params.day + ' ' + $route.params.year  }}</span>
-                <div class="book-appointment btn" @click="toggleBookingStatus">+ book appointment </div>
+                <span class="caption">{{ monthsName[$route.params.month - 1].toUpperCase() + ' ' + $route.params.day + ' ' + $route.params.year  }}</span>
+
             </header>
             <main class="content">
 
@@ -33,18 +34,21 @@
                 </div>
 
             </main>
+            <add-button @click="toggleBookingStatus"></add-button>
         </section>
-        {{ splitData.length }}
+    
     </div>
 </template>
 
 <script>
 import titleHeader from '../../../components/title_header.vue'
+import addBtn from '../../../components/add_plus_button.vue'
 import {mapState,mapActions,mapMutations,mapGetters} from 'vuex'
 import {bus} from '../../../../../main.js'
 export default {
     components:{
         'title-header':titleHeader,
+        'add-button':addBtn
     },
     data(){
         return{
@@ -156,12 +160,19 @@ header.caption{
     justify-content: space-between;
     border-bottom: 1px solid var(--gray-border);
 
-    padding: 0.5rem 0.75rem;
-
+    padding: 0.75rem 0.75rem;
+    
 
 }
+.prev-btn{
+    font-size: 1.5rem;
+    
+}
+.prev-btn:hover{
+    border-bottom: 0.5px solid var(--black);
+}
 span.caption{
-    font-size: 1.75rem
+    font-size: 1.875rem
 }
 .btn{
 
@@ -364,10 +375,10 @@ main.content{
    
 }
 .task-content-wrapper{
-    margin-top: 1.25rem;
+
     margin-right: 2%;
     cursor: pointer;
-    padding:0.5rem 1% 0.5rem 0.5rem;
+    padding:0rem 1% 0.5rem 0.5rem;
 
 }  
 .task-content{
