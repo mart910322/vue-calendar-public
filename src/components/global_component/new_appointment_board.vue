@@ -1,7 +1,112 @@
 <template>
     <transition name="roll-up">
         <div class="back-board" >
+            <div class="container">
+                <header class="title">
+                    <div class="title">book appointment</div>
+                    <cross-icon class="cross icon"></cross-icon>
+                </header>
+                <main class="body">
+                    <section class="page one" v-if="false">
 
+                        <div class="each-wrapper">
+                            <div class="index">1.</div>
+                            <div class="q-and-a-wrapper">
+                                <div class="question">does the appointment happen regularly?</div>
+                                <div class="answer-wrapper checkbox">
+
+                                    <div class="custom-checkbox">
+                                        <div class="checkbox-box">
+                                            <tick-icon class="tick"></tick-icon>
+                                        </div>
+                                        <span class="checkbox-text">Yes</span>
+                                    </div>
+                                    <div class="custom-checkbox">
+                                        <div class="checkbox-box">
+                                            <tick-icon class="tick"></tick-icon>
+                                        </div>
+                                        <span class="checkbox-text">No</span>
+                                    </div>
+
+                                </div>
+                                <div class="error-text">something wrong</div>
+                            </div>
+                        </div>
+
+                        <div class="each-wrapper">
+                            <div class="index">2.</div>
+                            <div class="q-and-a-wrapper">
+                                <div class="question">type task name</div>
+                                <div class="answer-wrapper input-text">
+                                    <title-icon class="icon"></title-icon>
+                                    <input type="text" class="input-text">
+                                </div>
+                                <div class="error-text">something wrong</div>
+                            </div>
+                        </div>
+
+                        <div class="each-wrapper">
+                            <div class="index">3.</div>
+                            <div class="q-and-a-wrapper">
+                                <div class="question">type task details</div>
+                                <div class="answer-wrapper input-text">
+                                    <details-icon class="icon"></details-icon>
+                                    <input type="text" class="input-text">
+                                </div>
+                                <div class="error-text">something wrong</div>
+                            </div>
+                        </div>
+
+                    </section>
+
+
+                    <section class="page two reuglar">
+
+                        <div class="each-wrapper">
+                            <div class="index">4.</div>
+                            <div class="q-and-a-wrapper">
+                                <div class="question">pick days it will repeat</div>
+                                <div class="answer-wrapper days-picker">
+
+
+                                </div>
+                                <div class="error-text">something wrong</div>
+                            </div>
+                        </div>
+
+                        <div class="each-wrapper">
+                            <div class="index">5.</div>
+                            <div class="q-and-a-wrapper">
+                                <div class="question">when is it start</div>
+                                <div class="answer-wrapper input-text">
+                                    <title-icon class="icon"></title-icon>
+                                    <input type="datetime-local" class="input-text">
+                                </div>
+                                <div class="error-text">something wrong</div>
+                            </div>
+                        </div>
+
+                        <div class="each-wrapper">
+                            <div class="index">6.</div>
+                            <div class="q-and-a-wrapper">
+                                <div class="question">when is it end</div>
+                                <div class="answer-wrapper input-text">
+                                    <details-icon class="icon"></details-icon>
+                                    <input type="datetime-local" class="input-text">
+                                </div>
+                                <div class="error-text">something wrong</div>
+                            </div>
+                        </div>
+
+                    </section>
+
+
+                </main>
+                <footer class="buttons">
+                    <div class="next btn">next</div>
+                    <div class="prev btn">cancel</div>
+                </footer>
+            </div>
         </div>
     </transition>
 </template>
@@ -11,6 +116,8 @@ import crossIcon from '../svg_component/cross_normal.vue'
 import calendarIcon from '../svg_component/calendar_reschedule.vue'
 import clockIcon from '../svg_component/time_for_lane.vue'
 import detailsIcon from '../svg_component/detail_article.vue'
+import titleIcon from '../svg_component/headline.vue'
+import tickIcon from '../svg_component/tick.vue'
 
 import {mapState,mapMutations,mapActions,mapGetters} from 'vuex'
 import {bus} from '../../main.js'
@@ -19,10 +126,12 @@ import firebase from 'firebase'
 
 export default {
     components:{
-        //'cross-icon':crossIcon,
+        'cross-icon':crossIcon,
+        'title-icon':titleIcon,
+        'tick-icon':tickIcon,
         //'calendar-icon':calendarIcon,
         //'clock-icon':clockIcon,
-        //'details-icon':detailsIcon
+        'details-icon':detailsIcon
     },
     computed:{
         ...mapState([
@@ -316,5 +425,191 @@ export default {
 </script>
  
 <style scoped>
+.back-board{
+    position:fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.5);
+
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 100;
+}
+.container{
+    background: var(--white);
+    width: 35rem;
+    min-height: 22.5rem;
+    padding-bottom: 1rem;
+    border-radius: 8px;
+
+
+
+    display: grid;
+    grid-row-gap: 0.75rem;
+    grid-template-rows: 4rem 1fr 2rem;
+}
+header.title{
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    padding: 0 1rem 0 0.5rem;
+    border-radius: 8px 8px 0 0;
+
+    background-image:  linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)),linear-gradient(var(--light-blue) , var(--light-blue));
+
+  
+}
+div.title{
+    font-size: 1.5rem;
+
+}
+.cross.icon{
+    width: 1.45rem;
+    cursor: pointer;
+}
+.cross.icon:hover{
+    --icon-color:var(--normal-blue);
+}
+
+
+.body{
+    padding: 0rem 0.75rem;
+}
+.page{
+    display: grid;
+    grid-template-columns:1fr;
+    grid-template-rows: repeat(3,minmax(5rem)); 
+
+    grid-row-gap: 1rem;
+}
+.page.one{
+
+}
+.each-wrapper{
+    display: grid;
+    grid-template-columns: 1.5rem 1fr;
+
+}
+.index{
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+.q-and-a-wrapper{
+
+}
+.question{
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--normal-blue)
+}
+.answer-wrapper{
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+}
+
+.answer-wrapper.checkbox{
+
+}
+.answer-wrapper.input-text{
+
+    border: 1px solid var(--gray-border);
+    padding:0.15rem 0.5rem;
+    width: 85%;
+}
+
+.custom-checkbox{
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+
+    cursor: pointer;
+}
+.checkbox-box{
+    width: 1rem;
+    height: 1rem;
+    padding: 0.075rem;
+    border: 1px solid var(--black);
+
+    margin-right: 0.5rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+}
+.tick{
+    display: none;
+    transform: scale(1) rotate(-5deg) translateY(-10%);
+}
+.tick.checked{
+    display: inline;
+}
+.checkbox-text{
+    
+}
+input.input-text{
+    font-size: 1.25rem;
+    border: none;
+    
+   -webkit-appearance:none;
+   -moz-appearance:none;
+   appearance:none;
+   outline: none;
+
+   width: 100%;
+}
+.error-text{
+    color: var(--normal-red);
+
+}
+.body .icon{
+    --icon-color: var(--gray-border);
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.5rem;
+}
+
+.buttons{
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 1.5rem;
+
+   
+}
+.buttons .btn{
+    width: 7.5rem;
+    height: 1.85rem;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.buttons .btn:hover{
+    background: var(--light-blue);
+    color: var(--normal-blue);
+    border: 1px solid var(--light-blue)
+}
+.next{
+    background: var(--normal-blue);
+    color: var(--white);
+ 
+    margin-right: 1.25rem;
+}
+.prev{
+
+    border: 1px solid var(--normal-blue);
+    color: var(--normal-blue);
+}
 
 </style>
