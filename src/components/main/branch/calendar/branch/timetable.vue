@@ -18,6 +18,10 @@
                         </span>
                         <span class="task-time-category">
                             {{category ? 'start' : 'end'}}
+                            
+                        </span>
+                        <span class="cross-day-time">
+                            {{ time.getDate() != showingDate.getDate() ?  shortMorthName[time.getMonth()] + ' ' + time.getDate() : ''}}
                         </span>
                     </div>
                     <div class="time-line-area">
@@ -54,10 +58,14 @@ export default {
         return{
             showingDate:null,
             monthsName:["January","February","March","April","May","June","July","August","September","October","November","December"],
+            shortMorthName:["JAN","FEB","MAR","APR","MAY","JUN","JULY","AUG","SEP","OCT","NOV","DEC"],
         }
     },
-    mounted(){
+    created(){
         this.initialize();
+    },
+    mounted(){
+        //this.initialize();
 
 
         bus.$on('addedAppointment',this.initialize);
@@ -122,9 +130,21 @@ export default {
         ]),
         initialize(){
             this.showingDate = new Date(this.$route.params.year + '-' + this.$route.params.month + '-' + this.$route.params.day);
-            let start= this.showingDate;
-            let end = new Date(start.getFullYear(),start.getMonth(),start.getDate() + 1);
+            let start= this.showingDate;     
+            let end = new Date(start.getFullYear(),start.getMonth(), start.getDate() + 1);
+            
 
+            if( isNaN(start) ){
+                this.showingDate = new Date(this.$route.params.year + '/' + this.$route.params.month + '/' + this.$route.params.day + ' ' + '00:00:00')
+                let start = this.showingDate; 
+       
+            }
+            if( isNaN(end) ){
+    
+                end = new Date(start.getFullYear()  + '/' + (start.getMonth() + 1 )+ '/' + (start.getDate() + 1) + ' ' + '00:00:00') 
+            }//debug for Safari 
+             
+           
             this.getUserTimetable({startTimeLine:start,endTimeLine:end});
         }
     }
@@ -217,17 +237,25 @@ main.content{
 
 
 
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 2.25rem;
 
+    grid-column-gap: 0.5rem;
     width: 100%;
 
 
 }
 .task-time{
-    margin-right: 0.5rem;
+    
 }
 .task-time-category{
 
+}
+.cross-day-time{
+    grid-column:  1 / 3;
+    grid-row: 2 / 3;
+ 
 }
 .end .task-time-area{
     color: var(--gray-border);
@@ -344,7 +372,7 @@ main.content{
 }
 .each-task{
     display: grid;
-    grid-template-columns: 4.25rem 3rem 1fr;
+    grid-template-columns: 4.5rem 3rem 1fr;
     grid-auto-rows: minmax(8rem,auto);
 
     justify-items: center;
@@ -356,13 +384,16 @@ main.content{
 .task-time-area{
 
 
-
-    flex-direction: column;
-
-    align-items: flex-end;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 2.3rem;
 
 
-
+}
+.cross-day-time{
+    white-space: nowrap;
+    grid-column:  auto;
+    grid-row: auto;
+ 
 }
 .task-time{
     margin-right: 0rem;

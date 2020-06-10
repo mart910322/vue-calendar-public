@@ -30,7 +30,7 @@
                     <three-dots-icon class="event-menu-btn" @iconClicked="showMenu(index)" :class="{'show':currentShowingMenu == index}"></three-dots-icon>
              
                     <div class="menu-wrapper"  v-click-outside="showMenu" @click.self="showMenu(index)">
-                        <div class="menu-option" v-for="(cell,optionIndex) in menuicons" :key="optionIndex" @click="menuEventsHandle(optionIndex,ref,isItRegular,title,content,startTime,endTime)">
+                        <div class="menu-option" v-for="(cell,optionIndex) in menuicons" :key="optionIndex" @click="menuEventsHandle(optionIndex,ref,isItRegular,title,content)">
                             <component :is="cell" class="menu-icon"></component>
                             <span class="menu-option-name">{{ menuNames[optionIndex] }}</span>
                             
@@ -54,7 +54,7 @@ import threeDotsIcon from '../../../../svg_component/menu_three_dots.vue'
 import cancelIcon from '../../../../svg_component/calendar_cancel.vue'
 import bookAgainIcon from '../../../../svg_component/calendar_reschedule.vue'
 import editScheduleIcon from '../../../../svg_component/edit_pan.vue'
-
+import {bus} from '../../../../../main.js'
 import noteAndToDoPiece from './notes_to_do_piece.vue'
 export default {
     components:{
@@ -104,13 +104,13 @@ export default {
                     
                     var menus = document.getElementsByClassName('menu-wrapper');
                     if(!(el == event.target || el.contains(event.target) )){                 
-                        if(!(event.target.tagName == 'svg' || event.target.tagName == 'path' || event.target.classList.contains('menu-option') || event.target.classList.contains('menu-option-name') || event.target.classList.contains('wrapper')) ){
+                        if(!(event.target.tagName == 'svg' || event.target.tagName == 'path' || event.target.classList.contains('wrapper')) ){
                             binding.value(null);
                           
                         }   
                     }
 
-                }/*it is a bug in here. the aim should have been the user clicked out of the area of menu , 
+                }/*there is a bug in here. the expectation is the user clicked out of the area of menu , 
                 then unshow the menu. but now the 'el.contains' can not match the 'event.target' which is 
                 because the 'event.target' will return a element of svg  that is not under the 'el' 
                 directly
@@ -156,7 +156,7 @@ export default {
             this.currentShowingMenu = index;
         },//the number of currentShowingMenu equal the number of a menu will show
 
-        menuEventsHandle(index,ref,isItRegular,title,content,startTime,endTime){
+        menuEventsHandle(index,ref,isItRegular,title,content){
             //this.showMenu(index); //clickout directive handle unshow the menu
             
 
@@ -165,7 +165,9 @@ export default {
                 //                showing up the alert ,then execute the function which wrote in func ^ if user clicked  yes
             }
             if(index == 1){
-                console.log(index,ref,isItRegular);
+                this.toggleBookingStatus();
+                bus.$emit('bookAgain',{ref,isItRegular});
+            
              
             }
             if(index == 2){

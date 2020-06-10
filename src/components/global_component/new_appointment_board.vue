@@ -51,7 +51,7 @@
                                 <div class="question">appointment details (option)</div>
                                 <div class="answer-wrapper input-text">
                                     <details-icon class="icon"></details-icon>
-                                    <input type="text" class="input-text">
+                                    <input type="text" class="input-text" v-model="details">
                                 </div>
                                 <div class="error-text" v-if="detailsChecker != ''">{{ detailsChecker }}</div>
                             </div>
@@ -459,14 +459,62 @@ export default {
             }
 
             this.showPrompt({success:doesItSuccess,msg:msg});
-        }
+        },
+        fetchDataForBookAgain({ref,isItRegular}){
+
+            let currentUser = firebase.auth().currentUser;
+            this.regular = isItRegular;
+            let destination =  this.regular ? 'user-timetable-regular' : 'user-timetable';
+            db.collection('user-profile').doc(currentUser.uid).collection(destination).doc(ref).get().then(data => {
+       
+                let {title,content,startTime,endTime} = data.data();
+
+                this.title = title;
+                this.details = content;
+                
+                if(this.regular){
+                    this.regularTime = {
+
+                        start:startTime,
+                        end:endTime
+                    }
+                    this.dayNames.map((dayName,index)=> {
+                        data.data().days.forEach(day => {
+                            if(index == day){
+                                dayName.wasSelected = true;
+                            }
+                        })
+                    })
+
+
+
+                }else{
+                    this.notRegularTime = {
+
+                        start:startTime,
+                        end:endTime
+                    }
+                }
+
+
+            }).catch(err => {
+                console.log(err);
+            });
+        },
 
     },
     created(){
         this.initializeAllData();
       
     
+    },
+    mounted(){
+        bus.$on('bookAgain',this.fetchDataForBookAgain);
+    },
+    beforeDestroy(){
+        bus.$off('bookAgain',this.fetchDataForBookAgain);
     }
+    
 }
 </script>
  
@@ -714,7 +762,9 @@ footer.buttons{
 .container{
 
     width: 100%;
-    min-height: 100%;
+    min-height: 0;
+    height: var(--mobile-height);
+    max-height: var(--mobile-height);
     padding-bottom: 1rem;
     border-radius: 0px;
 
@@ -785,4 +835,5 @@ footer.buttons{
 
 
 }
+
 </style>
