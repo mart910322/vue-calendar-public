@@ -363,6 +363,9 @@ export default {
     cursor: pointer;
    
 }
+.each-day:hover{
+    transform: translateY(-5%);
+}
 .each-day-title{
     display: flex;
     justify-content: space-between;
@@ -424,7 +427,13 @@ export default {
 }    
 }
 @media screen and (max-width: 768px){
+.schedule-container{
 
+    grid-template-columns: repeat(2,1fr);
+    grid-auto-rows: minmax(15rem,auto);
+
+    padding: 0 1.5rem;
+}   
 .container{
     
 }

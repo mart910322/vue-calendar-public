@@ -280,7 +280,7 @@ export default {
 .dateSelector::after{
     content: attr(data-today-name);
     position: absolute;
-    right: 1.75rem;
+    right: 1.95rem;
 }
 .calendar-icon{
     padding: 0.6rem;

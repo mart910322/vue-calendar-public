@@ -30,7 +30,7 @@
                     <three-dots-icon class="event-menu-btn" @iconClicked="showMenu(index)" :class="{'show':currentShowingMenu == index}"></three-dots-icon>
              
                     <div class="menu-wrapper"  v-click-outside="showMenu" @click.self="showMenu(index)">
-                        <div class="menu-option" v-for="(cell,optionIndex) in menuicons" :key="optionIndex" @click="menuEventsHandle(optionIndex,ref,isItRegular,title,content)">
+                        <div class="menu-option" v-for="(cell,optionIndex) in menuicons" :key="optionIndex" @click="menuEventsHandle(optionIndex,ref,isItRegular,title,content,startTime,endTime)">
                             <component :is="cell" class="menu-icon"></component>
                             <span class="menu-option-name">{{ menuNames[optionIndex] }}</span>
                             
@@ -156,8 +156,8 @@ export default {
             this.currentShowingMenu = index;
         },//the number of currentShowingMenu equal the number of a menu will show
 
-        menuEventsHandle(index,ref,isItRegular,title,content){
-            //this.showMenu(index); //clickout directive handle this
+        menuEventsHandle(index,ref,isItRegular,title,content,startTime,endTime){
+            //this.showMenu(index); //clickout directive handle unshow the menu
             
 
             if(index == 0){

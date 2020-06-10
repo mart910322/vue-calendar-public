@@ -1,13 +1,13 @@
 <template>
     <transition name="roll-up">
-        <div class="back-board" >
-            <div class="container">
+        <div class="back-board" v-if="doesBookingBoardShow">
+            <div class="container" ref="appointment" @animationend="toggleAnimation">
                 <header class="title">
                     <div class="title">book appointment</div>
-                    <cross-icon class="cross icon"></cross-icon>
+                    <cross-icon class="cross icon" @iconClicked="pageChange(-3)"></cross-icon>
                 </header>
                 <main class="body">
-                    <section class="page one" v-if="false">
+                    <section class="page one" v-if="currentPage == 1">
 
                         <div class="each-wrapper">
                             <div class="index">1.</div>
@@ -15,62 +15,62 @@
                                 <div class="question">does the appointment happen regularly?</div>
                                 <div class="answer-wrapper checkbox">
 
-                                    <div class="custom-checkbox">
+                                    <div class="custom-checkbox" @click="regular = true">
                                         <div class="checkbox-box">
-                                            <tick-icon class="tick"></tick-icon>
+                                            <tick-icon class="tick" v-if="regular"></tick-icon>
                                         </div>
                                         <span class="checkbox-text">Yes</span>
                                     </div>
-                                    <div class="custom-checkbox">
+                                    <div class="custom-checkbox" @click="regular = false">
                                         <div class="checkbox-box">
-                                            <tick-icon class="tick"></tick-icon>
+                                            <tick-icon class="tick" v-if="!regular"></tick-icon>
                                         </div>
                                         <span class="checkbox-text">No</span>
                                     </div>
 
                                 </div>
-                                <div class="error-text">something wrong</div>
+                                <div class="error-text" v-if="regularCheckboxErr != ''">{{ regularCheckboxErr }}</div>
                             </div>
                         </div>
 
                         <div class="each-wrapper">
                             <div class="index">2.</div>
                             <div class="q-and-a-wrapper">
-                                <div class="question">type task name</div>
+                                <div class="question">appointment name</div>
                                 <div class="answer-wrapper input-text">
                                     <title-icon class="icon"></title-icon>
-                                    <input type="text" class="input-text">
+                                    <input type="text" class="input-text" v-model="title" maxlength="20">
                                 </div>
-                                <div class="error-text">something wrong</div>
+                                <div class="error-text" v-if="titleChecker != ''">{{ titleChecker }}</div>
                             </div>
                         </div>
 
                         <div class="each-wrapper">
                             <div class="index">3.</div>
                             <div class="q-and-a-wrapper">
-                                <div class="question">type task details</div>
+                                <div class="question">appointment details (option)</div>
                                 <div class="answer-wrapper input-text">
                                     <details-icon class="icon"></details-icon>
                                     <input type="text" class="input-text">
                                 </div>
-                                <div class="error-text">something wrong</div>
+                                <div class="error-text" v-if="detailsChecker != ''">{{ detailsChecker }}</div>
                             </div>
                         </div>
 
                     </section>
 
 
-                    <section class="page two reuglar">
+                    <section class="page two regular" v-if="currentPage == 2 && regular">
 
                         <div class="each-wrapper">
                             <div class="index">4.</div>
                             <div class="q-and-a-wrapper">
                                 <div class="question">pick days it will repeat</div>
                                 <div class="answer-wrapper days-picker">
-
+                                    <span v-for="({day,wasSelected},index) in dayNames" :key="index" class="day-selector" :class="{'daySelected' : wasSelected}" @click="selectingDays(index)">{{ day }}</span>
 
                                 </div>
-                                <div class="error-text">something wrong</div>
+                                <div class="error-text" v-if="regularDaysChecker != ''">{{ regularDaysChecker }}</div>
                             </div>
                         </div>
 
@@ -79,10 +79,10 @@
                             <div class="q-and-a-wrapper">
                                 <div class="question">when is it start</div>
                                 <div class="answer-wrapper input-text">
-                                    <title-icon class="icon"></title-icon>
-                                    <input type="datetime-local" class="input-text">
+                                    <clock-icon class="icon"></clock-icon>
+                                    <input type="time" class="input-text" v-model="regularTime.start">
                                 </div>
-                                <div class="error-text">something wrong</div>
+                                <div class="error-text" v-if="regularStartChecker != ''">{{ regularStartChecker }}</div>
                             </div>
                         </div>
 
@@ -91,20 +91,48 @@
                             <div class="q-and-a-wrapper">
                                 <div class="question">when is it end</div>
                                 <div class="answer-wrapper input-text">
-                                    <details-icon class="icon"></details-icon>
-                                    <input type="datetime-local" class="input-text">
+                                    <clock-icon class="icon"></clock-icon>
+                                    <input type="time" class="input-text" v-model="regularTime.end">
                                 </div>
-                                <div class="error-text">something wrong</div>
+                                <div class="error-text" v-if="regularEndChecker != ''">{{ regularEndChecker }}</div>
                             </div>
                         </div>
 
                     </section>
 
+                    <section class="page two no-regular" v-if="currentPage == 2 && !regular">
+
+                        <div class="each-wrapper">
+                            <div class="index">4.</div>
+                            <div class="q-and-a-wrapper">
+                                <div class="question">when is it start</div>
+                                <div class="answer-wrapper input-text">
+                                    <calendar-icon class="icon"></calendar-icon>
+                                    <input type="datetime-local" class="input-text" v-model="notRegularTime.start">
+                                </div>
+                                <div class="error-text" v-if="notRegularStartChecker != ''">{{ notRegularStartChecker }}</div>
+                            </div>
+                        </div>
+
+                        <div class="each-wrapper">
+                            <div class="index">5.</div>
+                            <div class="q-and-a-wrapper">
+                                <div class="question">when is it end</div>
+                                <div class="answer-wrapper input-text">
+                                    <calendar-icon class="icon"></calendar-icon>
+                                    <input type="datetime-local" class="input-text" v-model="notRegularTime.end">
+                                </div>
+                                <div class="error-text" v-if="notRegularEndChecker != ''">{{ notRegularEndChecker }}</div>
+                            </div>
+                        </div>
+
+                    </section>                    
+
 
                 </main>
                 <footer class="buttons">
-                    <div class="next btn">next</div>
-                    <div class="prev btn">cancel</div>
+                    <div class="next btn" @click="pageChange(1)">{{ currentPage == maxPage ?  'sumbit' :'next' }}</div>
+                    <div class="prev btn" @click="pageChange(-1)">{{ currentPage == 1 ?  'cancel' :'back' }}</div>
                 </footer>
             </div>
         </div>
@@ -113,7 +141,7 @@
 
 <script>
 import crossIcon from '../svg_component/cross_normal.vue'
-import calendarIcon from '../svg_component/calendar_reschedule.vue'
+import calendarIcon from '../svg_component/calendar_tick.vue'
 import clockIcon from '../svg_component/time_for_lane.vue'
 import detailsIcon from '../svg_component/detail_article.vue'
 import titleIcon from '../svg_component/headline.vue'
@@ -129,8 +157,8 @@ export default {
         'cross-icon':crossIcon,
         'title-icon':titleIcon,
         'tick-icon':tickIcon,
-        //'calendar-icon':calendarIcon,
-        //'clock-icon':clockIcon,
+        'calendar-icon':calendarIcon,
+        'clock-icon':clockIcon,
         'details-icon':detailsIcon
     },
     computed:{
@@ -142,59 +170,89 @@ export default {
             'dateFormatCurrentDay',
   
         ]),
-        timeSelection(){
-            let timeSelection = [],handledTimeSelection = [];
+        regularCheckboxErr(){
 
-            for(var i = 0; i <= 48 ;i++){
-                timeSelection.push(i * 0.5);
+            return ''
+        },
+        titleChecker(){
+            let title = this.title;
+            if(title.length == 0){
+                return "can't be empty"
+            }
+            return ''
+        },
+        detailsChecker(){
+            let details = this.details;
+            
+            return ''
+        },
+        regularDaysChecker(){
+            if(this.dayNames.every(day => day.wasSelected == false)){
+                return "can't be empty"
+            }
+            return ''
+        },
+        regularStartChecker(){
+           
+
+            if(this.regularTime.start == ''){
+                return "can't be empty"
+            }
+            if( this.regularTime.start >  this.regularTime.end){
+                return "bad time range"
+            }
+            return ''
+        },
+        regularEndChecker(){
+            if(this.regularTime.end == ''){
+                return "can't be empty"
+            }
+            return ''
+        },
+
+        notRegularStartChecker(){
+
+            if(this.notRegularTime.start == ''){
+                return "can't be empty"
+            }
+          
+            if( this.notRegularTime.start >  this.notRegularTime.end){
+                return "bad time range"
             }
 
-            timeSelection.map(eachTime => {
-                var [hour,minute] = [Math.floor(eachTime),eachTime % 1 * 60];
-                minute = this.$options.filters.plusZero(minute);
-                hour = this.$options.filters.plusZero(hour);
-                
-                eachTime = hour + ':' +  minute;
-                handledTimeSelection.push(eachTime);
-             
 
-            });
-
-            return handledTimeSelection ;
-        }
+            return ''
+        },
+        notRegularEndChecker(){
+            if(this.notRegularTime.end == ''){
+                return "can't be empty"
+            }
+            return ''
+        }        
     },
-    filters:{
-        plusZero(val){
-            if(val < 10){
-                return '0' + val.toString();
-            }
-            return  val;
-        }
-    },   
+ 
     data(){
         return{
-            didYesOrNoClick:false,
-            isItRegular:false,
-      
+            currentPage:1,
+            maxPage:2,
+
+     
+            regular:false,
 
             title:'',
             details:'',
-            regularStartTime:'00:00',
-            regularEndTime:'00:00',
 
-            notRegularStartTime:{
-                year:2020,
-                month:0,
-                day:0,
-                time:'00:00'
+            regularTime:{
+                start:'12:00',
+                end:'12:00'
             },
-            notRegularEndTime:{
-                year:2020,
-                month:0,
-                day:0,
-                time:'00:00'
+            notRegularTime:{
+                start:'2020-06-09T12:00',
+                end:'2020-06-09T12:00'
             },
-            errorText:'',
+
+
+
 
             monthsName:["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"],
             dayNames:[{ day:'SUN', wasSelected:false },{ day:'MON', wasSelected:false },
@@ -218,191 +276,179 @@ export default {
         ...mapActions([
             'getUserTimetable'
         ]),
+
+
+        pageChange(val/*+1 or -1 */){
+
+            if(val == 1){
+                if(this.formatErrorChecker()){
+                    this.toggleAnimation();
+                    return
+                }
+            }
+
+
+            this.currentPage += val;
+            if(this.currentPage > this.maxPage){
+                
+                this.currentPage = 1;
+                this.submitData();
+
+            }
+            if(this.currentPage < 1){
+                this.endingAction();
+                this.currentPage = 1;
+
+            }
+        },
+        formatErrorChecker(){
+
+            if(this.currentPage == 1){
+
+                if(this.titleChecker != '' || this.detailsChecker != '' ){
+                    return true
+                }
+
+            }
+
+            if(this.currentPage == 2){
+                if(this.regular){
+                    if(this.regularDaysChecker != '' ||this.regularStartChecker != '' || this.regularEndChecker != ''){
+                        return true
+                    }
+                }
+                if(!this.regular){
+                    if(this.notRegularStartChecker != '' || this.notRegularEndChecker != ''){
+                        return true
+                    }
+                }
+            }
+            return false
+
+        },//the actually checker on computer
+
+        toggleAnimation(){
+            this.$refs.appointment.classList.toggle('animation');
+        },
+
+
         initializeAllData(){
-            this.didYesOrNoClick = false;
-            this.isItRegular = false;
+            let now = new Date();
 
             this.title = '';
             this.details = '';
-            this.regularStartTime = '00:00';
-            this.regularEndTime = '00:00';
 
-            this.notRegularStartTime = initializeDate();
-            this.notRegularEndTime = initializeDate();
-
-
-            function initializeDate(){
-                var getToday = new Date();
-
-                return{
-                    year:getToday.getFullYear(),
-                    month:getToday.getMonth(),
-                    day:getToday.getDate(),
-                    time:'00:00'
-                }
+            function plusZero(val){
+                    if(val < 10){
+                        return '0' + val
+                    }
+                    return val
+                  
             }
+
+
+            this.regularTime.start = plusZero(now.getHours()) + ':' + plusZero(now.getMinutes());
+            this.regularTime.end = plusZero(now.getHours()) + ':' + plusZero(now.getMinutes());
+
+
+            function currentDate(){
+                let year = now.getFullYear();
+
+                let month = plusZero(now.getMonth() + 1);
+          
+
+                let date =  plusZero(now.getDate());
+    
+
+                let hour = plusZero(now.getHours());
+                let minutes = plusZero(now.getMinutes());
+
+
+                return year + '-' + month + '-' + date + 'T' + hour + ':' + minutes
+            }
+
+          
+            this.notRegularTime.start = currentDate();
+            this.notRegularTime.end = currentDate();
             
-            this.dayNames=[{ day:'SUN', wasSelected:false },{ day:'MON', wasSelected:false },
-                            { day:'TUE', wasSelected:false },{ day:'WED', wasSelected:false },
-                            { day:'THU', wasSelected:false },{ day:'FRI', wasSelected:false },
-                            { day:'SAT', wasSelected:false }];            
+            this.dayNames.map(eachDay => {
+                eachDay.wasSelected = false;
+            })
+          
         },
-        cancelBooking(){
-            this.endingAction();
-        },
+
         selectingDays(index){
 
             this.dayNames[index].wasSelected = !this.dayNames[index].wasSelected ;
      
         },
-        dataFormatErrorChecker(){
-            let formatedStartDate,formatedEndDate,startTime,endTime ;
 
 
-            if(this.title.length > 25){
-                this.errorText = 'title only can be 25 character';
-                return
-            }
-            if(this.title.length <= 0){
-                this.errorText = 'title can not be emtpy';
-                return
-            }       
-            if(this.isItRegular){
-                
-                var daySelectedChecker = this.dayNames.filter(eachDay => {
-                    return eachDay.wasSelected;
-                })
-        
-                if(daySelectedChecker.length == 0){
-                    this.errorText = 'you have not selected any day';
-                    return
-                }
+        submitData(){
 
-                [startTime,endTime ] = [this.formatTime(this.regularStartTime),this.formatTime(this.regularEndTime)];
-              
-
-
-                if(startTime[0] + startTime[1] > endTime[0] + endTime[1]){
-                    this.errorText = 'time format error'
-                    return                    
-                }
-
-                [formatedStartDate,formatedEndDate] = [this.regularStartTime,this.regularEndTime];
-
-            }else{
-                startTime = this.notRegularStartTime;
-                endTime = this.notRegularEndTime;
-
-                var formatedStartTime = this.formatTime(startTime.time);
-                var formatedEndTime = this.formatTime(endTime.time);
-     
-                [formatedStartDate,formatedEndDate] = [new Date(startTime.year,startTime.month,startTime.day,formatedStartTime[0],formatedStartTime[1] ),new Date(endTime.year,endTime.month,endTime.day,formatedEndTime[0],formatedEndTime[1] )];
-            
-                if(formatedStartDate.getTime > formatedEndDate.getTime()){
-                    this.errorText = 'time format error'
-                    return                         
-                }
-            
-                
-            }
-
-
-            this.errorText = '';
-            this.newAppointment(formatedStartDate,formatedEndDate);
-        },
-        endingAction(DidItNeedLoading){
-
-
-           /* let endDay = new Date(this.dateFormatCurrentDay.getTime());
-            endDay.setDate(endDay.getDate() + 1);       
-            
-            this.getUserTimetable({startTimeLine:this.dateFormatCurrentDay, endTimeLine: endDay});*/
-            
-
-            this.errorText = '';
-            this.initializeAllData();
-            this.toggleBookingStatus();
-            if(DidItNeedLoading){
+            let submited = new Promise((resolve,reject) => {
                 this.loading();
-            }
-        },//this a funtion for after the add new booking appointment has finished
-        newAppointment(startTime,endTime){
+                let currentUser = firebase.auth().currentUser;
 
+                
 
+                let notRegularData = {
 
-            this.loading();
-            var currentUser = firebase.auth().currentUser;
+                    title:this.title,
+                    content:this.details,
+                    isItRegular:false,
+                    startTime:new Date(this.notRegularTime.start),
+                    endTime:new Date(this.notRegularTime.end),
 
+                }
 
-
-
-
-            if(this.isItRegular){//true == is regular
-
-                var days = [];
-                this.dayNames.forEach((eachDay,index) => {
-                    if(eachDay.wasSelected){
+                let days = [];
+                this.dayNames.forEach((day,index) => {
+                    if(day.wasSelected){
                         days.push(index);
-                  
                     }
                 })
-               
-                db.collection('user-profile').doc(currentUser.uid).collection('user-timetable-regular').add({
+
+                let regularData = {
                     title:this.title,
                     content:this.details,
-                    startTime:startTime,
-                    endTime:endTime,
-                    isItRegular:this.isItRegular,
-                    days:days,
-            
-                 
-                }).then(() => {
+                    isItRegular:true,
+                    startTime:this.regularTime.start,
+                    endTime:this.regularTime.end,
+                    days:days
+                }
 
+                let destination =  this.regular ? 'user-timetable-regular' : 'user-timetable';
+                db.collection('user-profile').doc(currentUser.uid).collection(destination).add( this.regular ? regularData : notRegularData ).then(() => {
                     this.endingAction(true);
-                    this.emitStatus(true);
-      
+                    resolve();
+
                 }).catch(err => {
-
-                    this.endingAction(true);
-                    
-
-                    this.errorText = err;
+                    this.endingAction(false);
                     console.log(err);
-                    this.emitStatus(false);
+                    reject(err);
                 });
+            })
+            return submited
 
-            }else{
-
-     
-
-                db.collection('user-profile').doc(currentUser.uid).collection('user-timetable').add({
-                    title:this.title,
-                    content:this.details,
-                    startTime:startTime,
-                    endTime:endTime,
-                    isItRegular:this.isItRegular,
+        },
 
 
-                }).then(() => {
-                    this.endingAction(true);
-                    this.emitStatus(true);
-           
-                }).catch(err => {
-                    this.endingAction(true);
-        
-                    this.errorText = err;
-                    console.log(err  );
-                    this.emitStatus(false);
-                })
-   
+        endingAction(doesItSuccess){
+
+      
+            this.initializeAllData();
+            this.toggleBookingStatus();
+
+            if(doesItSuccess != null){
+                
+                this.loading();
+                this.emitStatus(doesItSuccess);
+
             }
 
         },
-        formatTime(time){
-            var splitedTime = time.split(':');
-   
-            return [parseInt(splitedTime[0]),parseInt(splitedTime[1])]
-        },
+
         emitStatus(doesItSuccess){
             let msg = '';
             if(doesItSuccess){
@@ -451,7 +497,40 @@ export default {
 
     display: grid;
     grid-row-gap: 0.75rem;
-    grid-template-rows: 4rem 1fr 2rem;
+    grid-template-rows: 4rem 1fr 2.75rem;
+
+    
+}
+
+.container.animation{
+    animation: shake 0.75s;
+}
+@keyframes shake{
+    0%{
+        transform: translateX(0%);
+    }
+    12.5%{
+        transform: translateX(1.25%);
+    }
+    25%{
+        transform: translateX(-1.25%);
+    }
+    37.5%{
+        transform: translateX(2.5%);
+    }
+    50%{
+        transform: translateX(-2.5%);
+    }
+    62.5%{
+        transform: translateX(2.5%);
+    }
+    75%{
+        transform: translateX(-1.25%);
+    }
+
+    100%{
+        transform: translateX(0%);
+    }
 }
 header.title{
     
@@ -487,7 +566,7 @@ div.title{
 .page{
     display: grid;
     grid-template-columns:1fr;
-    grid-template-rows: repeat(3,minmax(5rem)); 
+ 
 
     grid-row-gap: 1rem;
 }
@@ -500,15 +579,16 @@ div.title{
 
 }
 .index{
+    color: var(--normal-blue);
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: 400;
 }
 .q-and-a-wrapper{
 
 }
 .question{
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: 400;
     color: var(--normal-blue)
 }
 .answer-wrapper{
@@ -520,19 +600,14 @@ div.title{
 .answer-wrapper.checkbox{
 
 }
-.answer-wrapper.input-text{
-
-    border: 1px solid var(--gray-border);
-    padding:0.15rem 0.5rem;
-    width: 85%;
-}
-
 .custom-checkbox{
     display: flex;
     align-items: center;
     margin-right: 1rem;
 
     cursor: pointer;
+
+    font-size: 1.25rem;
 }
 .checkbox-box{
     width: 1rem;
@@ -540,19 +615,40 @@ div.title{
     padding: 0.075rem;
     border: 1px solid var(--black);
 
-    margin-right: 0.5rem;
+    margin-right: 6px;
 
     display: flex;
     align-items: center;
     justify-content: center;
   
 }
+.answer-wrapper.input-text{
+
+    border: 1px solid var(--gray-border);
+    padding:0.15rem 0.5rem;
+    width: 95%;
+}
+
+
+.answer-wrapper.days-picker{
+
+}
+.day-selector{
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: var(--gray-border);   
+    margin-right: 1rem;
+    cursor: pointer;
+}
+.day-selector.daySelected{
+    color: var(--normal-blue);
+}
 .tick{
-    display: none;
+
     transform: scale(1) rotate(-5deg) translateY(-10%);
 }
 .tick.checked{
-    display: inline;
+ 
 }
 .checkbox-text{
     
@@ -579,11 +675,13 @@ input.input-text{
     margin-right: 0.5rem;
 }
 
-.buttons{
+footer.buttons{
+
     display: flex;
     justify-content: flex-end;
     padding: 0 1.5rem;
-
+    align-items: flex-end;
+    height: 100%;
    
 }
 .buttons .btn{
@@ -598,7 +696,8 @@ input.input-text{
 .buttons .btn:hover{
     background: var(--light-blue);
     color: var(--normal-blue);
-    border: 1px solid var(--light-blue)
+    border: 1px solid var(--light-blue);
+    
 }
 .next{
     background: var(--normal-blue);
@@ -611,5 +710,79 @@ input.input-text{
     border: 1px solid var(--normal-blue);
     color: var(--normal-blue);
 }
+@media screen and (max-width: 650px){
+.container{
 
+    width: 100%;
+    min-height: 100%;
+    padding-bottom: 1rem;
+    border-radius: 0px;
+
+
+
+    display: block;
+
+
+    
+} 
+header.title{
+    margin-bottom: 1.5rem;
+    height: 4.75rem;
+    padding: 0 1.25rem 0 0.75rem;
+}
+div.title{
+    font-size: 1.75rem;
+
+}
+.body{
+    padding: 0rem 0.75rem;
+    margin-bottom: 4rem;
+}
+.page{
+    display: grid;
+    grid-template-columns:1fr;
+ 
+
+    grid-row-gap: 1.75rem;
+}
+.each-wrapper{
+    display: grid;
+    grid-template-columns: 1.65rem 1fr;
+
+}
+.custom-checkbox{
+
+    margin-right: 2rem;
+
+    font-size: 1.35rem;
+}
+.checkbox-box{
+    width: 1.225rem;
+    height: 1.225rem;
+    padding: 0.1rem;
+    border: 1px solid var(--black);
+
+    margin-right:0.5rem;
+
+  
+}
+.tick{
+
+    transform: scale(1) rotate(-5deg) translateY(-6.5%);
+}
+
+footer.buttons{
+    justify-content: space-between;
+    padding:0 1rem;
+}
+.buttons .btn{
+    font-size: 1.375rem;
+    width: 50%;
+
+    height: 2.25rem;
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.05);
+}
+
+
+}
 </style>

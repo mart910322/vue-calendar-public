@@ -359,7 +359,7 @@ export default new Vuex.Store({
                                         if(regularDay == dateStartPoint.getDay()){ 
 
                                             var formatedStartTime = timeFormater(data.startTime/* timetable-regular used (hour:minutes) and type = string as time format */,dateStartPoint);
-                                            var formatedEndTime = timeFormater(data.endTime,dateStartPoint); /*keep it year,month,date as the same. because reuglar timetable just continue within a day */
+                                            var formatedEndTime = timeFormater(data.endTime,dateStartPoint); /*keep it year,month,date as the same. because regular timetable just continue within a day */
                                             
                                             var toNotRegularFormat = {
                                                 startTime:{seconds:formatedStartTime.getTime() / 1000},
@@ -378,6 +378,7 @@ export default new Vuex.Store({
 
 
                                         function timeFormater(timeString,dateObj){     
+                                       
                                             var splitTime = timeString.split(':').map(toInt => {
                                     
                                                 return parseInt(toInt);
@@ -403,7 +404,7 @@ export default new Vuex.Store({
                             console.log(err);
                             reject(err);
                             state.fetchingTimetable = false;
-                            commit('showPrompt',{success:true,msg:'connect datebase error'})
+                            commit('showPrompt',{success:false,msg:'connect datebase error'})
                         });
 
 
@@ -415,7 +416,7 @@ export default new Vuex.Store({
                         console.log(err);
                         state.fetchingTimetable = false;
                         reject(err);
-                        commit('showPrompt',{success:true,msg:'connect datebase error'})
+                        commit('showPrompt',{success:false,msg:'connect datebase error'})
                     });
                     
                 })
@@ -454,7 +455,7 @@ export default new Vuex.Store({
                         state.fetchingTask = false;
                         console.log(err);
                         reject(err);
-                        commit('showPrompt',{success:true,msg:'connect datebase error'})
+                        commit('showPrompt',{success:false,msg:'connect datebase error'})
                     });
                     
                 })
@@ -542,7 +543,7 @@ export default new Vuex.Store({
                     console.log(err);
                     reject(err);
                     commit('loading');
-                    commit('showPrompt',{success:true,msg:'connect datebase error'})
+                    commit('showPrompt',{success:false,msg:'connect datebase error'})
                 })
             })
 

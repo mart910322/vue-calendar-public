@@ -148,11 +148,7 @@ html{
   font-size: 14.75px;
 }
 }
-
-@media screen and (max-width: 550px){
-html{
-  font-size: 13px;
-}
+@media screen and (max-width: 650px){
 
 .roll-up-enter-active,.roll-up-leave-active{
     transition:0.75s ease-in-out;
@@ -167,5 +163,12 @@ html{
     transform: translateY(0%)
 
 }
+}
+
+@media screen and (max-width: 550px){
+html{
+  font-size: 13px;
+}
+
 }
 </style>
