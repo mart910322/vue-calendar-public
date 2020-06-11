@@ -340,7 +340,7 @@ export default {
     background: var(--normal-blue);
     color:var(--white);
     margin-right: 1rem;
-    opacity: 0.8;
+   
   
 }
 
