@@ -161,16 +161,19 @@ export default {
             this.showPrompt({success:doesItSuccess,msg:msg});
         },
 
-
+        localizeData({content,title,ref}){
+            this.title = title;
+            this.details = content;
+            this.ref = ref;
+        }
     },
     created(){
       
         this.initializeData();
-        bus.$on('injectData',({content,title,ref}) => {
-            this.title = title;
-            this.details = content;
-            this.ref = ref;
-        })
+        bus.$on('injectTaskData',this.localizeData);
+    },
+    beforeDestroy(){
+        bus.$off('injectTaskData',this.localizeData);
     }
 }
 </script>

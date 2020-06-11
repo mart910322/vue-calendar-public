@@ -10,7 +10,7 @@
     
         </section>
         <footer class="nav-footer">
-            <div class="nav-element-wrapper"  @click="linkTo(5)">
+            <div class="nav-element-wrapper"  @click="linkTo(5)" >
                 <support-icon  class="nav-icon"></support-icon>
                 <span class="nav-name">support</span>
             </div>
@@ -46,7 +46,7 @@ export default {
     },
     data(){
         return{
-            navNames:["home","calendar","task board","setting","log out"],
+            navNames:["home","calendar","task board","setting","log out",],
         }
     },
     computed:{
@@ -65,12 +65,12 @@ export default {
         ]),
         matchCurrentPath(index){
             let name = this.$route.name.toLowerCase();
-            
+            let macthName = this.navNames[index].trim().replace(/ /g,'');
             if(name == 'timetable'){
                 name = 'calendar';
             }
-     
-            return name == this.navNames[index].trim().replace(/ /g,'');
+      
+            return name == macthName;
         },//matching which current path and icon name for distinguish where is the user  
         navIcons(index){
             switch(index){
@@ -91,7 +91,7 @@ export default {
                 case 2 : router.push('/home/taskBoard');break;
                 case 3 : router.push('/home/setting');break;
                 case 4 : firebase.auth().signOut();router.push('/');break;
-                case 5 : router.push('/');break;
+                case 5 : router.push('/home/support');break;
                 
             }  
 

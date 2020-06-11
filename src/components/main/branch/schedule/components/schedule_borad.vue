@@ -127,7 +127,8 @@ export default {
     methods:{
         ...mapMutations([
             'toggleBookingStatus',
-            'showAlert'
+            'showAlert',
+            'toggleEditAppointmentStatus'
 
         ]),
         ...mapActions([
@@ -157,7 +158,7 @@ export default {
         },//the number of currentShowingMenu equal the number of a menu will show
 
         menuEventsHandle(index,ref,isItRegular,title,content){
-            //this.showMenu(index); //clickout directive handle unshow the menu
+            this.showMenu(index); //clickout directive handle unshow the menu
             
 
             if(index == 0){
@@ -171,7 +172,8 @@ export default {
              
             }
             if(index == 2){
-                console.log(index,ref,isItRegular);
+                this.toggleEditAppointmentStatus();
+                bus.$emit('injectAppointmentData',{ref,isItRegular});
             }
 
 

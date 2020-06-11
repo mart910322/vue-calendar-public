@@ -252,7 +252,7 @@ export default {
             },
 
 
-
+            fetchingData:false,
 
             monthsName:["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"],
             dayNames:[{ day:'SUN', wasSelected:false },{ day:'MON', wasSelected:false },
@@ -452,54 +452,94 @@ export default {
         emitStatus(doesItSuccess){
             let msg = '';
             if(doesItSuccess){
-                msg = 'booked  anew appointment successful';
+                msg = 'booked a new appointment';
                 bus.$emit('addedAppointment');
             }else{
-                msg = 'failed to book appointment';
+                msg = 'book appointment failed ';
             }
 
             this.showPrompt({success:doesItSuccess,msg:msg});
         },
+
         fetchDataForBookAgain({ref,isItRegular}){
 
-            let currentUser = firebase.auth().currentUser;
-            this.regular = isItRegular;
-            let destination =  this.regular ? 'user-timetable-regular' : 'user-timetable';
-            db.collection('user-profile').doc(currentUser.uid).collection(destination).doc(ref).get().then(data => {
-       
-                let {title,content,startTime,endTime} = data.data();
 
-                this.title = title;
-                this.details = content;
-                
-                if(this.regular){
-                    this.regularTime = {
 
-                        start:startTime,
-                        end:endTime
-                    }
-                    this.dayNames.map((dayName,index)=> {
-                        data.data().days.forEach(day => {
-                            if(index == day){
-                                dayName.wasSelected = true;
-                            }
+            if(!this.fetchingData){
+                this.fetchingData = true;
+                let currentUser = firebase.auth().currentUser;
+                this.regular = isItRegular;
+                let destination =  this.regular ? 'user-timetable-regular' : 'user-timetable';
+                db.collection('user-profile').doc(currentUser.uid).collection(destination).doc(ref).get().then(data => {
+        
+                    let {title,content,startTime,endTime} = data.data();
+
+                    this.title = title;
+                    this.details = content;
+            
+                    if(this.regular){
+
+
+
+
+                        this.regularTime = {
+
+                            start:startTime,
+                            end:endTime
+                        }
+                        
+
+                        this.dayNames.map((dayName,index)=> {
+                            data.data().days.forEach(day => {
+                                if(index == day){
+                                    dayName.wasSelected = true;
+                                }
+                            })
                         })
-                    })
 
 
 
-                }else{
-                    this.notRegularTime = {
+                    }else{
+                    
+    
+                 
+                        let htmlDate = (seconds) => {
+                            let year,month,day,hour,minutes;
+                            let date = new Date( seconds * 1000);
 
-                        start:startTime,
-                        end:endTime
+                            year = date.getFullYear();
+                            month = this.$options.filters.plusZero((date.getMonth() + 1));
+                            day = this.$options.filters.plusZero( date.getDate() );
+                            hour =  this.$options.filters.plusZero( date.getHours()) ;
+                            minutes = this.$options.filters.plusZero( date.getMinutes());
+
+                            
+                            let result =  year + '-' + month + '-' + day + 'T' + hour + ':' + minutes;
+
+
+                            return result
+                        }
+               
+                        let start = htmlDate(startTime.seconds);
+                        let end = htmlDate(endTime.seconds);
+
+         
+                        this.notRegularTime = {
+
+                            start:start,
+                            end:end
+                        }
                     }
-                }
+                    this.fetchingData = false;
+                
+                }).catch(err => {
+                    this.showPrompt({success:false,msg:'fetch data failed'})
+                    console.log(err);
+                    this.fetchingData = false;
+                });                
+            }
 
 
-            }).catch(err => {
-                console.log(err);
-            });
         },
 
     },
@@ -741,12 +781,15 @@ footer.buttons{
     align-items: center;
     cursor: pointer;
 }
+@media screen and (min-width:768px){
 .buttons .btn:hover{
     background: var(--light-blue);
     color: var(--normal-blue);
     border: 1px solid var(--light-blue);
     
+}   
 }
+
 .next{
     background: var(--normal-blue);
     color: var(--white);
@@ -770,7 +813,8 @@ footer.buttons{
 
 
 
-    display: block;
+    grid-row-gap:1.5em;
+    grid-template-rows: 4rem 1fr 5rem;
 
 
     
@@ -824,12 +868,14 @@ div.title{
 footer.buttons{
     justify-content: space-between;
     padding:0 1rem;
+    align-items: center;
+
 }
 .buttons .btn{
-    font-size: 1.375rem;
+    font-size: 1.425rem;
     width: 50%;
 
-    height: 2.25rem;
+    height: 2.5rem;
     box-shadow: 0px 3px 6px rgba(0,0,0,0.05);
 }
 

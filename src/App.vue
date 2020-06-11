@@ -6,7 +6,7 @@
       <loading></loading>
       <book-appointment-board></book-appointment-board>
       <add-task-note-borad></add-task-note-borad>
-
+      <edit-appointment-board></edit-appointment-board>
       <custom-prompt></custom-prompt>
 
     </div>
@@ -16,7 +16,7 @@ import customAlert from './components/template/alert_custom.vue'
 import loading from './components/template/loading_animated_component.vue'
 import bookAppointmentBoard from './components/global_component/new_appointment_board.vue'
 import addTaskNoteBorad from './components/global_component/new_task_note_board.vue'
-
+import editAppointmentBoard from './components/global_component/edit_appointment_board.vue'
 import customPrompt from './components/global_component/prompt_finished.vue'
 
 import {mapActions,mapMutations} from 'vuex'
@@ -39,6 +39,7 @@ export default {
       'custom-alert':customAlert,
       'loading':loading,
       'book-appointment-board':bookAppointmentBoard,
+      'edit-appointment-board':editAppointmentBoard,
       'add-task-note-borad':addTaskNoteBorad,
   
       'custom-prompt':customPrompt,
@@ -71,6 +72,7 @@ export default {
 
     --gray-background:#F9F9F9;
     --gray-border:#C7C7C7;
+    --normal-gray:#9D9D9D;
     --light-gray:#EBEBEB;
     --dark-gray:#707070;
 

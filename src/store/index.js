@@ -48,10 +48,18 @@ export default new Vuex.Store({
         enableEditTask:false,
         editingTaskTemp:{},
     
+        doesEditAppointmentShow:false,
+
+
         /*user config */
         colorConfig:{},
         userProfile:{},
         /*user config */
+
+
+
+        bookAgainDataTemp:{},
+        
     },
     getters:{
 
@@ -180,6 +188,8 @@ export default new Vuex.Store({
         toggleMobileMenuStatus(state){
             state.mobileMenuShow = !state.mobileMenuShow
         },
+
+
         emitCurrentDay(state,date){
             state.currentDay = date;
            
@@ -228,6 +238,10 @@ export default new Vuex.Store({
         toggleBookingStatus(state){
             state.doesBookingBoardShow = !state.doesBookingBoardShow;
         },
+        toggleEditAppointmentStatus(state){
+            state.doesEditAppointmentShow = !state.doesEditAppointmentShow;
+      
+        },
         toggleNewTaskStatus(state){
             state.enableEditTask = false;
             state.doesNewTaskBoardShow = !state.doesNewTaskBoardShow;
@@ -236,7 +250,7 @@ export default new Vuex.Store({
             state.enableEditTask = true;
             state.doesNewTaskBoardShow = !state.doesNewTaskBoardShow;
        
-            bus.$emit('injectData',...data);//export the editing data
+            bus.$emit('injectTaskData',...data);//export the editing data
         }        
     },
     actions: {

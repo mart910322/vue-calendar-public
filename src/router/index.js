@@ -15,7 +15,7 @@ import calendar from '../components/main/branch/calendar/calendar.vue'
 import taskBoard from '../components/main/branch/task_management/task_board.vue'
 import setting from '../components/main/branch/setting/setting.vue'
 import timetable from '../components/main/branch/calendar/branch/timetable.vue'
-
+import support from '../components/main/branch/support/support.vue'
 import notFound from '../components/template/404error.vue'
 
 
@@ -101,7 +101,13 @@ Vue.use(VueRouter)
         name:'setting',
         component:setting,
         meta: { requiresAuth : true },
-      }
+      },
+      {
+        path:'support',
+        name:'support',
+        component:support,
+        meta: { requiresAuth : true },
+      },     
     ]
   },
   {

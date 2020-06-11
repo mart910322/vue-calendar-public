@@ -31,7 +31,7 @@ export default {
 .toggle-btn,.toggle-btn::before{
     --container-padding:12px;
     --container-border-radius:calc(var(--toggle-btn-height,2rem) * 5);
-    --background-color:var(--dark-gray);
+    --background-color:var(--normal-gray);
     
     --width:var(--toggle-btn-width,7rem);;
     --height:var(--toggle-btn-height,2rem);
@@ -55,7 +55,10 @@ export default {
     transition: 0.5s linear;
 
     overflow: hidden;
+
+    box-shadow:inset 0px 3px 10px 0px  rgba(0,0,0,0.425);
 }
+
 .toggle-btn{
     justify-content: flex-end;
     position: relative;
