@@ -1,7 +1,7 @@
 <template>
     <div class="slogan-area">
         <h1 class="slogan">The time is always right to do what is right</h1>
-        <span class="details">Time waits for no one. Catching every second and every moment. xxxxxxxx</span>
+        <span class="details">Time waits for no one. Catch the beauty of the moment. and living in efficient life</span>
         <div class="btn-wrapper">
             <custom-btn class="sign-up btn" @onClick="linkTo('/register')"><span slot="btn-name">sign up</span></custom-btn>
             <custom-btn class="sign-in btn" @onClick="linkTo('/login')"><span slot="btn-name">sign in</span></custom-btn>
@@ -28,10 +28,11 @@ export default {
 .slogan-area{
     width: 40%;
     min-width: 30rem;
+    max-width: 37.5rem;
     height: 22.5rem;
+
     color: white;
     margin-left: 4vw;
-
 
 }
 .slogan{
@@ -48,6 +49,7 @@ export default {
     opacity: 0.8;
     font-size: 1.5rem;
     font-weight: 300;
+
 }
 .btn-wrapper{
     margin-top: 2rem;
@@ -126,7 +128,7 @@ export default {
 
 
 }
-@media screen and (max-width:550px) {
+@media screen and (max-width:650px) {
 .slogan-area{
 
     height: 80%;

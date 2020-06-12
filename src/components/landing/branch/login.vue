@@ -179,7 +179,7 @@ export default {
     font-size: 1.115rem;
 }
 }
-@media screen and (max-width:550px){
+@media screen and (max-width:650px){
 .container{
 
 

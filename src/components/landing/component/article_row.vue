@@ -74,7 +74,10 @@ export default {
 .content-wrapper{
 
     grid-area: content;
-    padding-bottom: 3rem;
+    padding-bottom: 2.75rem;
+
+    min-height: 15rem;
+
 
 }
 
@@ -87,7 +90,7 @@ export default {
 .content{
     display: block;
     
-    line-height: 2rem;
+    line-height: 2.25rem;
     font-weight: 300;
     font-size: 1.45rem;
     opacity: 0.8;
@@ -139,7 +142,7 @@ export default {
     margin: 1.25rem 0 0 0;
 }
 }
-@media screen and (max-width: 700px){
+@media screen and (max-width: 768px){
 .article-area{
     --element-width:calc(22.5rem + 7.5vw);
 }

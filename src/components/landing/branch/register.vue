@@ -196,7 +196,7 @@ export default {
     font-size: 1.225rem;
 } 
 }
-@media screen and (max-width:550px){
+@media screen and (max-width:650px){
 .container{
 
 

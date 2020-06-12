@@ -23,23 +23,25 @@
                 </span>
             </landing-article>
             <landing-article :isContentFirst="true" class="swim-lane-el">
-                <img src="../../assets/landing_content_image/wotk_to_do_list.jpg" slot="picture">
-                <span slot="title">Task notes and to do list</span>
-                <span slot="content">
-                    It's a reminder in order to check the task you want to do. And it assist you to remember something you don't want forgot. Also you will not be confused with the clearly UI. 
-                </span>
-            </landing-article>
-            <landing-article :isContentFirst="false" class="swim-lane-el">
                 <img src="../../assets/landing_content_image/work_schedule.jpg" slot="picture">
                 <span slot="title">Easy to use</span>
                 <span slot="content">
-                    You don't need any tutorials and instructions. It will come naturally to you and pick it up. It will not spend your time a lot as well. But it keeps its powerful function as the same                </span>
+                    Any tutorials and instructions are unnecessary in here. It will come naturally to you and pick it up. You will not be confused with the clearly UI. But it keeps same powerful            
+                </span>
+            </landing-article>            
+            <landing-article :isContentFirst="false" class="swim-lane-el">
+                <img src="../../assets/landing_content_image/wotk_to_do_list.jpg" slot="picture">
+                <span slot="title">Task notes and to do list</span>
+                <span slot="content">
+                    Besides schedule system. We have a memo system for no time limits. You can write down objective in there. Also you can easily edit and delete the notes with no confusing
+                </span>
             </landing-article>
+
             <landing-article :isContentFirst="true" class="swim-lane-el"> 
                 <img src="../../assets/landing_content_image/work_calendar.jpg" slot="picture">
                 <span slot="title">Calendar and schedule</span>
                 <span slot="content">
-                   It's a management panel for tracking and planning schedule.                   
+                    Our main function which is schedule system that provided tracking program in every day. Also we provided a calendar service for looking at all schedule in a month.                  
                 </span>
             </landing-article>
 
